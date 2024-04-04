@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Box, TextField, Button, Typography } from '@mui/material';
 import { apiRequest } from './api';
+import NaviBtn from './NaviBtn';
+import Alert from './Alert';
 
 function Login () {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const [openAlert, setOpenAlert] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -21,8 +24,13 @@ function Login () {
       navigate('/dashboard');
     } catch (error) {
       console.error('Login failed:', error.message);
+      setOpenAlert(true); // 显示Alert
       // 处理登录失败逻辑
     }
+  };
+
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
   };
 
   return (
@@ -73,7 +81,14 @@ function Login () {
           >
             Sign In
           </Button>
+          <Alert
+              open={openAlert}
+              handleClose={handleCloseAlert}
+              severity="error"
+              message="Login failed. Please try again."
+          />
         </Box>
+        <NaviBtn to="/register">Register</NaviBtn>
       </Box>
     </Container>
   );
