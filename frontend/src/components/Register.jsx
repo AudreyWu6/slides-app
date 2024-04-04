@@ -45,7 +45,7 @@ function Register () {
       const data = await apiRequest('/admin/auth/register', 'POST', { email, name, password });
       console.log('Registration successful:', data);
       localStorage.setItem('token', data.token);
-      navigate('/dashboard');
+      navigate('/login');
     } catch (error) {
       console.error('Registration failed:', error);
       setError(error.message || 'Registration failed.');
@@ -124,7 +124,7 @@ function Register () {
                     message={error}
                 />
               </Box>
-              <NaviBtn fullWidth to="/">Login</NaviBtn>
+              <NaviBtn fullWidth to="/login">Login</NaviBtn>
             </Box>
         </Container>
   );

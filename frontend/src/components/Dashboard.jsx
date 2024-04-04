@@ -10,7 +10,7 @@ function Dashboard () {
   return (
         <div>
             Dashboard
-            <NaviBtn to="/" onClick={handleLogout}>Logout</NaviBtn>
+            <NaviBtn to="/login" onClick={handleLogout}>Logout</NaviBtn>
         </div>
   );
 }
