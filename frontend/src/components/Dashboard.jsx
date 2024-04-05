@@ -1,5 +1,6 @@
 import React from 'react';
 import NaviBtn from './NaviBtn';
+import SlideEditor from './SlideEditor';
 
 function Dashboard () {
   const handleLogout = () => {
@@ -10,8 +11,10 @@ function Dashboard () {
   return (
         <div>
             Dashboard
+            <SlideEditor></SlideEditor>
             <NaviBtn to="/login" onClick={handleLogout}>Logout</NaviBtn>
         </div>
+
   );
 }
 
