@@ -1,14 +1,15 @@
 // ParentComponent.jsx
 import React, { useState } from 'react';
-import TextModal from './TextModal';
+import ElementModal from './ElementModal';
 import { Button } from '@mui/material';
 
-function ModalBtn ({ update }) {
+function ModalBtn ({ update, type }) {
   const [modalOpen, setModalOpen] = useState(false);
   return (
       <>
-        <Button onClick={() => setModalOpen(true)}>Add Text</Button>
-        <TextModal
+        <Button onClick={() => setModalOpen(true)}>Add {type}</Button>
+        <ElementModal
+            type={type}
             open={modalOpen}
             handleClose={() => setModalOpen(false)}
             update={update}

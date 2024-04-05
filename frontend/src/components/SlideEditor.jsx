@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import Slide from './Slide';
-import AddVideoModal from './AddVideoModal';
-import AddCodeBlockModal from './AddCodeBlockModal';
 import ModalBtn from './OpenModalBtn';
 
 function SlideEditor () {
@@ -52,9 +50,10 @@ function SlideEditor () {
       <div>
         {/* toolbox */}
         <div className="toolbar">
-          <ModalBtn update={(data) => handleAddElement(data, 'text')}></ModalBtn>
-          <AddVideoModal onAddVideo={(videoData) => handleAddElement(videoData, 'video')}/>
-          <AddCodeBlockModal onAddCodeBlock={(codeBlockData) => handleAddElement(codeBlockData, 'code')}/>
+          <ModalBtn type='text' update={(data) => handleAddElement(data, 'text')}></ModalBtn>
+          <ModalBtn type='image' update={(data) => handleAddElement(data, 'image')}></ModalBtn>
+          <ModalBtn type='video' update={(data) => handleAddElement(data, 'video')}></ModalBtn>
+          <ModalBtn type='code' update={(data) => handleAddElement(data, 'code')}></ModalBtn>
         </div>
 
         {/* slide */}

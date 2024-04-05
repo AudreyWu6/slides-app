@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { materialLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import TextModal from './TextModal';
+import ElementModal from './ElementModal';
 
 function Slide ({ slide, updateElements, deleteElement, handleUpdateElement }) {
   // State to control the modal for adding/editing elements
   const [modalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [initialTextData, setInitialTextData] = useState(null);
+  const [initialData, setInitialData] = useState(null);
   const [elementId, setElementId] = useState(null);
+  const [dataType, setDataType] = useState(null);
 
   const handleDeleteElement = (elementId) => {
     deleteElement(elementId);
@@ -20,16 +21,23 @@ function Slide ({ slide, updateElements, deleteElement, handleUpdateElement }) {
     if (elementToEdit) {
       console.log('Editing element with ID:', elementId);
       // Set the initial data for the modal to the element's current properties
-      setInitialTextData({
+      setInitialData({
         ...elementToEdit,
         // Any transformations needed for the modal's expectations
       });
+      console.log(initialData);
       setElementId(elementId);
+      setDataType(elementToEdit.type);
+      console.log(dataType);
       // Open the modal in edit mode
       setIsEditing(true);
       setModalOpen(true);
     }
   };
+
+  useEffect(() => {
+    console.log(dataType); // 在这里检查更新后的值
+  }, [dataType]);
 
   return (
         <div className="slide-container" style={{ border: '2px solid black', margin: '20px', position: 'relative', width: '100%', height: '1000px' }}>
@@ -143,11 +151,12 @@ function Slide ({ slide, updateElements, deleteElement, handleUpdateElement }) {
                   return null;
               }
             })}
-          <TextModal
+          <ElementModal
+              type={dataType}
               open={modalOpen}
               handleClose={() => setModalOpen(false)}
               isEditing={isEditing}
-              initialTextData={initialTextData}
+              initialData={initialData}
               update={(data) => handleUpdateElement(elementId, data)}
           />
           {/* Button or method to open the modal in add mode */}
