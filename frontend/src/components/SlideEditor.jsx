@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import AddTextModal from './AddTextModal';
 import Slide from './Slide';
-import AddImageModal from './AddImageModal';
 import AddVideoModal from './AddVideoModal';
-import AddCodeBlockModal from './AddCodeBlockModal'; // 确保路径正确
+import AddCodeBlockModal from './AddCodeBlockModal';
+import ModalBtn from './OpenModalBtn';
 
 function SlideEditor () {
   // 假设我们只处理一个幻灯片，我们可以直接将这个幻灯片的状态命名为slide
@@ -19,7 +18,6 @@ function SlideEditor () {
     }));
   };
 
-  // 删除元素的示例方法
   const deleteElement = (elementId) => {
     setSlide(prevSlide => ({
       ...prevSlide,
@@ -30,28 +28,39 @@ function SlideEditor () {
   const handleAddElement = (elementData, elementType) => {
     const newElement = {
       id: Date.now(), // 为新元素生成唯一ID
-      type: elementType, // 元素类型，如"text", "image"等
-      ...elementData, // 元素具体数据
+      type: elementType,
+      ...elementData,
     };
-
     updateElements([...slide.elements, newElement]);
+  };
+
+  const handleUpdateElement = (elementId, updatedData) => {
+    const updatedElements = slide.elements.map((element) => {
+      if (element.id === elementId) {
+        // 对于匹配的ID，返回更新后的数据
+        return { ...element, ...updatedData };
+      }
+      // 对于不匹配的ID，保留原有元素不变
+      return element;
+    });
+
+    // 使用更新后的元素数组来更新状态
+    updateElements(updatedElements);
   };
 
   return (
       <div>
-        {/* 可以放置一些顶部的工具栏或其他UI组件 */}
+        {/* toolbox */}
         <div className="toolbar">
-          <AddTextModal onAddText={(textData) => handleAddElement(textData, 'text')}/>
-          <AddImageModal onAddImage={(imageData) => handleAddElement(imageData, 'image')}/>
+          <ModalBtn update={(data) => handleAddElement(data, 'text')}></ModalBtn>
           <AddVideoModal onAddVideo={(videoData) => handleAddElement(videoData, 'video')}/>
           <AddCodeBlockModal onAddCodeBlock={(codeBlockData) => handleAddElement(codeBlockData, 'code')}/>
-          {/* 其他操作按钮或组件 */}
         </div>
 
-        {/* 幻灯片展示区 */}
-        <Slide slide={slide} updateElements={updateElements} deleteElement={deleteElement}/>
+        {/* slide */}
+        <Slide slide={slide} updateElements={updateElements} deleteElement={deleteElement} handleUpdateElement={handleUpdateElement}/>
 
-        {/* 如果需要在幻灯片下方添加其他内容 */}
+        {/* other */}
         <div className="additional-content">
           {/* 在这里添加其他内容 */}
         </div>

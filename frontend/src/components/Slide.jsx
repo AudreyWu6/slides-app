@@ -1,16 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { materialLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import TextModal from './TextModal';
 
-function Slide ({ slide, updateElements, deleteElement }) {
+function Slide ({ slide, updateElements, deleteElement, handleUpdateElement }) {
+  // State to control the modal for adding/editing elements
+  const [modalOpen, setModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [initialTextData, setInitialTextData] = useState(null);
+  const [elementId, setElementId] = useState(null);
+
   const handleDeleteElement = (elementId) => {
     deleteElement(elementId);
   };
 
   const handleEditElement = (elementId) => {
-    console.log('Editing element with ID:', elementId);
-
+    // Find the element to edit
+    const elementToEdit = slide.elements.find(element => element.id === elementId);
+    if (elementToEdit) {
+      console.log('Editing element with ID:', elementId);
+      // Set the initial data for the modal to the element's current properties
+      setInitialTextData({
+        ...elementToEdit,
+        // Any transformations needed for the modal's expectations
+      });
+      setElementId(elementId);
+      // Open the modal in edit mode
+      setIsEditing(true);
+      setModalOpen(true);
+    }
   };
+
   return (
         <div className="slide-container" style={{ border: '2px solid black', margin: '20px', position: 'relative', width: '100%', height: '1000px' }}>
             {slide.elements.map((element, index) => {
@@ -123,6 +143,14 @@ function Slide ({ slide, updateElements, deleteElement }) {
                   return null;
               }
             })}
+          <TextModal
+              open={modalOpen}
+              handleClose={() => setModalOpen(false)}
+              isEditing={isEditing}
+              initialTextData={initialTextData}
+              update={(data) => handleUpdateElement(elementId, data)}
+          />
+          {/* Button or method to open the modal in add mode */}
         </div>
   );
 }
