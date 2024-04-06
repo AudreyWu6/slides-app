@@ -45,10 +45,25 @@ const EditPresentation = () => {
   };
 
   const handleAddSlide = () => {
-    const newSlide = { id: Date.now(), content: 'new slide content' };
+    const newSlide = { id: Date.now(), elements: [] };
     const updatedPresentation = {
       ...presentation,
       slides: [...presentation.slides, newSlide]
+    };
+    updatePresentation(updatedPresentation);
+  };
+
+  const handleUpdateSlide = (passedSlide) => {
+    console.log('handleSlideUpdate', passedSlide);
+    const updatedSlides = presentation.slides.map(slide => {
+      if (slide.id === passedSlide.id) {
+        return passedSlide; // 将新内容合并到旧幻灯片对象中
+      }
+      return slide; // 对于未匹配的幻灯片，保持原样
+    });
+    const updatedPresentation = {
+      ...presentation,
+      slides: updatedSlides
     };
     updatePresentation(updatedPresentation);
   };
@@ -114,8 +129,8 @@ const EditPresentation = () => {
       <Button onClick={handleAddSlide} size="small" variant="contained" sx={{ mt: 2 }}>Add New Slide</Button>
       <Button onClick={handleDeleteSlide} size="small" variant="contained" color="error" sx={{ mt: 2, ml: 2 }} startIcon={<DeleteIcon />}>Delete Slide
 </Button>
-      <Typography sx={{ mt: 2 }}>Slide {currentSlideIndex + 1}: {presentation.slides[currentSlideIndex].content}</Typography>
-      <SlideEditor></SlideEditor>
+      <Typography sx={{ mt: 2 }}>Slide {currentSlideIndex + 1}</Typography>
+      <SlideEditor slide={presentation.slides[currentSlideIndex]} handleUpdateSlide={handleUpdateSlide} ></SlideEditor>
       <Dialog open={deleteConfirmOpen} onClose={() => setDeleteConfirmOpen(false)}>
         <DialogTitle>Are you sure you want to delete this presentation?</DialogTitle>
         <DialogActions>

@@ -82,10 +82,10 @@ function Login () {
             Sign In
           </Button>
           <Alert
-              open={openAlert}
-              handleClose={handleCloseAlert}
-              severity="error"
-              message="Login failed. Please try again."
+            open={openAlert}
+            handleClose={handleCloseAlert}
+            severity="error"
+            message="Login failed. Please try again."
           />
         </Box>
         <NaviBtn to="/register">Register</NaviBtn>
