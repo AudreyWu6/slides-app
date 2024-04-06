@@ -3,7 +3,6 @@ import { Button, Modal, Box, TextField, CardMedia, Typography, Grid, Card, CardC
 import { useNavigate } from 'react-router-dom';
 import { usePresentations } from './PresentationContext'; // Adjust the import path as needed
 import NaviBtn from './NaviBtn';
-import SlideEditor from './SlideEditor';
 
 function Dashboard () {
   const navigate = useNavigate();
