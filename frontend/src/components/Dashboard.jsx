@@ -23,7 +23,7 @@ function Dashboard () {
   const createPresentation = () => {
     addPresentation({
       ...newPresentation,
-      slides: [{ id: 1, content: '' }], // Default single empty slide
+      slides: [{ id: 1, elements: [] }], // Default single empty slide
       thumbnail: newPresentation.thumbnail || '', // Use default if no thumbnail is specified
     });
     handleClose();
