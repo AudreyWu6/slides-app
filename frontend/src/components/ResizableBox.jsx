@@ -4,7 +4,8 @@ import { materialLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 function ResizableBox ({ element, index, handleDeleteElement, handleEditElement, handleUpdateElement, containerHeight, containerWidth }) {
   const [isSelected, setIsSelected] = useState(false);
-  const toggleSelect = () => {
+  const toggleSelect = (e) => {
+    e.stopPropagation(); // 阻止事件冒泡
     setIsSelected(prev => !prev);
   };
   // useState to track size and position
@@ -16,7 +17,7 @@ function ResizableBox ({ element, index, handleDeleteElement, handleEditElement,
   });
   // handle drag
   const startDrag = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const startPos = { x: e.pageX, y: e.pageY };
     let tempLeft = parseInt(style.left);
     let tempTop = parseInt(style.top);
@@ -66,6 +67,7 @@ function ResizableBox ({ element, index, handleDeleteElement, handleEditElement,
   const startResize = (corner, e) => {
     e.stopPropagation(); // 阻止mousedown事件冒泡
     e.preventDefault()
+    const aspectRatio = element.width / element.height
     const startPos = { x: e.pageX, y: e.pageY };
     let tempWidth = parseFloat(style.width);
     let tempHeight = parseFloat(style.height);
@@ -75,32 +77,46 @@ function ResizableBox ({ element, index, handleDeleteElement, handleEditElement,
     const onResizing = (e) => {
       const dx = e.pageX - startPos.x;
       const dy = e.pageY - startPos.y;
+      // 计算基于容器宽高的比例变化
+      const dxRatio = Math.abs(dx / containerWidth * 100);
+      const dyRatio = Math.abs(dy / containerHeight * 100);
 
-      let newWidth = tempWidth;
-      let newHeight = tempHeight;
+      // 选择最大的变化比例，确保宽高比
+      const maxDeltaRatio = Math.max(dxRatio, dyRatio);
+      let sign; // 根据角的不同调整符号
+      switch (corner) {
+        case 'bottom-right':
+          sign = Math.sign(dxRatio > dyRatio ? dx : dy);
+          break;
+        case 'bottom-left':
+          sign = Math.sign(dxRatio > dyRatio ? -dx : dy);
+          break;
+        case 'top-right':
+          sign = Math.sign(dxRatio > dyRatio ? dx : -dy);
+          break;
+        case 'top-left':
+          sign = Math.sign(dxRatio > dyRatio ? -dx : -dy);
+          break;
+        default:
+          sign = 1; // 默认增加方向
+          break;
+      }
+
+      let newWidth = tempWidth + maxDeltaRatio * sign;
+      let newHeight = newWidth / aspectRatio;
       let newLeft = tempLeft;
       let newTop = tempTop;
 
       switch (corner) {
-        case 'bottom-right':
-          newWidth = tempWidth + dx / containerWidth * 100;
-          newHeight = tempHeight + dy / containerHeight * 100;
-          break;
         case 'bottom-left':
-          newWidth = tempWidth - dx / containerWidth * 100;
-          newHeight = tempHeight + dy / containerHeight * 100;
-          newLeft = tempLeft + dx;
+          newLeft = tempLeft - maxDeltaRatio * sign * containerWidth / 100;
           break;
         case 'top-left':
-          newWidth = tempWidth - dx / containerWidth * 100;
-          newHeight = tempHeight - dy / containerHeight * 100;
-          newLeft = tempLeft + dx;
-          newTop = tempTop + dy;
+          newLeft = tempLeft - maxDeltaRatio * sign * containerWidth / 100;
+          newTop = tempTop - (newHeight - tempHeight) * containerHeight / 100;
           break;
         case 'top-right':
-          newWidth = tempWidth + dx / containerWidth * 100;
-          newHeight = tempHeight - dy / containerHeight * 100;
-          newTop = tempTop + dy;
+          newTop = tempTop - (newHeight - tempHeight) * containerHeight / 100;
           break;
       }
       // Boundary checks for the new dimensions and position
@@ -171,8 +187,12 @@ function ResizableBox ({ element, index, handleDeleteElement, handleEditElement,
       content = (
         <div style={{
           position: 'absolute',
+          width: '100%',
+          height: '100%',
           color: element.color,
           fontSize: `${element.fontSize}em`,
+          overflow: 'hidden',
+          fontFamily: element.fontFamily,
         }}>
           {element.text}
         </div>
@@ -182,6 +202,9 @@ function ResizableBox ({ element, index, handleDeleteElement, handleEditElement,
       content = (
         <img src={element.url} alt={element.alt} style={{
           position: 'absolute',
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
         }} />
       );
       break;
@@ -191,6 +214,9 @@ function ResizableBox ({ element, index, handleDeleteElement, handleEditElement,
           src={element.url}
           style={{
             position: 'absolute',
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
           }}
           autoPlay={element.autoPlay}
           muted
@@ -203,6 +229,9 @@ function ResizableBox ({ element, index, handleDeleteElement, handleEditElement,
         <div
           style={{
             position: 'absolute',
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
           }}
         >
           <SyntaxHighlighter language={element.language} style={materialLight} customStyle={{ fontSize: `${element.fontSize}em` }}>

@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import ElementModal from './ElementModal';
 import ResizableBox from './ResizableBox';
 
-function Slide ({ slide, handleDeleteElement, handleUpdateElement }) {
+function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor }) {
+  console.log(slide.background, 'theme', themeColor);
   // State to control the modal for adding/editing elements
   const [modalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [initialData, setInitialData] = useState(null);
   const [elementId, setElementId] = useState(null);
   const [dataType, setDataType] = useState(null);
+  const backgroundColor = slide.background || themeColor
 
   const handleEditElement = (elementId) => {
     // Find the element to edit
@@ -31,7 +33,7 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement }) {
 
   return (
     <div className="slide-container"
-         style={{ border: '2px solid black', margin: '20px', position: 'relative', width: '1600px', height: '1000px' }}>
+         style={{ border: '2px solid black', margin: '20px', position: 'relative', width: '1200px', height: '800px', background: backgroundColor }}>
       {slide.elements.map((element, index) => {
         return (
           <ResizableBox
@@ -41,8 +43,8 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement }) {
             handleDeleteElement={handleDeleteElement}
             handleEditElement={handleEditElement}
             handleUpdateElement={handleUpdateElement}
-            containerHeight={parseInt('1000px')}
-            containerWidth={parseInt('1600px')}
+            containerHeight={parseInt('800px')}
+            containerWidth={parseInt('1200px')}
           />
         );
       })}
