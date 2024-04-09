@@ -1,18 +1,92 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Modal, Box, TextField, CardMedia, Typography, Grid, Card, CardContent } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { usePresentations } from './PresentationContext'; // Adjust the import path as needed
 import NaviBtn from './NaviBtn';
+import { apiRequestStore } from './apiStore';
+
+const fetchPresentations = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await apiRequestStore('/store', token, 'GET', null);
+    const presentations = response || [];
+    console.log('presentationsData recieved from server: ', presentations);
+    return presentations; // Ensure this is always an array
+  } catch (error) {
+    console.error('Fetching presentations failed:', error);
+    return [];
+  }
+};
+
+const putToServer = async (pres) => {
+  try {
+    const token = localStorage.getItem('token');
+    const body = { store: pres };
+    console.log('the body that given to server', body);
+    await apiRequestStore('/store', token, 'PUT', body);
+    // console.log('the response from server: ', data);
+  } catch (error) {
+    console.error('Fetching presentation failed:', error.message);
+  }
+};
 
 function Dashboard () {
   const navigate = useNavigate();
-  const { presentations, addPresentation } = usePresentations(); // Assuming addPresentation is a function provided by your context to add a new presentation
+  const { presentations, addPresentation, setAllPresentations } = usePresentations(); // Assuming addPresentation is a function provided by your context to add a new presentation
   const [open, setOpen] = useState(false);
   const [newPresentation, setNewPresentation] = useState({
     name: '',
     description: '',
     thumbnail: '',
   });
+
+  useEffect(() => {
+    const loadPresentations = async () => {
+      const fetchedPresentations = await fetchPresentations();
+      const presentationsData = Array.isArray(fetchedPresentations.store.store) ? fetchedPresentations.store.store : [];
+      // console.log('fetchedPresentations is : ', fetchedPresentations, Array.isArray(fetchedPresentations.store.store));
+      console.log('presentationsData)', presentationsData);
+      if (presentationsData) {
+        setAllPresentations(presentationsData);
+      } else {
+        setAllPresentations([]);
+      }
+    //   setAllPresentations(presentationsData);
+    };
+    loadPresentations();
+  }, []);
+
+  // useEffect(() => {
+  //   let isMounted = true;
+  //   async function loadPresentations () {
+  //     const fetchedPresentations = await fetchPresentations();
+  //     if (isMounted && fetchedPresentations && fetchedPresentations.store && fetchedPresentations.store.store) {
+  //       const presentationsData = fetchedPresentations.store.store;
+  //       setAllPresentations(presentationsData);
+  //     } else {
+  //       setAllPresentations([]);
+  //     }
+  //   }
+  //   loadPresentations();
+  //   return () => {
+  //     isMounted = false; // Clean up function to set flag as false when component unmounts
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    const updateServer = async () => {
+      if (presentations.length > 0) {
+        try {
+          await putToServer(presentations);
+          console.log('the body beforeput to server: ', presentations);
+          setAllPresentations(presentations);
+        } catch (error) {
+          console.error('Failed to update presentations on the server:', error);
+        }
+      }
+    };
+    updateServer();
+  }, [presentations]);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -21,11 +95,13 @@ function Dashboard () {
   };
 
   const createPresentation = () => {
-    addPresentation({
+    const newPres = {
       ...newPresentation,
-      slides: [{ id: 1, elements: [] }], // Default single empty slide
-      thumbnail: newPresentation.thumbnail || '', // Use default if no thumbnail is specified
-    });
+      id: Date.now(),
+      slides: [{ id: Date.now(), elements: [] }],
+      thumbnail: newPresentation.thumbnail || '',
+    };
+    addPresentation(newPres);
     handleClose();
   };
 
@@ -39,7 +115,6 @@ function Dashboard () {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    // Navigate to login or perform additional cleanup
     navigate('/login');
   };
 
@@ -65,7 +140,7 @@ function Dashboard () {
       </Modal>
       <Grid container spacing={2} style={{ marginTop: '20px' }}>
         {presentations.map((presentation) => (
-          <Grid item key={presentation.id} xs={12} sm={6} md={4} lg={3} sx={{ minWidth: 100, maxWidth: 300 }} onClick={() => navigate(`/edit-presentation/${presentation.id}`)} style={{ cursor: 'pointer' }}>
+          <Grid item key={presentation.id} xs={12} sm={6} md={4} lg={3} sx={{ minWidth: 100, maxWidth: 300 }} onClick={() => navigate(`/edit-presentation/${presentation.id}/slide/1`)} style={{ cursor: 'pointer' }}>
             <Card sx={{ aspectRatio: '2 / 1' }} >
               { presentation.thumbnail ? (<CardMedia component="img" height="50" image={ presentation.thumbnail } alt="Thumbnail"/>) : (<Box sx={{ height: 50, bgcolor: 'grey.300' }} />)}
               <CardContent>

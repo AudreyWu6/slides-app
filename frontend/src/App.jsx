@@ -9,6 +9,9 @@ import Login from './components/Login'; // 确保Login.jsx的路径正确
 import Register from './components/Register'; // 确保Register.jsx的路径正确
 import EditPresentation from './components/EditPresentation';
 import { PresentationProvider } from './components/PresentationContext';
+import PreviewPresentation from './components/PreviewPresentation';
+import ReorderSlides from './components/ReorderSlides';
+import './App.css';
 
 const App = () => {
   return (
@@ -19,7 +22,9 @@ const App = () => {
           </nav>
           <Routes>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/edit-presentation/:id" element={<EditPresentation />} />
+            <Route path="/edit-presentation/:id/slide/:slideNumber" element={<EditPresentation />} />
+            <Route path="/preview-presentation/:id/slide/:slideNumber" element={<PreviewPresentation />} />
+            <Route path="/reorder-slides/:id" element={<ReorderSlides />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
               <Route path="/" element={<Navigate replace to="/login" />} />
