@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Slide from './Slide';
 import ModalBtn from './OpenModalBtn';
+import ColorBtn from './ColorBtn';
 
-function SlideEditor ({ slide: passedSlide, handleUpdateSlide }) {
-  console.log('slide passed', passedSlide)
+function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme, themeColor }) {
+  console.log('slide passed', passedSlide);
+  console.log('theme', themeColor);
   const initialState = {
     id: 1,
     elements: [],
@@ -19,6 +21,14 @@ function SlideEditor ({ slide: passedSlide, handleUpdateSlide }) {
   const updateElements = (newElements) => {
     setSlide(prevSlide => {
       const updatedSlide = { ...prevSlide, elements: newElements };
+      handleUpdateSlide(updatedSlide); // 调用父组件的函数，传递更新后的 slide
+      return updatedSlide;
+    });
+  };
+
+  const updateBackground = (color) => {
+    setSlide(prevSlide => {
+      const updatedSlide = { ...prevSlide, background: color };
       handleUpdateSlide(updatedSlide); // 调用父组件的函数，传递更新后的 slide
       return updatedSlide;
     });
@@ -59,9 +69,12 @@ function SlideEditor ({ slide: passedSlide, handleUpdateSlide }) {
   };
 
   return (
-    <div>
+    <div style={{
+      display: 'flex',
+    }} >
       {/* toolbox */}
-      <div className="toolbar">
+      <div className="toolbar" style={{ display: 'flex', flexDirection: 'column', width: '300px' }}>
+        <ColorBtn updateBackground={updateBackground} updateTheme={handleUpdateTheme}></ColorBtn>
         <ModalBtn type='text' update={(data) => handleAddElement(data, 'text')}></ModalBtn>
         <ModalBtn type='image' update={(data) => handleAddElement(data, 'image')}></ModalBtn>
         <ModalBtn type='video' update={(data) => handleAddElement(data, 'video')}></ModalBtn>
@@ -69,8 +82,9 @@ function SlideEditor ({ slide: passedSlide, handleUpdateSlide }) {
       </div>
 
       {/* slide */}
-      <Slide slide={slide} handleDeleteElement={handleDeleteElement} handleUpdateElement={handleUpdateElement}/>
-
+      <div>
+      <Slide slide={slide} handleDeleteElement={handleDeleteElement} handleUpdateElement={handleUpdateElement} themeColor={themeColor}/>
+      </div>
       {/* other */}
       <div className="additional-content">
         {/* 在这里添加其他内容 */}

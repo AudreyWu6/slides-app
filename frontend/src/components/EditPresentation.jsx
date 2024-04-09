@@ -44,6 +44,11 @@ const EditPresentation = () => {
     setEditTitleOpen(false);
   };
 
+  const handleUpdateTheme = (color) => {
+    const updatedPresentation = { ...presentation, theme: color };
+    updatePresentation(updatedPresentation);
+  };
+
   const handleAddSlide = () => {
     const newSlide = { id: Date.now(), elements: [] };
     const updatedPresentation = {
@@ -130,7 +135,7 @@ const EditPresentation = () => {
       <Button onClick={handleDeleteSlide} size="small" variant="contained" color="error" sx={{ mt: 2, ml: 2 }} startIcon={<DeleteIcon />}>Delete Slide
 </Button>
       <Typography sx={{ mt: 2 }}>Slide {currentSlideIndex + 1}</Typography>
-      <SlideEditor slide={presentation.slides[currentSlideIndex]} handleUpdateSlide={handleUpdateSlide} ></SlideEditor>
+      <SlideEditor slide={presentation.slides[currentSlideIndex]} handleUpdateSlide={handleUpdateSlide} handleUpdateTheme={handleUpdateTheme} themeColor={presentation.theme}></SlideEditor>
       <Dialog open={deleteConfirmOpen} onClose={() => setDeleteConfirmOpen(false)}>
         <DialogTitle>Are you sure you want to delete this presentation?</DialogTitle>
         <DialogActions>
