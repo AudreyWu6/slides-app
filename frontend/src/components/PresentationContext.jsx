@@ -24,8 +24,26 @@ export const PresentationProvider = ({ children }) => {
     );
   };
 
+  // const deletePresentation = (id) => {
+  //   setPresentations((prev) => prev.filter((presentation) => presentation.id !== id));
+  // };
   const deletePresentation = (id) => {
-    setPresentations((prev) => prev.filter((presentation) => presentation.id !== id));
+    setPresentations((prev) => {
+      // Find the index of the presentation to delete
+      const indexToDelete = prev.findIndex(presentation => presentation.id === id);
+      // Filter out the presentation to delete
+      const filtered = prev.filter((presentation, index) => index !== indexToDelete);
+      // Decrease the ID of presentations that come after the deleted one, if needed
+      if (indexToDelete !== -1) {
+        return filtered.map((presentation, index) => {
+          if (index >= indexToDelete) {
+            return { ...presentation, id: presentation.id - 1 };
+          }
+          return presentation;
+        });
+      }
+      return filtered;
+    });
   };
 
   // New function to reorder slides within a presentation
@@ -44,8 +62,12 @@ export const PresentationProvider = ({ children }) => {
     setPresentations(newPresentations);
   };
 
+  const resetState = () => {
+    setPresentations([]);
+  };
+
   return (
-    <PresentationContext.Provider value={{ presentations, addPresentation, updatePresentation, deletePresentation, reorderSlides, setAllPresentations }}>
+    <PresentationContext.Provider value={{ presentations, addPresentation, updatePresentation, deletePresentation, reorderSlides, setAllPresentations, resetState, }}>
       {children}
     </PresentationContext.Provider>
   );

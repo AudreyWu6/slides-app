@@ -22,9 +22,9 @@ const putToServer = async (pres) => {
   try {
     const token = localStorage.getItem('token');
     const body = { store: pres };
-    console.log('the body that given to server', body);
-    const data = await apiRequestStore('/store', token, 'PUT', body);
-    console.log('the response from server: ', data);
+    // console.log('the body that given to server', body);
+    await apiRequestStore('/store', token, 'PUT', body);
+    // console.log('the response from server: ', data);
     // updatePresentation(updatedPresentation);
     // putToServer(presentations.map(p => p.id === parseInt(id) ? updatedPresentation : p));
   } catch (error) {
@@ -53,10 +53,8 @@ const ReorderSlides = () => {
   const handleClose = async () => {
     if (selectedPresentation) {
       try {
-        await putToServer([selectedPresentation]);
+        // await putToServer([selectedPresentation]);
         navigate(`/edit-presentation/${id}/slide/1`);
-        // console.log('id and selectedPresentation.id', id, selectedPresentation.id);
-        // navigate(`/edit-presentation/${selectedPresentation.id}/slide/1`);
       } catch (error) {
         console.error('Failed to update server:', error);
       }
@@ -69,7 +67,7 @@ const ReorderSlides = () => {
     const loadSlides = async () => {
       const fetchedPresentations = await fetchPresentations();
       const presentationsArray = fetchedPresentations.store;
-      const presentationById = presentationsArray[id - 1];
+      const presentationById = presentationsArray.find(p => p.id === parseInt(id));
       setSelectedPresentation(presentationById);
     };
     loadSlides();
@@ -96,18 +94,21 @@ const ReorderSlides = () => {
   }, [presentations]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', }}>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId='droppable-slides' direction="horizontal">
           {(provided, snapshot) => (
             <div {...provided.droppableProps} ref={provided.innerRef}
             style={{
               display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-around', // Evenly spaces the cards within the line and handles spacing between wrapped lines
-              gap: '16px', // Adds space between the cards
+              flexWrap: 'nowrap',
+              justifyContent: 'flex-start',
+              gap: '8px',
               width: '100%',
-            }}>
+              overflowX: 'auto',
+              paddingBottom: '10px',
+            }}
+            >
               {slides.map((slide, index) => (
                 <Draggable key={slide.id} draggableId={`slide-${slide.id}`} index={index}>
                   {(provided) => (
@@ -117,18 +118,20 @@ const ReorderSlides = () => {
                       {...provided.dragHandleProps}
                       sx={{
                         ...provided.draggableProps.style,
-                        backgroundColor: snapshot.isDragging ? 'lightgreen' : 'white',
                         userSelect: 'none',
-                        minWidth: '50px',
-                        minHeight: '150px',
+                        minHeight: '100px',
+                        minWidth: '200px',
+                        maxHeight: '150px',
                         maxWidth: '300px',
-                        width: '100%', // This ensures that the card takes up the space it needs, respecting min and max width
-                        height: 'auto', // Adjust based on content
+                        width: '100%',
+                        height: 'auto',
                         padding: '10px',
                         margin: '0 0 8px 0',
                         display: 'flex',
                         justifyContent: 'flex-start',
                         border: '1px solid lightgrey',
+                        marginRight: '10px',
+                        alignItems: 'center',
                       }}
                     >
                       Slide {index + 1}:
@@ -170,7 +173,7 @@ const ReorderSlides = () => {
                               </pre>
                             );
                           default:
-                            return null; // Handle unknown element type
+                            return null;
                         }
                       })}
 
@@ -183,14 +186,13 @@ const ReorderSlides = () => {
           )}
         </Droppable>
       </DragDropContext>
-      <Button onClick={handleClose} style={{ marginTop: '20px' }}>Close</Button>
+      <Button onClick={handleClose} style={{ marginTop: '20px' }}>Save</Button>
     </div>
   );
 };
 
 export default ReorderSlides;
 
-// import React, { useEffect, useState } from 'react';
 // import { useNavigate, useParams } from 'react-router-dom';
 // import { Button, Card } from '@mui/material';
 // import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';

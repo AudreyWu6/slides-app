@@ -38,7 +38,8 @@ const PreviewPresentation = () => {
     const loadSlides = async () => {
       const fetchedPresentations = await fetchPresentations();
       const presentationsArray = fetchedPresentations.store;
-      const presentationById = presentationsArray[id - 1];
+      // const presentationById = presentationsArray[id - 1];
+      const presentationById = presentationsArray.find(p => p.id === parseInt(id));
       // updatePresentation(presentationById);
       console.log('presentationById', presentationById);
       setSelectedPresentation(presentationById);

@@ -10,8 +10,8 @@ const fetchPresentations = async () => {
     const token = localStorage.getItem('token');
     const response = await apiRequestStore('/store', token, 'GET', null);
     const presentations = response || [];
-    console.log('presentationsData recieved from server: ', presentations);
-    return presentations; // Ensure this is always an array
+    // console.log('presentationsData recieved from server: ', presentations);
+    return presentations;
   } catch (error) {
     console.error('Fetching presentations failed:', error);
     return [];
@@ -22,7 +22,7 @@ const putToServer = async (pres) => {
   try {
     const token = localStorage.getItem('token');
     const body = { store: pres };
-    console.log('the body that given to server', body);
+    // console.log('the body that given to server', body);
     await apiRequestStore('/store', token, 'PUT', body);
   } catch (error) {
     console.error('Fetching presentation failed:', error.message);
@@ -31,12 +31,13 @@ const putToServer = async (pres) => {
 
 function Dashboard () {
   const navigate = useNavigate();
-  const { presentations, addPresentation, setAllPresentations } = usePresentations(); // Assuming addPresentation is a function provided by your context to add a new presentation
+  const { presentations, addPresentation, setAllPresentations, resetState } = usePresentations(); // Assuming addPresentation is a function provided by your context to add a new presentation
   const [open, setOpen] = useState(false);
   const [newPresentation, setNewPresentation] = useState({
     name: '',
     description: '',
     thumbnail: '',
+    // id: null,
   });
 
   useEffect(() => {
@@ -49,41 +50,25 @@ function Dashboard () {
       } else {
         setAllPresentations([]);
       }
-    //   setAllPresentations(presentationsData);
     };
     loadPresentations();
+    console.log('presentations in dashboard should be load one time: ', presentations);
   }, []);
-
-  // useEffect(() => {
-  //   let isMounted = true;
-  //   async function loadPresentations () {
-  //     const fetchedPresentations = await fetchPresentations();
-  //     if (isMounted && fetchedPresentations && fetchedPresentations.store && fetchedPresentations.store.store) {
-  //       const presentationsData = fetchedPresentations.store.store;
-  //       setAllPresentations(presentationsData);
-  //     } else {
-  //       setAllPresentations([]);
-  //     }
-  //   }
-  //   loadPresentations();
-  //   return () => {
-  //     isMounted = false; // Clean up function to set flag as false when component unmounts
-  //   };
-  // }, []);
 
   useEffect(() => {
     const updateServer = async () => {
       if (presentations.length > 0) {
         try {
           await putToServer(presentations);
-          console.log('the body beforeput to server: ', presentations);
-          setAllPresentations(presentations);
+          // console.log('the body beforeput to server: ', presentations);
+          // setAllPresentations(presentations);
         } catch (error) {
           console.error('Failed to update presentations on the server:', error);
         }
       }
     };
     updateServer();
+    console.log('presentations in dashboard, has change?????', presentations);
   }, [presentations]);
 
   const handleOpen = () => setOpen(true);
@@ -112,6 +97,7 @@ function Dashboard () {
   };
 
   const handleLogout = () => {
+    resetState();
     localStorage.removeItem('token');
     navigate('/login');
   };
