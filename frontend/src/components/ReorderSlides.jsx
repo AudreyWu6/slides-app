@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Card } from '@mui/material';
 import { usePresentations } from '../components/PresentationContext';
 import { apiRequestStore } from './apiStore';
+import NaviBtn from './NaviBtn';
 
 const fetchPresentations = async () => {
   try {
@@ -35,7 +36,7 @@ const putToServer = async (pres) => {
 const ReorderSlides = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { presentations, reorderSlides } = usePresentations();
+  const { presentations, reorderSlides, resetState } = usePresentations();
   const [selectedPresentation, setSelectedPresentation] = useState(null);
   const [slides, setSlides] = useState([]);
 
@@ -93,7 +94,19 @@ const ReorderSlides = () => {
     updateServer();
   }, [presentations]);
 
+  const handleLogout = () => {
+    resetState();
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
+
   return (
+    <div>
+    <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginRight: '15px' }}>
+      <div style={{ display: 'inline-flex', alignItems: 'center' }}>
+        <NaviBtn to="/login" onClick={handleLogout}>Logout</NaviBtn>
+      </div>
+    </div>
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', }}>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId='droppable-slides' direction="horizontal">
@@ -186,14 +199,17 @@ const ReorderSlides = () => {
           )}
         </Droppable>
       </DragDropContext>
-      <Button onClick={handleClose} style={{ marginTop: '20px' }}>Save</Button>
+      <div>
+        <Button onClick={handleClose} style={{ marginTop: '20px' }}>Save</Button>
+        <Button onClick={() => navigate(`/edit-presentation/${id}/slide/1`)} style={{ marginTop: '20px' }}>Close</Button>
+      </div>
+    </div>
     </div>
   );
 };
 
 export default ReorderSlides;
 
-// import { useNavigate, useParams } from 'react-router-dom';
 // import { Button, Card } from '@mui/material';
 // import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 // import { usePresentations } from '../components/PresentationContext';

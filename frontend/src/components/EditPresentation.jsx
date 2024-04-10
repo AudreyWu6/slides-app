@@ -77,14 +77,6 @@ const EditPresentation = () => {
       updatePresentation(presentationById);
       setSelectedPresentation(presentationById);
       console.log('presentationsArray **** check', id, presentationsArray.find(p => p.id === parseInt(id, 10)).slides);
-      // presentationsArray.filter(p => p.id === parseInt(id))
-      // if (presentationById && presentationById.slides.length > currentSlideIndex) {
-      //   const slideByIndex = presentationById.slides[currentSlideIndex];
-      //   console.log('Found slide:', slideByIndex);
-      // } else {
-      //   console.log('Slide or presentation not found');
-      //   navigate('/dashboard');
-      // }
     };
     loadSlides();
   }, [id]);
@@ -103,6 +95,9 @@ const EditPresentation = () => {
         } catch (error) {
           console.error('Failed to update presentations on the server:', error);
         }
+      }
+      if (deleteSignal) {
+        navigate('/dashboard');
       }
     };
     updateServer();
@@ -188,25 +183,25 @@ const EditPresentation = () => {
   };
 
   // const handleDeleteThisPresentation = async () => {
-  //   // await deletePresentation(selectedPresentation.id);
-  //   // try {
-  //   //   await putToServer(presentations);
-  //   //   setDeleteConfirmOpen(false);
-  //   //   console.log('presentations after delete presentation: ', presentations);
-  //   //   // navigate('/dashboard');
-  //   // } catch (error) {
-  //   //   console.error('Failed to save changes:', error);
-  //   // }
-  //   const updatedPresentations = presentations.filter(p => p.id !== selectedPresentation.id);
   //   await deletePresentation(selectedPresentation.id);
   //   try {
-  //     await putToServer(updatedPresentations);
+  //     await putToServer(presentations);
   //     setDeleteConfirmOpen(false);
-  //     console.log('Presentations after delete presentation: ', updatedPresentations);
+  //     console.log('presentations after delete presentation: ', presentations);
   //     // navigate('/dashboard');
   //   } catch (error) {
   //     console.error('Failed to save changes:', error);
   //   }
+  // const updatedPresentations = presentations.filter(p => p.id !== selectedPresentation.id);
+  // await deletePresentation(selectedPresentation.id);
+  // try {
+  //   await putToServer(updatedPresentations);
+  //   setDeleteConfirmOpen(false);
+  //   console.log('Presentations after delete presentation: ', updatedPresentations);
+  //   // navigate('/dashboard');
+  // } catch (error) {
+  //   console.error('Failed to save changes:', error);
+  // }
   // };
 
   const handleDeleteThisPresentation = async () => {
