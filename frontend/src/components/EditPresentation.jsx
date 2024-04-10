@@ -8,6 +8,8 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { usePresentations } from '../components/PresentationContext';
 import SlideEditor from './SlideEditor';
+import { apiRequestStore } from './apiStore';
+import SlideTransitionWrapper from './SlideTransitionWrapper';
 
 const modalStyle = {
   position: 'absolute',
@@ -20,105 +22,229 @@ const modalStyle = {
   p: 4,
 };
 
+const fetchPresentations = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await apiRequestStore('/store', token, 'GET', null);
+    const presentations = response || [];
+    console.log('presentationsData recieved from server: ', presentations);
+    return presentations; // Ensure this is always an array
+  } catch (error) {
+    console.error('Fetching presentations failed:', error);
+    return [];
+  }
+};
+
+const putToServer = async (pres) => {
+  try {
+    const token = localStorage.getItem('token');
+    const body = { store: pres };
+    // console.log('the body that given to server', body);
+    await apiRequestStore('/store', token, 'PUT', body);
+    // console.log('the response from server: ', data);
+  } catch (error) {
+    console.error('PUT presentation failed:', error.message);
+  }
+};
+
 const EditPresentation = () => {
-  const { id } = useParams();
+  const { id, slideNumber } = useParams();
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const navigate = useNavigate();
   const { presentations, updatePresentation, deletePresentation } = usePresentations();
-  const presentationIndex = presentations.findIndex(p => p.id === parseInt(id));
-  const presentation = presentations[presentationIndex];
-
   const [editTitleOpen, setEditTitleOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [title, setTitle] = useState(presentation?.name || '');
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [selectedPresentation, setSelectedPresentation] = useState(null);
+  const [title, setTitle] = useState(selectedPresentation?.name || '');
+  const [deleteSignal, setDeleteSignal] = useState(false);
+  // console.log('presentations', presentations);
 
   useEffect(() => {
-    if (!presentation) {
-      navigate('/dashboard'); // Redirect if the presentation is not found
-    }
-  }, [presentation, navigate]);
+    const index = parseInt(slideNumber, 10) - 1; // Convert slideNumber from string to integer and adjust for zero-based indexing
+    setCurrentSlideIndex(index);
+  }, [slideNumber]);
+
+  const updateSlideInUrl = (index) => {
+    const slideNumberForUrl = index + 1;
+    navigate(`/edit-presentation/${id}/slide/${slideNumberForUrl}`, { replace: true });
+  };
+
+  useEffect(() => {
+    const loadSlides = async () => {
+      const fetchedPresentations = await fetchPresentations();
+      const presentationsArray = fetchedPresentations.store;
+      const presentationById = presentationsArray.find(p => p.id === parseInt(id, 10));
+      updatePresentation(presentationById);
+      setSelectedPresentation(presentationById);
+      console.log('presentationsArray **** check', id, presentationsArray.find(p => p.id === parseInt(id, 10)).slides);
+    };
+    loadSlides();
+  }, [id]);
+
+  const previewPresentation = () => {
+    const slideNumberForUrl = currentSlideIndex + 1;
+    navigate(`/preview-presentation/${id}/slide/${slideNumberForUrl}`);
+  };
+
+  useEffect(() => {
+    const updateServer = async () => {
+      if (presentations.length > 0) {
+        try {
+          await putToServer(presentations);
+          console.log('the body before put to server: ', presentations);
+        } catch (error) {
+          console.error('Failed to update presentations on the server:', error);
+        }
+      }
+      if (deleteSignal) {
+        navigate('/dashboard');
+      }
+    };
+    updateServer();
+  }, [presentations, deleteSignal]);
 
   const handleUpdateTitle = () => {
-    const updatedPresentation = { ...presentation, title };
+    const updatedPresentation = { ...selectedPresentation, name: title };
     updatePresentation(updatedPresentation);
     setEditTitleOpen(false);
+    setSelectedPresentation(updatedPresentation); // Update the local state to reflect the change immediately
   };
 
   const handleUpdateTheme = (color) => {
-    const updatedPresentation = { ...presentation, theme: color };
+    const updatedPresentation = { ...selectedPresentation, theme: color };
     updatePresentation(updatedPresentation);
   };
 
-  const handleAddSlide = () => {
-    const newSlide = { id: Date.now(), elements: [] };
-    const updatedPresentation = {
-      ...presentation,
-      slides: [...presentation.slides, newSlide]
-    };
-    updatePresentation(updatedPresentation);
+  const handleReorderClick = () => {
+    navigate(`/reorder-slides/${selectedPresentation.id}`);
   };
 
   const handleUpdateSlide = (passedSlide) => {
     console.log('handleSlideUpdate', passedSlide);
-    const updatedSlides = presentation.slides.map(slide => {
+    const updatedSlides = selectedPresentation.slides.map(slide => {
       if (slide.id === passedSlide.id) {
         return passedSlide; // 将新内容合并到旧幻灯片对象中
       }
       return slide; // 对于未匹配的幻灯片，保持原样
     });
     const updatedPresentation = {
-      ...presentation,
+      ...selectedPresentation,
       slides: updatedSlides
     };
     updatePresentation(updatedPresentation);
+    setSelectedPresentation(updatedPresentation);
   };
 
-  const handleDeleteThisPresentation = () => {
-    deletePresentation(presentation.id);
-    setDeleteConfirmOpen(false);
-    navigate('/dashboard');
+  const handleAddSlide = () => {
+    const newSlide = { id: Date.now(), elements: [] };
+    const updatedSlides = [...selectedPresentation.slides, newSlide];
+    const updatedPresentation = {
+      ...selectedPresentation,
+      slides: updatedSlides
+    };
+    updatePresentation(updatedPresentation);
+    setSelectedPresentation(updatedPresentation);
   };
 
   const handleDeleteSlide = () => {
-    if (presentation.slides.length === 1) {
+    if (selectedPresentation.slides.length === 1) {
       alert('Cannot delete the only slide. Please delete the entire presentation if needed.');
       return;
     }
-    const updatedSlides = presentation.slides.filter((_, index) => index !== currentSlideIndex);
-    const updatedPresentation = { ...presentation, slides: updatedSlides };
+    const updatedSlides = selectedPresentation.slides.filter((_, index) => index !== currentSlideIndex);
+    const updatedPresentation = { ...selectedPresentation, slides: updatedSlides };
     updatePresentation(updatedPresentation);
     setCurrentSlideIndex(prevIndex => prevIndex > 0 ? prevIndex - 1 : 0);
+    setSelectedPresentation(updatedPresentation);
   };
 
-  const handlePreviousSlide = () => setCurrentSlideIndex(prevIndex => prevIndex - 1);
-  const handleNextSlide = () => setCurrentSlideIndex(prevIndex => prevIndex + 1);
+  const handlePreviousSlide = () => {
+    setCurrentSlideIndex(prevIndex => {
+      const newIndex = (prevIndex - 1 + selectedPresentation.slides.length) % selectedPresentation.slides.length;
+      updateSlideInUrl(newIndex);
+      return newIndex;
+    });
+  };
+  const handleNextSlide = () => {
+    setCurrentSlideIndex(prevIndex => {
+      const newIndex = (prevIndex + 1) % selectedPresentation.slides.length;
+      updateSlideInUrl(newIndex);
+      return newIndex;
+    });
+  };
+
+  const handleBackClick = async () => {
+    try {
+      await putToServer(presentations);
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Failed to save changes:', error);
+    }
+  };
+
+  // const handleDeleteThisPresentation = async () => {
+  //   await deletePresentation(selectedPresentation.id);
+  //   try {
+  //     await putToServer(presentations);
+  //     setDeleteConfirmOpen(false);
+  //     console.log('presentations after delete presentation: ', presentations);
+  //     // navigate('/dashboard');
+  //   } catch (error) {
+  //     console.error('Failed to save changes:', error);
+  //   }
+  // const updatedPresentations = presentations.filter(p => p.id !== selectedPresentation.id);
+  // await deletePresentation(selectedPresentation.id);
+  // try {
+  //   await putToServer(updatedPresentations);
+  //   setDeleteConfirmOpen(false);
+  //   console.log('Presentations after delete presentation: ', updatedPresentations);
+  //   // navigate('/dashboard');
+  // } catch (error) {
+  //   console.error('Failed to save changes:', error);
+  // }
+  // };
+
+  const handleDeleteThisPresentation = async () => {
+    try {
+      await deletePresentation(selectedPresentation.id);
+      setDeleteSignal(prev => !prev); // Toggle to trigger the useEffect
+      setDeleteConfirmOpen(false);
+      console.log('presentations afetr delete presentation: ', presentations);
+    } catch (error) {
+      console.error('Failed to delete presentation:', error);
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'ArrowLeft' && currentSlideIndex > 0) {
         handlePreviousSlide();
-      } else if (event.key === 'ArrowRight' && currentSlideIndex < presentation.slides.length - 1) {
+      } else if (event.key === 'ArrowRight' && currentSlideIndex < selectedPresentation.slides.length - 1) {
         handleNextSlide();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentSlideIndex, presentation?.slides.length]);
+  }, [currentSlideIndex, selectedPresentation?.slides.length]);
 
-  if (!presentation) return <Typography>Loading...</Typography>;
-  useEffect(() => {
-    console.log('The current slide index is: ', currentSlideIndex);
-  }, [currentSlideIndex]);
+  if (!selectedPresentation) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Box sx={{ p: 1 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-        <Button variant="contained" size="small" onClick={() => navigate('/dashboard')}>Back</Button>
-        <Button onClick={() => setDeleteConfirmOpen(true)} size="small" variant="contained" color="error" startIcon={<DeleteIcon />}>Delete Presentation</Button>
+        <Button variant="contained" size="small" onClick={handleBackClick}>Back</Button>
+        <div>
+          <Button onClick={previewPresentation}>Preview</Button>
+          <Button onClick={handleReorderClick}>Reorder Slides</Button>
+          <Button onClick={() => setDeleteConfirmOpen(true)} size="small" variant="contained" color="error" startIcon={<DeleteIcon />}>Delete Presentation</Button>
+        </div>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
         <Typography variant="h4" sx={{ display: 'flex', alignItems: 'center', gap: 2, justifyContent: 'space-between' }}>
-          {title}
+          {selectedPresentation.name}
           <IconButton
             sx={{ display: 'inline-block' }}
             onClick={() => setEditTitleOpen(true)}><EditIcon />
@@ -132,10 +258,13 @@ const EditPresentation = () => {
         </Box>
       </Modal>
       <Button onClick={handleAddSlide} size="small" variant="contained" sx={{ mt: 2 }}>Add New Slide</Button>
-      <Button onClick={handleDeleteSlide} size="small" variant="contained" color="error" sx={{ mt: 2, ml: 2 }} startIcon={<DeleteIcon />}>Delete Slide
-</Button>
-      <Typography sx={{ mt: 2 }}>Slide {currentSlideIndex + 1}</Typography>
-      <SlideEditor slide={presentation.slides[currentSlideIndex]} handleUpdateSlide={handleUpdateSlide} handleUpdateTheme={handleUpdateTheme} themeColor={presentation.theme}></SlideEditor>
+      <Button onClick={handleDeleteSlide} size="small" variant="contained" color="error" sx={{ mt: 2, ml: 2 }} startIcon={<DeleteIcon />}>Delete Slide</Button>
+      <Typography sx={{ mt: 2, display: 'flex', justifyContent: 'center', fontWeight: 700 }}>Slide {currentSlideIndex + 1}</Typography>
+      {selectedPresentation && selectedPresentation.slides.length > 0 && currentSlideIndex < selectedPresentation.slides.length && (
+        <SlideTransitionWrapper keyProp={selectedPresentation.slides[currentSlideIndex].id}>
+          <SlideEditor slide={selectedPresentation.slides[currentSlideIndex]} handleUpdateSlide={handleUpdateSlide} handleUpdateTheme={handleUpdateTheme} themeColor={selectedPresentation.theme}/>
+        </SlideTransitionWrapper>
+      )}
       <Dialog open={deleteConfirmOpen} onClose={() => setDeleteConfirmOpen(false)}>
         <DialogTitle>Are you sure you want to delete this presentation?</DialogTitle>
         <DialogActions>
@@ -145,13 +274,13 @@ const EditPresentation = () => {
       </Dialog>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
         <div style={{ fontSize: '1em' }}>{ currentSlideIndex + 1 }</div>
-        {presentation.slides.length >= 1 && <Button onClick={handleDeleteSlide} size="small" sx={{ ml: 2 }} variant="outlined" startIcon={<DeleteIcon />}>Delete</Button>}
+        {selectedPresentation.slides.length >= 1 && <Button onClick={handleDeleteSlide} size="small" sx={{ ml: 2 }} variant="outlined" startIcon={<DeleteIcon />}>Delete</Button>}
         <div>
           {currentSlideIndex >= 1 && <IconButton onClick={handlePreviousSlide}><ArrowBackIcon /></IconButton>}
-          {currentSlideIndex < presentation.slides.length - 1 && <IconButton onClick={handleNextSlide}><ArrowForwardIcon /></IconButton>}
+          {currentSlideIndex < selectedPresentation.slides.length - 1 && <IconButton onClick={handleNextSlide}><ArrowForwardIcon /></IconButton>}
         </div>
       </Box>
-    </Box>
+      </Box>
   );
 };
 

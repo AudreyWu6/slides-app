@@ -11,7 +11,7 @@ function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme
     elements: [],
   }
   const [slide, setSlide] = useState(passedSlide || initialState);
-  console.log('slide shown', slide)
+  // console.log('slide shown', slide)
 
   // 使用 useEffect 来监听 passedSlide 的变化
   useEffect(() => {
