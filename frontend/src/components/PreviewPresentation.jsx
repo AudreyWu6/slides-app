@@ -101,7 +101,7 @@ const PreviewPresentation = () => {
         <h2 style={{ textAlign: 'center' }}>Slide {currentSlideIndex + 1}</h2>
         <SlideTransitionWrapper keyProp={selectedPresentation.slides[currentSlideIndex].id}>
           {selectedPresentation && (
-            <SlideRender slide={selectedPresentation.slides[currentSlideIndex]} />
+            <SlideRender slide={selectedPresentation.slides[currentSlideIndex]} themeColor={selectedPresentation.theme}/>
           )}
         </SlideTransitionWrapper>
         <Button onClick={goToEditPresentation} variant='outlined' style={{ position: 'absolute', top: 20, left: 20 }}>

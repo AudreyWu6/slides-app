@@ -2,11 +2,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Box, Button, IconButton, Modal, TextField, Typography, Dialog, DialogActions, DialogTitle } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from '@mui/icons-material/Edit';// npm install react-syntax-highlighter --save
+// npm install react-router-dom
+// npm install @mui/material @emotion/react @emotion/styled
+// npm install @mui/icons-material
+// npm install react-router-dom react-beautiful-dnd
+// npm install react-best-gradient-color-picker 这是现在要下载的
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { usePresentations } from '../components/PresentationContext';
+import { usePresentations } from './PresentationContext';
 import SlideEditor from './SlideEditor';
 import { apiRequestStore } from './apiStore';
 import SlideTransitionWrapper from './SlideTransitionWrapper';
@@ -113,6 +118,7 @@ const EditPresentation = () => {
   const handleUpdateTheme = (color) => {
     const updatedPresentation = { ...selectedPresentation, theme: color };
     updatePresentation(updatedPresentation);
+    setSelectedPresentation(updatedPresentation); // Update the local state to reflect the change immediately
   };
 
   const handleReorderClick = () => {
