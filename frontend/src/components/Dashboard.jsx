@@ -24,7 +24,6 @@ const putToServer = async (pres) => {
     const body = { store: pres };
     console.log('the body that given to server', body);
     await apiRequestStore('/store', token, 'PUT', body);
-    // console.log('the response from server: ', data);
   } catch (error) {
     console.error('Fetching presentation failed:', error.message);
   }
@@ -43,8 +42,7 @@ function Dashboard () {
   useEffect(() => {
     const loadPresentations = async () => {
       const fetchedPresentations = await fetchPresentations();
-      const presentationsData = Array.isArray(fetchedPresentations.store.store) ? fetchedPresentations.store.store : [];
-      // console.log('fetchedPresentations is : ', fetchedPresentations, Array.isArray(fetchedPresentations.store.store));
+      const presentationsData = Array.isArray(fetchedPresentations.store) ? fetchedPresentations.store : [];
       console.log('presentationsData)', presentationsData);
       if (presentationsData) {
         setAllPresentations(presentationsData);

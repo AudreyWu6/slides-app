@@ -71,10 +71,10 @@ const EditPresentation = () => {
   useEffect(() => {
     const loadSlides = async () => {
       const fetchedPresentations = await fetchPresentations();
-      const presentationsArray = fetchedPresentations.store.store;
+      const presentationsArray = fetchedPresentations.store;
+      console.log('presentationsArray **** check', presentationsArray);
       const presentationById = presentationsArray[id - 1];
       updatePresentation(presentationById);
-      console.log('presentationById **** check', presentationById);
       setSelectedPresentation(presentationById);
       if (presentationById && presentationById.slides.length > currentSlideIndex) {
         const slideByIndex = presentationById.slides[currentSlideIndex];
@@ -111,6 +111,11 @@ const EditPresentation = () => {
     updatePresentation(updatedPresentation);
     setEditTitleOpen(false);
     setSelectedPresentation(updatedPresentation); // Update the local state to reflect the change immediately
+  };
+
+  const handleUpdateTheme = (color) => {
+    const updatedPresentation = { ...selectedPresentation, theme: color };
+    updatePresentation(updatedPresentation);
   };
 
   const handleReorderClick = () => {
@@ -239,10 +244,10 @@ const EditPresentation = () => {
       </Modal>
       <Button onClick={handleAddSlide} size="small" variant="contained" sx={{ mt: 2 }}>Add New Slide</Button>
       <Button onClick={handleDeleteSlide} size="small" variant="contained" color="error" sx={{ mt: 2, ml: 2 }} startIcon={<DeleteIcon />}>Delete Slide</Button>
-      <Typography sx={{ mt: 2 }}>Slide {currentSlideIndex + 1}</Typography>
+      <Typography sx={{ mt: 2, display: 'flex', justifyContent: 'center', fontWeight: 700 }}>Slide {currentSlideIndex + 1}</Typography>
       {selectedPresentation && selectedPresentation.slides.length > 0 && currentSlideIndex < selectedPresentation.slides.length && (
         <SlideTransitionWrapper keyProp={selectedPresentation.slides[currentSlideIndex].id}>
-          <SlideEditor slide={selectedPresentation.slides[currentSlideIndex]} handleUpdateSlide={handleUpdateSlide} />
+          <SlideEditor slide={selectedPresentation.slides[currentSlideIndex]} handleUpdateSlide={handleUpdateSlide} handleUpdateTheme={handleUpdateTheme} themeColor={selectedPresentation.theme}/>
         </SlideTransitionWrapper>
       )}
       <Dialog open={deleteConfirmOpen} onClose={() => setDeleteConfirmOpen(false)}>

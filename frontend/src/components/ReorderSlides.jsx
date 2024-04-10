@@ -50,15 +50,13 @@ const ReorderSlides = () => {
     }
   };
 
-  // const handleClose = () => {
-  //   navigate(`/edit-presentation/${id}/slide/1`); // Use the ID to navigate back dynamically
-  // };
-
   const handleClose = async () => {
     if (selectedPresentation) {
       try {
         await putToServer([selectedPresentation]);
         navigate(`/edit-presentation/${id}/slide/1`);
+        // console.log('id and selectedPresentation.id', id, selectedPresentation.id);
+        // navigate(`/edit-presentation/${selectedPresentation.id}/slide/1`);
       } catch (error) {
         console.error('Failed to update server:', error);
       }
@@ -70,10 +68,8 @@ const ReorderSlides = () => {
   useEffect(() => {
     const loadSlides = async () => {
       const fetchedPresentations = await fetchPresentations();
-      const presentationsArray = fetchedPresentations.store.store;
+      const presentationsArray = fetchedPresentations.store;
       const presentationById = presentationsArray[id - 1];
-      // console.log('id', id);
-      // console.log('presentationById **** check', presentationsArray[id - 1]);
       setSelectedPresentation(presentationById);
     };
     loadSlides();
@@ -124,7 +120,7 @@ const ReorderSlides = () => {
                         backgroundColor: snapshot.isDragging ? 'lightgreen' : 'white',
                         userSelect: 'none',
                         minWidth: '50px',
-                        minHeight: '100px',
+                        minHeight: '150px',
                         maxWidth: '300px',
                         width: '100%', // This ensures that the card takes up the space it needs, respecting min and max width
                         height: 'auto', // Adjust based on content
@@ -132,9 +128,6 @@ const ReorderSlides = () => {
                         margin: '0 0 8px 0',
                         display: 'flex',
                         justifyContent: 'flex-start',
-                        // flexDirection: 'column',
-                        // alignItems: 'center',
-                        // justifyContent: 'center',
                         border: '1px solid lightgrey',
                       }}
                     >

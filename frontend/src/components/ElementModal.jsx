@@ -1,9 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Box, TextField, Typography, FormControlLabel, Switch, Select, MenuItem } from '@mui/material';
+import {
+  Button,
+  Modal,
+  Box,
+  TextField,
+  Typography,
+  FormControlLabel,
+  Switch,
+  Select,
+  MenuItem,
+  InputLabel
+} from '@mui/material';
+import { FormControl } from '@mui/base';
 
 function parsePercentage (value) {
   if (value) {
-    return parseInt(value.replace('%', ''), 10);
+    return parseInt(value);
   }
   return '';
 }
@@ -46,7 +58,6 @@ function getInitialState (type) {
 function ElementModal ({ type, open, handleClose, update, isEditing = false, initialData = null }) {
   // console.log('modal', initialData);
   const [data, setData] = useState(initialData || getInitialState(type));
-
   useEffect(() => {
     // 这确保了每当isEditing或initialData变化时，data都会相应地更新
     // 特别是当从编辑切换回添加模式时，这个逻辑能确保状态重置
@@ -56,7 +67,7 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
       setData(getInitialState(type));
     }
   }, [isEditing, initialData, type]); // 注意：这里添加了type作为依赖项
-  // console.log('modal-data', data)
+  // console.log('modal-data', data);
   const handleSubmit = () => {
     update(data);
     handleClose();
@@ -65,13 +76,25 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
     case 'text':
       return (
         <Modal open={open} onClose={handleClose}>
-          <Box sx={{ background: 'white', padding: 4 }}>
+          <Box sx={{
+            position: 'absolute',
+            top: '200px',
+            left: '10px',
+            background: 'white',
+            padding: '20px',
+            display: 'flex',
+            width: '270px',
+            flexDirection: 'column',
+            gap: 2
+          }}>
             <Typography variant="h6">{isEditing ? 'Edit text' : 'Add text'}</Typography>
-            <TextField
-              label="size (%)"
-              value={parsePercentage(data.width)}
-              onChange={(e) => setData({ ...data, width: e.target.value, height: e.target.value })}
-            />
+            {!isEditing && (
+              <TextField
+                label="size (%)"
+                value={parsePercentage(data.width)}
+                onChange={(e) => setData({ ...data, width: e.target.value, height: e.target.value })}
+              />
+            )}
             <TextField
               label="text"
               value={data.text}
@@ -82,6 +105,20 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
               value={data.fontSize}
               onChange={(e) => setData({ ...data, fontSize: e.target.value })}
             />
+            <FormControl fullWidth>
+              <InputLabel id="font-family-select-label">Font</InputLabel>
+              <Select
+                labelId="font-family-select-label" // 引用 InputLabel 的 id
+                id="font-family-select" // 给 Select 设置一个唯一的 id
+                value={data.fontFamily || 'Font type'} // 如果没有设置字体类型，则默认显示 'Font type'
+                onChange={(e) => setData({ ...data, fontFamily: e.target.value })}
+                fullWidth
+              >
+                <MenuItem value="Arial">Arial</MenuItem>
+                <MenuItem value="Verdana">Verdana</MenuItem>
+                <MenuItem value="Helvetica">Helvetica</MenuItem>
+              </Select>
+            </FormControl>
             <TextField
               label="color (#HEX)"
               value={data.color}
@@ -95,12 +132,24 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
       return (
         <>
           <Modal open={open} onClose={handleClose}>
-            <Box sx={{ background: 'white', padding: 4 }}>
+            <Box sx={{
+              position: 'absolute',
+              top: '200px',
+              left: '10px',
+              width: '270px',
+              background: 'white',
+              padding: '20px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2
+            }}>
               <Typography variant="h6">{isEditing ? 'Edit image' : 'Add image'}</Typography>
+              {!isEditing && (
               <TextField
                 label="size (%)"
                 value={parsePercentage(data.width)}
                 onChange={(e) => setData({ ...data, width: e.target.value, height: e.target.value })}/>
+              )}
               <TextField
                 fullWidth
                 label="image URL or Base64"
@@ -122,7 +171,17 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
       return (
         <>
           <Modal open={open} onClose={handleClose}>
-            <Box sx={{ background: 'white', padding: 4 }}>
+            <Box sx={{
+              position: 'absolute',
+              top: '200px',
+              left: '10px',
+              width: '270px',
+              background: 'white',
+              padding: '20px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2
+            }}>
               <Typography variant="h6">{isEditing ? 'Edit video' : 'Add video'}</Typography>
               <TextField
                 fullWidth
@@ -130,9 +189,11 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
                 value={data.url}
                 onChange={(e) => setData({ ...data, url: e.target.value })}
               />
+              {!isEditing && (
               <TextField label="size (%)"
                          value={parsePercentage(data.width)}
                          onChange={(e) => setData({ ...data, width: e.target.value, height: e.target.value })}/>
+              )}
               <FormControlLabel
                 control={<Switch checked={data.autoPlay}
                                  value={data.autoPlay}
@@ -148,7 +209,17 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
       return (
         <>
           <Modal open={open} onClose={handleClose}>
-            <Box sx={{ background: 'white', padding: '20px' }}>
+            <Box sx={{
+              position: 'absolute',
+              top: '200px',
+              left: '10px',
+              width: '270px',
+              background: 'white',
+              padding: '20px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2
+            }}>
               <Typography variant="h6">{isEditing ? 'Edit code' : 'Add code'}</Typography>
               <Select
                 fullWidth
@@ -166,9 +237,11 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
                 value={data.fontSize}
                 onChange={(e) => setData({ ...data, fontSize: e.target.value })}
               />
+              {!isEditing && (
               <TextField label="size (%)"
                          value={parsePercentage(data.width)}
                          onChange={(e) => setData({ ...data, width: e.target.value, height: e.target.value })}/>
+              )}
               <TextField
                 fullWidth
                 multiline

@@ -37,7 +37,7 @@ const PreviewPresentation = () => {
   useEffect(() => {
     const loadSlides = async () => {
       const fetchedPresentations = await fetchPresentations();
-      const presentationsArray = fetchedPresentations.store.store;
+      const presentationsArray = fetchedPresentations.store;
       const presentationById = presentationsArray[id - 1];
       // updatePresentation(presentationById);
       console.log('presentationById', presentationById);
