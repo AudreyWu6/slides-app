@@ -11,10 +11,6 @@ export const PresentationProvider = ({ children }) => {
     setPresentations((prev) => [...prev, { ...presentation, id: prev.length + 1 }]);
   };
 
-  // {presentations.map((presentation) => (
-  //   <PresentationComponent key={presentation.id} {...presentation} />
-  // ))}
-
   const updatePresentation = (updatedPresentation) => {
     // setPresentations((prev) =>
     //   prev.map((presentation) => presentation.id === updatedPresentation.id ? updatedPresentation : presentation)
@@ -24,16 +20,16 @@ export const PresentationProvider = ({ children }) => {
     );
   };
 
-  // const deletePresentation = (id) => {
-  //   setPresentations((prev) => prev.filter((presentation) => presentation.id !== id));
-  // };
   const deletePresentation = (id) => {
     setPresentations((prev) => {
       // Find the index of the presentation to delete
       const indexToDelete = prev.findIndex(presentation => presentation.id === id);
       // Filter out the presentation to delete
       const filtered = prev.filter((presentation, index) => index !== indexToDelete);
-      // Decrease the ID of presentations that come after the deleted one, if needed
+      // Check if there are any presentations left
+      if (filtered.length === 0) {
+        return []; // Return an empty array if no presentations are left
+      }
       if (indexToDelete !== -1) {
         return filtered.map((presentation, index) => {
           if (index >= indexToDelete) {
