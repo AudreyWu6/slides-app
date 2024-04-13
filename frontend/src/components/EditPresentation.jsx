@@ -15,6 +15,7 @@ import { usePresentations } from './PresentationContext';
 import SlideEditor from './SlideEditor';
 import { apiRequestStore } from './apiStore';
 import SlideTransitionWrapper from './SlideTransitionWrapper';
+import NaviBtn from './NaviBtnDash';
 
 const modalStyle = {
   position: 'absolute',
@@ -32,10 +33,10 @@ const fetchPresentations = async () => {
     const token = localStorage.getItem('token');
     const response = await apiRequestStore('/store', token, 'GET', null);
     const presentations = response || [];
-    console.log('presentationsData recieved from server: ', presentations);
+    // console.log('presentationsData recieved from server: ', presentations);
     return presentations; // Ensure this is always an array
   } catch (error) {
-    console.error('Fetching presentations failed:', error);
+    // console.error('Fetching presentations failed:', error);
     return [];
   }
 };
@@ -54,7 +55,7 @@ const EditPresentation = () => {
   const { id, slideNumber } = useParams();
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const navigate = useNavigate();
-  const { presentations, updatePresentation, deletePresentation } = usePresentations();
+  const { presentations, updatePresentation, deletePresentation, resetState } = usePresentations();
   const [editTitleOpen, setEditTitleOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [selectedPresentation, setSelectedPresentation] = useState(null);
@@ -78,7 +79,7 @@ const EditPresentation = () => {
       const presentationById = presentationsArray.find(p => p.id === parseInt(id, 10));
       updatePresentation(presentationById);
       setSelectedPresentation(presentationById);
-      console.log('presentationsArray **** check', id, presentationsArray.find(p => p.id === parseInt(id, 10)).slides);
+      // console.log('presentationsArray **** check', id, presentationsArray.find(p => p.id === parseInt(id, 10)).slides);
     };
     loadSlides();
   }, [id]);
@@ -194,6 +195,11 @@ const EditPresentation = () => {
       console.error('Failed to delete presentation:', error);
     }
   };
+  const handleLogout = () => {
+    resetState();
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -220,6 +226,9 @@ const EditPresentation = () => {
           <Button onClick={previewPresentation}>Preview</Button>
           <Button onClick={handleReorderClick}>Reorder Slides</Button>
           <Button onClick={() => setDeleteConfirmOpen(true)} size="small" variant="contained" color="error" startIcon={<DeleteIcon />}>Delete Presentation</Button>
+          {/* <div style={{ display: 'inline-flex', alignItems: 'center' }}> */}
+          <NaviBtn to="/login" onClick={handleLogout}>Logout</NaviBtn>
+          {/* </div> */}
         </div>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>

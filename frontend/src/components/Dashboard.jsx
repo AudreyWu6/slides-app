@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Modal, Box, TextField, CardMedia, Typography, Grid, Card, CardContent } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { usePresentations } from './PresentationContext'; // Adjust the import path as needed
-import NaviBtn from './NaviBtn';
+import NaviBtn from './NaviBtnDash';
 import { apiRequestStore } from './apiStore';
 
 const fetchPresentations = async () => {

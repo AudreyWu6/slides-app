@@ -6,13 +6,15 @@ import { Button } from '@mui/material';
 import { apiRequestStore } from './apiStore';
 import SlideRender from './SlideRender';
 import SlideTransitionWrapper from './SlideTransitionWrapper';
+import NaviBtn from './NaviBtnDash';
+import { usePresentations } from './PresentationContext';
 
 const fetchPresentations = async () => {
   try {
     const token = localStorage.getItem('token');
     const response = await apiRequestStore('/store', token, 'GET', null);
     const presentations = response || [];
-    console.log('presentationsData recieved from server: ', presentations);
+    // console.log('presentationsData recieved from server: ', presentations);
     return presentations; // Ensure this is always an array
   } catch (error) {
     console.error('Fetching presentations failed:', error);
@@ -25,6 +27,8 @@ const PreviewPresentation = () => {
   const navigate = useNavigate();
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [selectedPresentation, setSelectedPresentation] = useState(null);
+  const { resetState } = usePresentations();
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     const index = parseInt(slideNumber, 10) - 1; // Convert slideNumber from string to integer and adjust for zero-based indexing
@@ -53,6 +57,22 @@ const PreviewPresentation = () => {
     const slideNumberForUrl = index + 1;
     navigate(`/preview-presentation/${id}/slide/${slideNumberForUrl}`, { replace: true });
   };
+
+  useEffect(() => {
+    // Handler to call on window resize
+    function handleResize () {
+      // Set window width to the innerWidth of the browser window
+      setWindowWidth(window.innerWidth);
+    }
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+    // Call handler right away so state gets updated with initial window size
+    handleResize();
+    // Remove event listener on cleanup
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const goToPreviousSlide = () => {
     setCurrentSlideIndex(prevIndex => {
@@ -86,6 +106,12 @@ const PreviewPresentation = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentSlideIndex, selectedPresentation?.slides.length]);
 
+  const handleLogout = () => {
+    resetState();
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
+
   if (!selectedPresentation) {
     return <div>Loading...</div>;
   }
@@ -93,13 +119,16 @@ const PreviewPresentation = () => {
   return (
     <div>
       <div style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}>
-        <h2 style={{ textAlign: 'center' }}>Slide {currentSlideIndex + 1}</h2>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <NaviBtn to="/login" onClick={handleLogout}>Logout</NaviBtn>
+      </div>
+        <h3 style={{ textAlign: 'center' }}>Title: {selectedPresentation.name} slide {currentSlideIndex + 1}</h3>
         <SlideTransitionWrapper keyProp={selectedPresentation.slides[currentSlideIndex].id}>
           {selectedPresentation && (
-            <SlideRender slide={selectedPresentation.slides[currentSlideIndex]} themeColor={selectedPresentation.theme}/>
+            <SlideRender slide={selectedPresentation.slides[currentSlideIndex]} themeColor={selectedPresentation.theme} width={windowWidth}/>
           )}
         </SlideTransitionWrapper>
-        <Button onClick={goToEditPresentation} variant='outlined' style={{ position: 'absolute', top: 20, left: 20 }}>
+        <Button onClick={goToEditPresentation} variant='outlined' style={{ position: 'absolute', top: 10, left: 10 }}>
           Go Back to Edit
         </Button>
         {currentSlideIndex >= 1 && <ArrowBackIcon
