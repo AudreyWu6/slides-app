@@ -44,9 +44,7 @@ const putToServer = async (pres) => {
   try {
     const token = localStorage.getItem('token');
     const body = { store: pres };
-    // console.log('the body that given to server', body);
     await apiRequestStore('/store', token, 'PUT', body);
-    // console.log('the response from server: ', data);
   } catch (error) {
     console.error('PUT presentation failed:', error.message);
   }
@@ -62,7 +60,6 @@ const EditPresentation = () => {
   const [selectedPresentation, setSelectedPresentation] = useState(null);
   const [title, setTitle] = useState(selectedPresentation?.name || '');
   const [deleteSignal, setDeleteSignal] = useState(false);
-  // console.log('presentations', presentations);
 
   useEffect(() => {
     const index = parseInt(slideNumber, 10) - 1; // Convert slideNumber from string to integer and adjust for zero-based indexing
@@ -103,7 +100,9 @@ const EditPresentation = () => {
         navigate('/dashboard');
       }
     };
-    updateServer();
+    if (presentations && presentations.length >= 0 && selectedPresentation !== null) {
+      updateServer();
+    }
   }, [presentations, deleteSignal]);
 
   const handleUpdateTitle = () => {
@@ -179,7 +178,6 @@ const EditPresentation = () => {
 
   const handleBackClick = async () => {
     try {
-      await putToServer(presentations);
       navigate('/dashboard');
     } catch (error) {
       console.error('Failed to save changes:', error);

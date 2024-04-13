@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-// import { usePresentations } from '../components/PresentationContext';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Button } from '@mui/material';
@@ -24,9 +23,7 @@ const fetchPresentations = async () => {
 const PreviewPresentation = () => {
   const { id, slideNumber } = useParams();
   const navigate = useNavigate();
-  // const { presentations } = usePresentations();
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  // const presentation = presentations.find(p => p.id === parseInt(id));
   const [selectedPresentation, setSelectedPresentation] = useState(null);
 
   useEffect(() => {
@@ -38,9 +35,7 @@ const PreviewPresentation = () => {
     const loadSlides = async () => {
       const fetchedPresentations = await fetchPresentations();
       const presentationsArray = fetchedPresentations.store;
-      // const presentationById = presentationsArray[id - 1];
       const presentationById = presentationsArray.find(p => p.id === parseInt(id));
-      // updatePresentation(presentationById);
       console.log('presentationById', presentationById);
       setSelectedPresentation(presentationById);
       if (presentationById && presentationById.slides.length > currentSlideIndex) {

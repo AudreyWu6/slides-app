@@ -23,11 +23,7 @@ const putToServer = async (pres) => {
   try {
     const token = localStorage.getItem('token');
     const body = { store: pres };
-    // console.log('the body that given to server', body);
     await apiRequestStore('/store', token, 'PUT', body);
-    // console.log('the response from server: ', data);
-    // updatePresentation(updatedPresentation);
-    // putToServer(presentations.map(p => p.id === parseInt(id) ? updatedPresentation : p));
   } catch (error) {
     console.error('PUT presentation failed:', error.message);
   }
@@ -48,19 +44,6 @@ const ReorderSlides = () => {
     setSlides(items);
     if (selectedPresentation) {
       reorderSlides(selectedPresentation.id, items);
-    }
-  };
-
-  const handleClose = async () => {
-    if (selectedPresentation) {
-      try {
-        // await putToServer([selectedPresentation]);
-        navigate(`/edit-presentation/${id}/slide/1`);
-      } catch (error) {
-        console.error('Failed to update server:', error);
-      }
-    } else {
-      navigate(`/edit-presentation/${id}/slide/1`);
     }
   };
 
@@ -200,7 +183,6 @@ const ReorderSlides = () => {
         </Droppable>
       </DragDropContext>
       <div>
-        <Button onClick={handleClose} style={{ marginTop: '20px' }}>Save</Button>
         <Button onClick={() => navigate(`/edit-presentation/${id}/slide/1`)} style={{ marginTop: '20px' }}>Close</Button>
       </div>
     </div>
