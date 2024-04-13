@@ -93,13 +93,11 @@ const EditPresentation = () => {
 
   useEffect(() => {
     const updateServer = async () => {
-      if (presentations.length > 0) {
-        try {
-          await putToServer(presentations);
-          console.log('the body before put to server: ', presentations);
-        } catch (error) {
-          console.error('Failed to update presentations on the server:', error);
-        }
+      try {
+        await putToServer(presentations);
+        console.log('the body before put to server: ', presentations);
+      } catch (error) {
+        console.error('Failed to update presentations on the server:', error);
       }
       if (deleteSignal) {
         navigate('/dashboard');
@@ -187,28 +185,6 @@ const EditPresentation = () => {
       console.error('Failed to save changes:', error);
     }
   };
-
-  // const handleDeleteThisPresentation = async () => {
-  //   await deletePresentation(selectedPresentation.id);
-  //   try {
-  //     await putToServer(presentations);
-  //     setDeleteConfirmOpen(false);
-  //     console.log('presentations after delete presentation: ', presentations);
-  //     // navigate('/dashboard');
-  //   } catch (error) {
-  //     console.error('Failed to save changes:', error);
-  //   }
-  // const updatedPresentations = presentations.filter(p => p.id !== selectedPresentation.id);
-  // await deletePresentation(selectedPresentation.id);
-  // try {
-  //   await putToServer(updatedPresentations);
-  //   setDeleteConfirmOpen(false);
-  //   console.log('Presentations after delete presentation: ', updatedPresentations);
-  //   // navigate('/dashboard');
-  // } catch (error) {
-  //   console.error('Failed to save changes:', error);
-  // }
-  // };
 
   const handleDeleteThisPresentation = async () => {
     try {
