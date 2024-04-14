@@ -1,5 +1,5 @@
 // export default ResizableBox;
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { materialLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -13,6 +13,7 @@ function ResizableBox ({
   containerWidth
 }) {
   const [isSelected, setIsSelected] = useState(false);
+  console.log('containerWidth', containerWidth, 'x:', element.position.x)
   const toggleSelect = (e) => {
     e.stopPropagation(); // 阻止事件冒泡
     setIsSelected(prev => !prev);
@@ -24,6 +25,16 @@ function ResizableBox ({
     width: element.width + '%',
     height: element.height + '%',
   });
+  useEffect(() => {
+    setStyle({
+      left: element.position.x * containerWidth / 100 + 'px',
+      top: element.position.y * containerHeight / 100 + 'px',
+      width: element.width + '%',
+      height: element.height + '%',
+    });
+  }, [containerWidth, containerHeight, element.position.x, element.position.y, element.width, element.height]);
+
+  console.log('left', style.left, element.position.x * containerWidth / 100 + 'px')
   // handle drag
   const startDrag = (e) => {
     e.preventDefault();

@@ -72,7 +72,6 @@ function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme
     <div style={{
       display: 'flex',
     }} >
-      {/* toolbox */}
       <div className="toolbar" style={{ display: 'flex', flexDirection: 'column', width: '300px' }}>
         <ColorBtn updateBackground={updateBackground} updateTheme={handleUpdateTheme}></ColorBtn>
         <ModalBtn type='text' update={(data) => handleAddElement(data, 'text')}></ModalBtn>
