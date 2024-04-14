@@ -5,6 +5,7 @@ import ResizableBox from './ResizableBox';
 
 function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor }) {
   console.log(slide.background, 'theme', themeColor);
+  console.log('slideinslide', slide);
   // State to control the modal for adding/editing elements
   const [modalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -63,8 +64,8 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor })
             handleDeleteElement={handleDeleteElement}
             handleEditElement={handleEditElement}
             handleUpdateElement={handleUpdateElement}
-            containerHeight={parseInt('800px')}
-            containerWidth={parseInt('1200px')}
+            containerHeight={parseInt(height)}
+            containerWidth={parseInt((width))}
             // containerHeight={parseInt(`${height}px`)}
             // containerWidth={parseInt(`${width}px`)}
           />
