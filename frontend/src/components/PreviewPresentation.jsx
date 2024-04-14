@@ -28,7 +28,7 @@ const PreviewPresentation = () => {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [selectedPresentation, setSelectedPresentation] = useState(null);
   const { resetState } = usePresentations();
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  // const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     const index = parseInt(slideNumber, 10) - 1; // Convert slideNumber from string to integer and adjust for zero-based indexing
@@ -58,21 +58,21 @@ const PreviewPresentation = () => {
     navigate(`/preview-presentation/${id}/slide/${slideNumberForUrl}`, { replace: true });
   };
 
-  useEffect(() => {
-    // Handler to call on window resize
-    function handleResize () {
-      // Set window width to the innerWidth of the browser window
-      setWindowWidth(window.innerWidth);
-    }
-    // Add event listener
-    window.addEventListener('resize', handleResize);
-    // Call handler right away so state gets updated with initial window size
-    handleResize();
-    // Remove event listener on cleanup
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  // useEffect(() => {
+  //   // Handler to call on window resize
+  //   function handleResize () {
+  //     // Set window width to the innerWidth of the browser window
+  //     setWindowWidth(window.innerWidth);
+  //   }
+  //   // Add event listener
+  //   window.addEventListener('resize', handleResize);
+  //   // Call handler right away so state gets updated with initial window size
+  //   handleResize();
+  //   // Remove event listener on cleanup
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, []);
 
   const goToPreviousSlide = () => {
     setCurrentSlideIndex(prevIndex => {
@@ -125,7 +125,10 @@ const PreviewPresentation = () => {
         <h3 style={{ textAlign: 'center' }}>Title: {selectedPresentation.name} slide {currentSlideIndex + 1}</h3>
         <SlideTransitionWrapper keyProp={selectedPresentation.slides[currentSlideIndex].id}>
           {selectedPresentation && (
-            <SlideRender slide={selectedPresentation.slides[currentSlideIndex]} themeColor={selectedPresentation.theme} width={windowWidth}/>
+            <div style={{ position: 'relative' }}>
+              <SlideRender slide={selectedPresentation.slides[currentSlideIndex]} themeColor={selectedPresentation.theme}/>
+              {/* <SlideRender slide={selectedPresentation.slides[currentSlideIndex]} themeColor={selectedPresentation.theme} width={windowWidth}/> */}
+            </div>
           )}
         </SlideTransitionWrapper>
         <Button onClick={goToEditPresentation} variant='outlined' style={{ position: 'absolute', top: 10, left: 10 }}>

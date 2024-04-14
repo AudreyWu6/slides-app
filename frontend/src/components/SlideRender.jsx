@@ -2,13 +2,15 @@ import React from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-function SlideRender ({ slide, themeColor, width }) {
+function SlideRender ({ slide, themeColor }) {
   // Function to render different types of elements based on their type
   const backgroundColor = slide.background || themeColor
-  const containerWidth = width;
-  const containerHeight = width * 0.75;
+  // const containerWidth = width;
+  // const containerHeight = width * 0.75;
   const renderElement = (element) => {
     console.log('x', element.position.x);
+    console.log('element.position.x: ', element.position.x);
+    // console.log('width: ', width);
     switch (element.type) {
       case 'text':
         return (
@@ -16,8 +18,10 @@ function SlideRender ({ slide, themeColor, width }) {
             key={element.id}
             style={{
               position: 'absolute',
-              left: `${element.position.x * containerWidth / 100}`,
-              top: `${element.position.y * containerWidth / 100}`,
+              left: `${element.position.x}%`,
+              top: `${element.position.y}%`,
+              // left: element.position.x * containerWidth / 100 + 'px',
+              // top: element.position.y * containerHeight / 100 + 'px',
               zIndex: element.zIndex,
               fontSize: `${element.fontSize}em`,
               color: element.color,
@@ -38,8 +42,8 @@ function SlideRender ({ slide, themeColor, width }) {
             alt={element.alt}
             style={{
               position: 'absolute',
-              left: `${element.position.x * containerWidth / 100}%`,
-              top: `${element.position.y * containerWidth / 100}%`,
+              left: `${element.position.x}%`,
+              top: `${element.position.y}%`,
               zIndex: element.zIndex,
               width: `${element.width}%`,
               height: `${element.height}%`,
@@ -54,8 +58,8 @@ function SlideRender ({ slide, themeColor, width }) {
             src={element.url}
             style={{
               position: 'absolute',
-              left: `${element.position.x / containerWidth * 100}%`,
-              top: `${element.position.y / containerHeight * 100}%`,
+              left: `${element.position.x}%`,
+              top: `${element.position.y}%`,
               zIndex: element.zIndex,
               width: `${element.width}%`,
               height: `${element.height}%`,
@@ -72,8 +76,8 @@ function SlideRender ({ slide, themeColor, width }) {
             style={dark}
             customStyle={{
               position: 'absolute',
-              left: `${element.position.x / containerWidth * 100}%`,
-              top: `${element.position.y / containerHeight * 100}%`,
+              left: `${element.position.x}%`,
+              top: `${element.position.y}%`,
               zIndex: element.zIndex,
               width: `${element.width}%`,
               height: `${element.height}%`,
