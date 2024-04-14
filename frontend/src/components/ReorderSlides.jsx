@@ -117,9 +117,9 @@ const ReorderSlides = () => {
                       sx={{
                         ...provided.draggableProps.style,
                         userSelect: 'none',
-                        minHeight: '100px',
+                        minHeight: '150px',
                         minWidth: '200px',
-                        maxHeight: '150px',
+                        maxHeight: '225px',
                         maxWidth: '300px',
                         width: '100%',
                         height: 'auto',
@@ -132,7 +132,7 @@ const ReorderSlides = () => {
                       }}
                     >
                       Slide {index + 1}:
-                      <SlideRender slide={slide} themeColor={selectedPresentation.theme} width={200}/>
+                      <SlideRender slide={slide} themeColor={selectedPresentation.theme}/>
                     </Card>
                   )}
                 </Draggable>

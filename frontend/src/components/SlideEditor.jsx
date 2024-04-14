@@ -71,8 +71,9 @@ function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme
   return (
     <div style={{
       display: 'flex',
-    }} >
-      <div className="toolbar" style={{ display: 'flex', flexDirection: 'column', width: '300px' }}>
+    }} className="main-content">
+      <div className="toolbar">
+      {/* <div className="toolbar" style={{ display: 'flex', flexDirection: 'column', width: '300px' }}> */}
         <ColorBtn updateBackground={updateBackground} updateTheme={handleUpdateTheme}></ColorBtn>
         <ModalBtn type='text' update={(data) => handleAddElement(data, 'text')}></ModalBtn>
         <ModalBtn type='image' update={(data) => handleAddElement(data, 'image')}></ModalBtn>
@@ -83,10 +84,6 @@ function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme
       {/* slide */}
       <div>
       <Slide slide={slide} handleDeleteElement={handleDeleteElement} handleUpdateElement={handleUpdateElement} themeColor={themeColor}/>
-      </div>
-      {/* other */}
-      <div className="additional-content">
-        {/* 在这里添加其他内容 */}
       </div>
     </div>
   );

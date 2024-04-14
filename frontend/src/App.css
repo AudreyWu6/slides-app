@@ -29,3 +29,25 @@
   width: calc(100vw - 160px);
   aspect-ratio: 4 / 3;
 } */
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+.main-content {
+  display: flex;  /* Ensures horizontal layout by default */
+}
+
+/* Media query for screens narrower than 585px */
+@media (max-width: 690px) {
+  .main-content {
+      flex-direction: column; /* Stacks children vertically */
+  }
+
+  .toolbar {
+      flex-direction: row; /* Align toolbar items horizontally */
+      flex-wrap: wrap; /* Allows toolbar items to wrap */
+      width: 100%;
+  }
+}

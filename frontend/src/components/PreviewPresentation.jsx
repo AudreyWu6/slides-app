@@ -125,9 +125,8 @@ const PreviewPresentation = () => {
         <h3 style={{ textAlign: 'center' }}>Title: {selectedPresentation.name} slide {currentSlideIndex + 1}</h3>
         <SlideTransitionWrapper keyProp={selectedPresentation.slides[currentSlideIndex].id}>
           {selectedPresentation && (
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative', height: '100vh', width: '100%' }}>
               <SlideRender slide={selectedPresentation.slides[currentSlideIndex]} themeColor={selectedPresentation.theme}/>
-              {/* <SlideRender slide={selectedPresentation.slides[currentSlideIndex]} themeColor={selectedPresentation.theme} width={windowWidth}/> */}
             </div>
           )}
         </SlideTransitionWrapper>

@@ -20,10 +20,12 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor })
   useEffect(() => {
     function updateDimensions () {
       const viewportWidth = window.innerWidth; // Get the viewport width
-      const calculatedWidth = viewportWidth - 300; // Subtract 180 pixels
-      const newHeight = calculatedWidth * 0.75;
-      setWidth(`${calculatedWidth}`);
-      setHeight(`${newHeight}`);
+      if (viewportWidth > 690) {
+        const calculatedWidth = viewportWidth - 300; // Subtract 180 pixels
+        const newHeight = calculatedWidth * 0.75;
+        setWidth(`${calculatedWidth}`);
+        setHeight(`${newHeight}`);
+      }
     }
     updateDimensions();
     window.addEventListener('resize', updateDimensions);
@@ -53,7 +55,6 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor })
   return (
     // <div className="slide-container"
     <div className="slide-container" ref={elementRef}
-        // style={{ border: '2px solid black', margin: '20px', position: 'relative', width: '1200px', height: '800px', background: backgroundColor }}>
         style={{ border: '2px solid black', margin: '20px', position: 'relative', width: `${width}px`, height: `${height}px`, background: backgroundColor }}>
       {slide.elements.map((element, index) => {
         return (
@@ -66,8 +67,6 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor })
             handleUpdateElement={handleUpdateElement}
             containerHeight={parseInt(height)}
             containerWidth={parseInt((width))}
-            // containerHeight={parseInt(`${height}px`)}
-            // containerWidth={parseInt(`${width}px`)}
           />
         );
       })}
