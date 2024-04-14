@@ -1,8 +1,17 @@
+// export default ResizableBox;
 import React, { useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { materialLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-function ResizableBox ({ element, index, handleDeleteElement, handleEditElement, handleUpdateElement, containerHeight, containerWidth }) {
+function ResizableBox ({
+  element,
+  index,
+  handleDeleteElement,
+  handleEditElement,
+  handleUpdateElement,
+  containerHeight,
+  containerWidth
+}) {
   const [isSelected, setIsSelected] = useState(false);
   const toggleSelect = (e) => {
     e.stopPropagation(); // 阻止事件冒泡
@@ -10,8 +19,8 @@ function ResizableBox ({ element, index, handleDeleteElement, handleEditElement,
   };
   // useState to track size and position
   const [style, setStyle] = useState({
-    left: element.position.x + 'px',
-    top: element.position.y + 'px',
+    left: element.position.x * containerWidth / 100 + 'px',
+    top: element.position.y * containerHeight / 100 + 'px',
     width: element.width + '%',
     height: element.height + '%',
   });
@@ -53,10 +62,16 @@ function ResizableBox ({ element, index, handleDeleteElement, handleEditElement,
       startPos.x = e.pageX;
       startPos.y = e.pageY;
     };
+
     function stopDrag () {
       document.removeEventListener('mousemove', onDragging);
       document.removeEventListener('mouseup', stopDrag);
-      handleUpdateElement(element.id, { position: { x: tempLeft, y: tempTop } });
+      handleUpdateElement(element.id, {
+        position: {
+          x: tempLeft / containerWidth * 100,
+          y: tempTop / containerHeight * 100
+        }
+      });
     }
 
     document.addEventListener('mousemove', onDragging);
@@ -124,11 +139,19 @@ function ResizableBox ({ element, index, handleDeleteElement, handleEditElement,
         newWidth += newLeft / containerWidth * 100;
         newWidth = Math.max(1, newWidth);
         newLeft = 0; // 重置左边距，防止元素超出边界
+        if (corner === 'top-left') {
+          newTop -= (newWidth * aspectRatio - newHeight) * containerHeight / 100;
+        }
+        newHeight = newWidth * aspectRatio;
       }
       if (newTop < 0) {
         newHeight += newTop / containerHeight * 100;
         newHeight = Math.max(1, newHeight);
         newTop = 0;
+        if (corner === 'top-left') {
+          newLeft -= (newHeight / aspectRatio - newWidth) * containerWidth / 100;
+        }
+        newWidth = newHeight / aspectRatio;
       }
       const widthPx = newWidth * containerWidth / 100;
       const heightPx = newHeight * containerHeight / 100;
@@ -136,12 +159,18 @@ function ResizableBox ({ element, index, handleDeleteElement, handleEditElement,
         console.log('newLeft', newLeft, 'widthPx', widthPx, 'containerWidth', containerWidth)
         newWidth -= (newLeft + widthPx - containerWidth) / containerWidth * 100;
         newWidth = Math.max(1, newWidth);
-        newLeft = containerWidth - newWidth * containerWidth / 100;
+        if (corner === 'top-right') {
+          newTop -= (newWidth * aspectRatio - newHeight) * containerHeight / 100;
+        }
+        newHeight = newWidth * aspectRatio;
       }
       if (newTop + heightPx > containerHeight) {
         newHeight -= (newTop + heightPx - containerHeight) / containerHeight * 100;
         newHeight = Math.max(1, newHeight);
-        newTop = containerHeight - newHeight * containerHeight / 100;
+        if (corner === 'bottom-left') {
+          newLeft -= (newHeight / aspectRatio - newWidth) * containerWidth / 100;
+        }
+        newWidth = newHeight / aspectRatio;
       }
       // fds
       if (newWidth < 1) {
@@ -173,7 +202,14 @@ function ResizableBox ({ element, index, handleDeleteElement, handleEditElement,
     function stopResize () {
       document.removeEventListener('mousemove', onResizing);
       document.removeEventListener('mouseup', stopResize);
-      handleUpdateElement(element.id, { position: { x: tempLeft, y: tempTop }, width: tempWidth, height: tempHeight });
+      handleUpdateElement(element.id, {
+        position: {
+          x: tempLeft / containerWidth * 100,
+          y: tempTop / containerHeight * 100
+        },
+        width: tempWidth,
+        height: tempHeight
+      });
     }
 
     document.addEventListener('mousemove', onResizing);
@@ -205,7 +241,7 @@ function ResizableBox ({ element, index, handleDeleteElement, handleEditElement,
           width: '100%',
           height: '100%',
           objectFit: 'contain',
-        }} />
+        }}/>
       );
       break;
     case 'video':
@@ -234,7 +270,8 @@ function ResizableBox ({ element, index, handleDeleteElement, handleEditElement,
             objectFit: 'contain',
           }}
         >
-          <SyntaxHighlighter language={element.language} style={materialLight} customStyle={{ fontSize: `${element.fontSize}em` }}>
+          <SyntaxHighlighter language={element.language} style={materialLight}
+                             customStyle={{ fontSize: `${element.fontSize}em` }}>
             {element.code}
           </SyntaxHighlighter>
         </div>
@@ -266,14 +303,14 @@ function ResizableBox ({ element, index, handleDeleteElement, handleEditElement,
       {/* handles */}
       {isSelected && (
         <>
-        <div style={{ position: 'absolute', right: 0, bottom: 0, width: '5px', height: '5px', background: 'black' }}
-             onMouseDown={(e) => startResize('bottom-right', e)}/>
-        <div style={{ position: 'absolute', left: 0, bottom: 0, width: '5px', height: '5px', background: 'black' }}
-             onMouseDown={(e) => startResize('bottom-left', e)}/>
-        <div style={{ position: 'absolute', left: 0, top: 0, width: '5px', height: '5px', background: 'black' }}
-             onMouseDown={(e) => startResize('top-left', e)}/>
-        <div style={{ position: 'absolute', right: 0, top: 0, width: '5px', height: '5px', background: 'black' }}
-             onMouseDown={(e) => startResize('top-right', e)}/>
+          <div style={{ position: 'absolute', right: 0, bottom: 0, width: '5px', height: '5px', background: 'black' }}
+               onMouseDown={(e) => startResize('bottom-right', e)}/>
+          <div style={{ position: 'absolute', left: 0, bottom: 0, width: '5px', height: '5px', background: 'black' }}
+               onMouseDown={(e) => startResize('bottom-left', e)}/>
+          <div style={{ position: 'absolute', left: 0, top: 0, width: '5px', height: '5px', background: 'black' }}
+               onMouseDown={(e) => startResize('top-left', e)}/>
+          <div style={{ position: 'absolute', right: 0, top: 0, width: '5px', height: '5px', background: 'black' }}
+               onMouseDown={(e) => startResize('top-right', e)}/>
         </>
       )}
     </div>
