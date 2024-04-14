@@ -4,7 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Card } from '@mui/material';
 import { usePresentations } from '../components/PresentationContext';
 import { apiRequestStore } from './apiStore';
-import NaviBtn from './NaviBtn';
+import NaviBtn from './NaviBtnDash';
+import SlideRender from './SlideRender';
 
 const fetchPresentations = async () => {
   try {
@@ -53,6 +54,7 @@ const ReorderSlides = () => {
       const presentationsArray = fetchedPresentations.store;
       const presentationById = presentationsArray.find(p => p.id === parseInt(id));
       setSelectedPresentation(presentationById);
+      console.log('presentationById.slides', presentationById.slides[0].elements[0])
     };
     loadSlides();
   }, [id]);
@@ -90,8 +92,8 @@ const ReorderSlides = () => {
         <NaviBtn to="/login" onClick={handleLogout}>Logout</NaviBtn>
       </div>
     </div>
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', }}>
-      <DragDropContext onDragEnd={onDragEnd}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+      <DragDropContext onDragEnd={onDragEnd} >
         <Droppable droppableId='droppable-slides' direction="horizontal">
           {(provided, snapshot) => (
             <div {...provided.droppableProps} ref={provided.innerRef}
@@ -121,58 +123,16 @@ const ReorderSlides = () => {
                         maxWidth: '300px',
                         width: '100%',
                         height: 'auto',
-                        padding: '10px',
                         margin: '0 0 8px 0',
                         display: 'flex',
                         justifyContent: 'flex-start',
                         border: '1px solid lightgrey',
                         marginRight: '10px',
-                        alignItems: 'center',
+                        alignItems: 'flex-start',
                       }}
                     >
                       Slide {index + 1}:
-                      {slide.elements && slide.elements.map((element, elementIndex) => {
-                        // Render based on element type
-                        switch (element.type) {
-                          case 'text':
-                            return (
-                              <p key={element.id}>
-                                {/* Text {elementIndex + 1}:  */}
-                                {element.text}
-                              </p>
-                            );
-                          case 'image':
-                            return (
-                              <img
-                                key={element.id}
-                                src={element.url}
-                                alt={`Image ${elementIndex + 1}`}
-                                style={{ width: element.width, height: element.height }}
-                              />
-                            );
-                          case 'video':
-                            return (
-                              <video
-                                key={element.id}
-                                src={element.url}
-                                style={{ width: element.width, height: element.height }}
-                                controls
-                              />
-                            );
-                          case 'code':
-                            return (
-                              <pre key={element.id}>
-                                <code>
-                                  {/* Code {elementIndex + 1}:  */}
-                                  {element.text}
-                                </code>
-                              </pre>
-                            );
-                          default:
-                            return null;
-                        }
-                      })}
-
+                      <SlideRender slide={slide} themeColor={selectedPresentation.theme} width={200}/>
                     </Card>
                   )}
                 </Draggable>
@@ -183,7 +143,7 @@ const ReorderSlides = () => {
         </Droppable>
       </DragDropContext>
       <div>
-        <Button onClick={() => navigate(`/edit-presentation/${id}/slide/1`)} style={{ marginTop: '20px' }}>Close</Button>
+        <Button onClick={() => navigate(`/edit-presentation/${id}/slide/1`)} style={{ marginTop: '10px' }}>Close</Button>
       </div>
     </div>
     </div>

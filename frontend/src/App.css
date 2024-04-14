@@ -24,3 +24,8 @@
   background-color: white;
   width: auto;
 }
+
+/* .slide-container {
+  width: calc(100vw - 160px);
+  aspect-ratio: 4 / 3;
+} */

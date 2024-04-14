@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ElementModal from './ElementModal';
 import ResizableBox from './ResizableBox';
 
@@ -11,9 +11,27 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor })
   const [elementId, setElementId] = useState(null);
   const [dataType, setDataType] = useState(null);
   const backgroundColor = slide.background || themeColor
-
+  // ******************************* add width ****************************** */
+  const elementRef = useRef(null);
+  const [height, setHeight] = useState('0px');
+  useEffect(() => {
+    function updateDimensions () {
+      if (elementRef.current) {
+        const width = elementRef.current.offsetWidth; // Get the width of the container
+        const newHeight = width * 0.75; // Calculate height as 3/4 of the width
+        setHeight(`${newHeight}px`); // Set the height state
+      }
+    }
+    updateDimensions();
+    // Add event listener to resize window
+    window.addEventListener('resize', updateDimensions);
+    // Cleanup listener when component unmounts
+    return () => {
+      window.removeEventListener('resize', updateDimensions);
+    };
+  }, []);
+  // ******************************* add width ****************************** */
   const handleEditElement = (elementId) => {
-    // Find the element to edit
     const elementToEdit = slide.elements.find(element => element.id === elementId);
     if (elementToEdit) {
       console.log('Editing element with ID:', elementId);
@@ -32,8 +50,8 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor })
   }, [dataType]);
 
   return (
-    <div className="slide-container"
-         style={{ border: '2px solid black', margin: '20px', position: 'relative', width: '1200px', height: '800px', background: backgroundColor }}>
+    <div className="slide-container" ref={elementRef}
+         style={{ border: '2px solid black', margin: '20px', position: 'relative', width: 'calc(100vw - 180px)', height: `${height}`, background: backgroundColor }}>
       {slide.elements.map((element, index) => {
         return (
           <ResizableBox
@@ -43,8 +61,8 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor })
             handleDeleteElement={handleDeleteElement}
             handleEditElement={handleEditElement}
             handleUpdateElement={handleUpdateElement}
-            containerHeight={parseInt('800px')}
-            containerWidth={parseInt('1200px')}
+            containerHeight={parseInt(`${height}`)}
+            containerWidth={parseInt('calc(100vw - 160px)')}
           />
         );
       })}

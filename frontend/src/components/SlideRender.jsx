@@ -2,11 +2,11 @@ import React from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-function SlideRender ({ slide, themeColor }) {
+function SlideRender ({ slide, themeColor, width }) {
   // Function to render different types of elements based on their type
   const backgroundColor = slide.background || themeColor
-  const containerWidth = 1200;
-  const containerHeight = 800
+  const containerWidth = width;
+  const containerHeight = width * 0.75;
   const renderElement = (element) => {
     console.log('x', element.position.x);
     switch (element.type) {
@@ -16,8 +16,8 @@ function SlideRender ({ slide, themeColor }) {
             key={element.id}
             style={{
               position: 'absolute',
-              left: `${element.position.x / containerWidth * 100}%`,
-              top: `${element.position.y / containerHeight * 100}%`,
+              left: `${element.position.x * containerWidth / 100}`,
+              top: `${element.position.y * containerWidth / 100}`,
               zIndex: element.zIndex,
               fontSize: `${element.fontSize}em`,
               color: element.color,
@@ -38,8 +38,8 @@ function SlideRender ({ slide, themeColor }) {
             alt={element.alt}
             style={{
               position: 'absolute',
-              left: `${element.position.x / containerWidth * 100}%`,
-              top: `${element.position.y / containerHeight * 100}%`,
+              left: `${element.position.x * containerWidth / 100}%`,
+              top: `${element.position.y * containerWidth / 100}%`,
               zIndex: element.zIndex,
               width: `${element.width}%`,
               height: `${element.height}%`,
