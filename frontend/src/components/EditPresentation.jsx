@@ -133,6 +133,7 @@ const EditPresentation = () => {
     console.log('currentSlides 更新后:', currentSlides);
     console.log('currentVersionTimestamp 更新后:', currentVersionTimestamp);
   }, [currentSlides, currentVersionTimestamp]);
+
   const previewPresentation = () => {
     const slideNumberForUrl = currentSlideIndex + 1;
     navigate(`/preview-presentation/${id}/slide/${slideNumberForUrl}`);
@@ -150,7 +151,7 @@ const EditPresentation = () => {
         navigate('/dashboard');
       }
     };
-    if (presentations && presentations.length >= 0 && selectedPresentation !== null) {
+    if (presentations && presentations.length > 0 && selectedPresentation !== null) {
       updateServer();
     }
   }, [presentations, deleteSignal]);
@@ -179,6 +180,7 @@ const EditPresentation = () => {
   const handleReorderClick = () => {
     navigate(`/reorder-slides/${selectedPresentation.id}`);
   };
+
   const NewVersionToPresentation = (presentation, slides, theme, givenTimestamp) => {
     let newVersion;
     let existingVersion;
@@ -324,9 +326,7 @@ const EditPresentation = () => {
           <Button onClick={handleReorderClick} variant="contained" sx={{ ml: 1 }}>Reorder Slides</Button>
           <Button onClick={() => setDeleteConfirmOpen(true)} variant="contained" color="error" sx={{ ml: 1 }}>Delete Presentation</Button>
           <VersionHistoryBtn versions={selectedPresentation.versions} onRestoreVersion={handleRestoreVersion}/>
-          {/* <div style={{ display: 'inline-flex', alignItems: 'center' }}> */}
           <NaviBtn to="/login" onClick={handleLogout}>Logout</NaviBtn>
-          {/* </div> */}
         </div>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>

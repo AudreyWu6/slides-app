@@ -5,7 +5,7 @@ const VersionHistoryBtn = ({ versions, onRestoreVersion }) => {
 
   return (
     <>
-      <Button onClick={() => setIsOpen(true)}>Show Versions</Button>
+      <Button variant="contained" sx={{ ml: 1 }} onClick={() => setIsOpen(true)}>Show Versions</Button>
       {isOpen && (
         <div style={{ position: 'absolute', top: '20px', left: '20px', backgroundColor: 'white', padding: '20px', border: '1px solid black' }}>
           <h4>Version History</h4>
