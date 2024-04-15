@@ -1,8 +1,8 @@
 // components/EditPresentation.jsx
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Button, IconButton, Modal, TextField, Typography, Dialog, DialogActions, DialogTitle } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';// npm install react-syntax-highlighter --save
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Box, Button, Dialog, DialogActions, DialogTitle, IconButton, Modal, TextField, Typography } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit'; // npm install react-syntax-highlighter --save
 // npm install react-router-dom
 // npm install @mui/material @emotion/react @emotion/styled
 // npm install @mui/icons-material
@@ -58,9 +58,12 @@ const EditPresentation = () => {
   const { presentations, updatePresentation, deletePresentation, resetState } = usePresentations();
   const [editTitleOpen, setEditTitleOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [selectedPresentation, setSelectedPresentation] = useState(null);
+  const [selectedPresentation, setSelectedPresentation] = useState('null');
+  const [currentSlides, setCurrentSlides] = useState([]);
+  const [currentTheme, setCurrentTheme] = useState('');
   const [title, setTitle] = useState(selectedPresentation?.name || '');
   const [deleteSignal, setDeleteSignal] = useState(false);
+  const [currentVersionTimestamp, setCurrentVersionTimestamp] = useState(null);
 
   useEffect(() => {
     const index = parseInt(slideNumber, 10) - 1; // Convert slideNumber from string to integer and adjust for zero-based indexing
@@ -74,16 +77,36 @@ const EditPresentation = () => {
 
   useEffect(() => {
     const loadSlides = async () => {
-      const fetchedPresentations = await fetchPresentations();
-      const presentationsArray = fetchedPresentations.store;
-      const presentationById = presentationsArray.find(p => p.id === parseInt(id, 10));
-      updatePresentation(presentationById);
-      setSelectedPresentation(presentationById);
-      // console.log('presentationsArray **** check', id, presentationsArray.find(p => p.id === parseInt(id, 10)).slides);
-    };
-    loadSlides();
-  }, [id]);
+      try {
+        const fetchedPresentations = await fetchPresentations();
+        const presentationsArray = fetchedPresentations.store;
+        const presentationById = presentationsArray.find(p => p.id === parseInt(id, 10));
 
+        if (presentationById) {
+          const latestVersion = presentationById.versions[presentationById.versions.length - 1];
+          console.log('latestVersion', latestVersion);
+          setCurrentSlides(latestVersion.slides); // 设置当前版本的幻灯片信息
+          setCurrentVersionTimestamp(latestVersion.timestamp); // 设置最新版本的时间戳
+          if (latestVersion.theme) {
+            setCurrentTheme(latestVersion.theme);
+          }
+          setSelectedPresentation(presentationById); // 设置完整的演示文稿信息
+          setTitle(presentationById.name); // 设置演示文稿标题
+        } else {
+          console.error('Presentation not found');
+        }
+      } catch (error) {
+        console.error('Failed to fetch presentations:', error);
+      }
+    };
+
+    loadSlides();
+  }, [id, fetchPresentations]);
+
+  useEffect(() => {
+    console.log('currentSlides 更新后:', currentSlides);
+    console.log('currentVersionTimestamp 更新后:', currentVersionTimestamp);
+  }, [currentSlides, currentVersionTimestamp]);
   const previewPresentation = () => {
     const slideNumberForUrl = currentSlideIndex + 1;
     navigate(`/preview-presentation/${id}/slide/${slideNumberForUrl}`);
@@ -114,65 +137,106 @@ const EditPresentation = () => {
   };
 
   const handleUpdateTheme = (color) => {
-    const updatedPresentation = { ...selectedPresentation, theme: color };
-    updatePresentation(updatedPresentation);
-    setSelectedPresentation(updatedPresentation); // Update the local state to reflect the change immediately
+    setCurrentTheme(color); // 同步更新当前主题
+    const updatedPresentation = NewVersionToPresentation(selectedPresentation, currentSlides, currentTheme, currentVersionTimestamp);
+    updatePresentation(updatedPresentation); // 更新全局状态中的演示文稿
+    setSelectedPresentation(updatedPresentation); // 更新本地状态以反映更改
   };
 
   const handleReorderClick = () => {
     navigate(`/reorder-slides/${selectedPresentation.id}`);
   };
+  const NewVersionToPresentation = (presentation, slides, theme, givenTimestamp) => {
+    let newVersion;
+    let existingVersion;
+
+    // Check if a given timestamp is provided and find that version to update
+    if (givenTimestamp) {
+      existingVersion = presentation.versions.find(version => version.timestamp === givenTimestamp);
+      if (existingVersion) {
+        // If there's a matching version, update it
+        newVersion = { ...existingVersion, slides, theme };
+      } else {
+        // No version matches the given timestamp, create a new version
+        newVersion = {
+          timestamp: new Date().toISOString(), // New unique timestamp
+          slides,
+          theme
+        };
+      }
+    } else {
+      // If no timestamp is given, create a new version
+      newVersion = {
+        timestamp: new Date().toISOString(), // New unique timestamp
+        slides,
+        theme
+      };
+    }
+
+    // Construct the updated versions array
+    const newVersions = existingVersion
+      ? presentation.versions.map(version => version.timestamp === givenTimestamp ? newVersion : version)
+      : [...presentation.versions, newVersion]; // Add as a new version if not updating an existing one
+
+    return {
+      id: presentation.id, // Maintain the same presentation ID
+      name: presentation.name, // Maintain the same presentation name
+      versions: newVersions // Updated versions list
+    };
+  };
+
+  const updateSlide = (passedSlide) => {
+    console.log('handleSlideUpdate', passedSlide);
+    return currentSlides.map(slide => {
+      if (slide.id === passedSlide.id) {
+        return passedSlide;
+      }
+      return slide;
+    });
+  };
 
   const handleUpdateSlide = (passedSlide) => {
-    console.log('handleSlideUpdate', passedSlide);
-    const updatedSlides = selectedPresentation.slides.map(slide => {
-      if (slide.id === passedSlide.id) {
-        return passedSlide; // 将新内容合并到旧幻灯片对象中
-      }
-      return slide; // 对于未匹配的幻灯片，保持原样
-    });
-    const updatedPresentation = {
-      ...selectedPresentation,
-      slides: updatedSlides
-    };
-    updatePresentation(updatedPresentation);
-    setSelectedPresentation(updatedPresentation);
+    const updatedSlides = updateSlide(passedSlide); // 获取更新后的幻灯片
+    setCurrentSlides(updatedSlides); // 更新当前版本的幻灯片状态
+    const updatedPresentation = NewVersionToPresentation(selectedPresentation, updatedSlides, currentTheme, currentVersionTimestamp);
+    updatePresentation(updatedPresentation); // 更新全局状态
+    setSelectedPresentation(updatedPresentation); // 更新本地状态以反映更改
   };
 
   const handleAddSlide = () => {
     const newSlide = { id: Date.now(), elements: [] };
-    const updatedSlides = [...selectedPresentation.slides, newSlide];
-    const updatedPresentation = {
-      ...selectedPresentation,
-      slides: updatedSlides
-    };
+    const updatedSlides = [...currentSlides, newSlide];
+    setCurrentSlides(updatedSlides);
+    const updatedPresentation = NewVersionToPresentation(selectedPresentation, updatedSlides, currentTheme, currentVersionTimestamp);
     updatePresentation(updatedPresentation);
     setSelectedPresentation(updatedPresentation);
   };
 
   const handleDeleteSlide = () => {
-    if (selectedPresentation.slides.length === 1) {
+    if (currentSlides.length === 1) {
       alert('Cannot delete the only slide. Please delete the entire presentation if needed.');
       return;
     }
-    const updatedSlides = selectedPresentation.slides.filter((_, index) => index !== currentSlideIndex);
-    const updatedPresentation = { ...selectedPresentation, slides: updatedSlides };
+    const updatedSlides = currentSlides.filter((_, index) => index !== currentSlideIndex);
+    setCurrentSlides(updatedSlides);
+    const updatedPresentation = NewVersionToPresentation(selectedPresentation, updatedSlides, currentTheme, currentVersionTimestamp);
     updatePresentation(updatedPresentation);
-    setCurrentSlideIndex(prevIndex => prevIndex > 0 ? prevIndex - 1 : 0);
     setSelectedPresentation(updatedPresentation);
+    setCurrentSlideIndex(prevIndex => prevIndex > 0 ? prevIndex - 1 : 0);
   };
 
   const handlePreviousSlide = () => {
     setCurrentSlideIndex(prevIndex => {
-      const newIndex = (prevIndex - 1 + selectedPresentation.slides.length) % selectedPresentation.slides.length;
-      updateSlideInUrl(newIndex);
+      const newIndex = (prevIndex - 1 + currentSlides.length) % currentSlides.length;
+      updateSlideInUrl(newIndex); // Ensure this function also expects the current index setup
       return newIndex;
     });
   };
+
   const handleNextSlide = () => {
     setCurrentSlideIndex(prevIndex => {
-      const newIndex = (prevIndex + 1) % selectedPresentation.slides.length;
-      updateSlideInUrl(newIndex);
+      const newIndex = (prevIndex + 1) % currentSlides.length;
+      updateSlideInUrl(newIndex); // Ensure this function also expects the current index setup
       return newIndex;
     });
   };
@@ -205,14 +269,14 @@ const EditPresentation = () => {
     const handleKeyDown = (event) => {
       if (event.key === 'ArrowLeft' && currentSlideIndex > 0) {
         handlePreviousSlide();
-      } else if (event.key === 'ArrowRight' && currentSlideIndex < selectedPresentation.slides.length - 1) {
+      } else if (event.key === 'ArrowRight' && currentSlideIndex < currentSlides.length - 1) {
         handleNextSlide();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentSlideIndex, selectedPresentation?.slides.length]);
+  }, [currentSlideIndex, currentSlides.length]);
 
   if (!selectedPresentation) {
     return <div>Loading...</div>;
@@ -249,9 +313,9 @@ const EditPresentation = () => {
       <Button onClick={handleAddSlide} size="small" variant="contained" sx={{ mt: 2 }}>Add New Slide</Button>
       <Button onClick={handleDeleteSlide} size="small" variant="contained" color="error" sx={{ mt: 2, ml: 2 }} startIcon={<DeleteIcon />}>Delete Slide</Button>
       <Typography sx={{ mt: 2, display: 'flex', justifyContent: 'center', fontWeight: 700 }}>Slide {currentSlideIndex + 1}</Typography>
-      {selectedPresentation && selectedPresentation.slides.length > 0 && currentSlideIndex < selectedPresentation.slides.length && (
-        <SlideTransitionWrapper keyProp={selectedPresentation.slides[currentSlideIndex].id}>
-          <SlideEditor slide={selectedPresentation.slides[currentSlideIndex]} handleUpdateSlide={handleUpdateSlide} handleUpdateTheme={handleUpdateTheme} themeColor={selectedPresentation.theme}/>
+      {selectedPresentation && currentSlides.length > 0 && currentSlideIndex < currentSlides.length && (
+        <SlideTransitionWrapper keyProp={currentSlides[currentSlideIndex].id}>
+          <SlideEditor slide={currentSlides[currentSlideIndex]} handleUpdateSlide={handleUpdateSlide} handleUpdateTheme={handleUpdateTheme} themeColor={selectedPresentation.theme}/>
         </SlideTransitionWrapper>
       )}
       <Dialog open={deleteConfirmOpen} onClose={() => setDeleteConfirmOpen(false)}>
@@ -262,14 +326,16 @@ const EditPresentation = () => {
         </DialogActions>
       </Dialog>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-        <div style={{ fontSize: '1em' }}>{ currentSlideIndex + 1 }</div>
-        {selectedPresentation.slides.length >= 1 && <Button onClick={handleDeleteSlide} size="small" sx={{ ml: 2 }} variant="outlined" startIcon={<DeleteIcon />}>Delete</Button>}
-        <div>
-          {currentSlideIndex >= 1 && <IconButton onClick={handlePreviousSlide}><ArrowBackIcon /></IconButton>}
-          {currentSlideIndex < selectedPresentation.slides.length - 1 && <IconButton onClick={handleNextSlide}><ArrowForwardIcon /></IconButton>}
-        </div>
+        <div style={{ fontSize: '1em' }}>{currentSlideIndex + 1}</div>
+        {currentSlides.length >= 1 &&
+          <Button onClick={handleDeleteSlide} size="small" sx={{ ml: 2 }} variant="outlined"
+                  startIcon={<DeleteIcon/>}>Delete</Button>}
+          <div>
+            {currentSlideIndex >= 1 && <IconButton onClick={handlePreviousSlide}><ArrowBackIcon/></IconButton>}
+            {currentSlideIndex < currentSlides.length - 1 && <IconButton onClick={handleNextSlide}><ArrowForwardIcon/></IconButton>}
+          </div>
       </Box>
-      </Box>
+    </Box>
   );
 };
 

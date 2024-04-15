@@ -65,7 +65,9 @@ function SlideRender ({ slide, themeColor }) {
               height: `${element.height}%`,
               objectFit: 'contain',
             }}
-            controls
+            autoPlay={element.autoPlay}
+            muted
+            loop
           />
         );
       case 'code':

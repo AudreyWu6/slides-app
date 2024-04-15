@@ -8,6 +8,7 @@ export const PresentationProvider = ({ children }) => {
   const [presentations, setPresentations] = useState([]);
 
   const addPresentation = (presentation) => {
+    console.log('add', presentation);
     setPresentations((prev) => [...prev, { ...presentation, id: prev.length + 1 }]);
   };
 
