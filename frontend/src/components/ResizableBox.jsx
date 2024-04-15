@@ -13,7 +13,7 @@ function ResizableBox ({
   containerWidth
 }) {
   const [isSelected, setIsSelected] = useState(false);
-  console.log('containerWidth', containerWidth, 'x:', element.position.x)
+  // console.log('containerWidth', containerWidth, 'x:', element.position.x)
   const toggleSelect = (e) => {
     e.stopPropagation(); // 阻止事件冒泡
     setIsSelected(prev => !prev);
@@ -34,7 +34,7 @@ function ResizableBox ({
     });
   }, [containerWidth, containerHeight, element.position.x, element.position.y, element.width, element.height]);
 
-  console.log('left', style.left, element.position.x * containerWidth / 100 + 'px')
+  // console.log('left', style.left, element.position.x * containerWidth / 100 + 'px')
   // handle drag
   const startDrag = (e) => {
     e.preventDefault();
@@ -167,7 +167,7 @@ function ResizableBox ({
       const widthPx = newWidth * containerWidth / 100;
       const heightPx = newHeight * containerHeight / 100;
       if (newLeft + widthPx > containerWidth) {
-        console.log('newLeft', newLeft, 'widthPx', widthPx, 'containerWidth', containerWidth)
+        // console.log('newLeft', newLeft, 'widthPx', widthPx, 'containerWidth', containerWidth)
         newWidth -= (newLeft + widthPx - containerWidth) / containerWidth * 100;
         newWidth = Math.max(1, newWidth);
         if (corner === 'top-right') {

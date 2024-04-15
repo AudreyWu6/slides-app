@@ -78,10 +78,16 @@ function Dashboard () {
   };
 
   const createPresentation = () => {
+    const timestamp = new Date().toISOString(); // 为新版本生成时间戳
+    const initialSlides = [{ id: Date.now(), elements: [] }]; // 创建初始幻灯片数组
+    const initialVersion = {
+      timestamp,
+      slides: initialSlides,
+    };
     const newPres = {
       ...newPresentation,
       id: Date.now(),
-      slides: [{ id: Date.now(), elements: [] }],
+      versions: [initialVersion], // 初始化包含一个版本的数组
       thumbnail: newPresentation.thumbnail || '',
     };
     addPresentation(newPres);
@@ -130,7 +136,7 @@ function Dashboard () {
               <CardContent>
                 <Typography variant="h5">{presentation.name}</Typography>
                 {presentation.description && <Typography variant="body2">{presentation.description}</Typography>}
-                <Typography variant="body1">Slides: {presentation.slides.length}</Typography>
+                <Typography variant="body1">Slides: {presentation.versions[presentation.versions.length - 1].slides.length}</Typography>
               </CardContent>
             </Card>
           </Grid>
