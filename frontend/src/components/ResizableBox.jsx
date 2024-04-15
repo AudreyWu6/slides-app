@@ -279,6 +279,7 @@ function ResizableBox ({
             width: '100%',
             height: '100%',
             objectFit: 'contain',
+            overflow: 'hidden',
           }}
         >
           <SyntaxHighlighter language={element.language} style={materialLight}

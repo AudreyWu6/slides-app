@@ -5,7 +5,6 @@ import ColorBtn from './ColorBtn';
 
 function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme, themeColor }) {
   console.log('slide passed', passedSlide);
-  console.log('theme', themeColor);
   const initialState = {
     id: 1,
     elements: [],

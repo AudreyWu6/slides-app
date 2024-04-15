@@ -108,9 +108,9 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
             <FormControl fullWidth>
               <InputLabel id="font-family-select-label">Font</InputLabel>
               <Select
-                labelId="font-family-select-label" // 引用 InputLabel 的 id
-                id="font-family-select" // 给 Select 设置一个唯一的 id
-                value={data.fontFamily || 'Font type'} // 如果没有设置字体类型，则默认显示 'Font type'
+                labelId="font-family-select-label"
+                id="font-family-select"
+                value={data.fontFamily || 'Arial'}
                 onChange={(e) => setData({ ...data, fontFamily: e.target.value })}
                 fullWidth
               >
