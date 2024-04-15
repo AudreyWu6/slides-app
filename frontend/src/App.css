@@ -25,10 +25,6 @@
   width: auto;
 }
 
-/* .slide-container {
-  width: calc(100vw - 160px);
-  aspect-ratio: 4 / 3;
-} */
 .toolbar {
   display: flex;
   flex-direction: column;
@@ -39,10 +35,10 @@
   display: flex;  /* Ensures horizontal layout by default */
 }
 
-/* Media query for screens narrower than 585px */
+/* Media query for screens narrower than 690px */
 @media (max-width: 690px) {
   .main-content {
-      flex-direction: column; /* Stacks children vertically */
+    flex-direction: column; /* Stacks children vertically */
   }
 
   .toolbar {
