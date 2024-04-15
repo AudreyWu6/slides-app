@@ -125,14 +125,9 @@ const EditPresentation = () => {
         console.error('Failed to fetch presentations:', error);
       }
     };
-
     loadSlides();
   }, [id, fetchPresentations]);
 
-  useEffect(() => {
-    console.log('currentSlides 更新后:', currentSlides);
-    console.log('currentVersionTimestamp 更新后:', currentVersionTimestamp);
-  }, [currentSlides, currentVersionTimestamp]);
   const previewPresentation = () => {
     const slideNumberForUrl = currentSlideIndex + 1;
     navigate(`/preview-presentation/${id}/slide/${slideNumberForUrl}`);
@@ -150,7 +145,7 @@ const EditPresentation = () => {
         navigate('/dashboard');
       }
     };
-    if (presentations && presentations.length >= 0 && selectedPresentation !== null) {
+    if (presentations && presentations.length > 0 && selectedPresentation !== null) {
       updateServer();
     }
   }, [presentations, deleteSignal]);
@@ -158,7 +153,9 @@ const EditPresentation = () => {
   const handleRestoreVersion = (version) => {
     setCurrentSlides(version.slides);
     setCurrentTheme(version.theme)
-    setCurrentVersionTimestamp(version.timestamp);
+    const updatedPresentation = NewVersionToPresentation(selectedPresentation, currentSlides, currentTheme, '');
+    updatePresentation(updatedPresentation);
+    setSelectedPresentation(updatedPresentation);
   };
 
   const handleUpdateTitle = () => {
@@ -169,11 +166,10 @@ const EditPresentation = () => {
   };
 
   const handleUpdateTheme = (color) => {
-    setCurrentTheme(color); // 同步更新当前主题
+    setCurrentTheme(color);
     const updatedPresentation = NewVersionToPresentation(selectedPresentation, currentSlides, color, currentVersionTimestamp);
-    console.log('theme', updatedPresentation);
-    updatePresentation(updatedPresentation); // 更新全局状态中的演示文稿
-    setSelectedPresentation(updatedPresentation); // 更新本地状态以反映更改
+    updatePresentation(updatedPresentation);
+    setSelectedPresentation(updatedPresentation);
   };
 
   const handleReorderClick = () => {
