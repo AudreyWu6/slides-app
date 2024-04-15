@@ -4,7 +4,7 @@ import ElementModal from './ElementModal';
 import ResizableBox from './ResizableBox';
 
 function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor }) {
-  console.log(slide.background, 'theme', themeColor);
+  // console.log(slide.background, 'theme', themeColor);
   // State to control the modal for adding/editing elements
   const [modalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -48,7 +48,7 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor })
   const handleEditElement = (elementId) => {
     const elementToEdit = slide.elements.find(element => element.id === elementId);
     if (elementToEdit) {
-      console.log('Editing element with ID:', elementId);
+      // console.log('Editing element with ID:', elementId);
       setInitialData({
         ...elementToEdit,
       });
@@ -60,7 +60,7 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor })
   };
 
   useEffect(() => {
-    console.log(dataType); // 在这里检查更新后的值
+    // console.log(dataType); // 在这里检查更新后的值
   }, [dataType]);
 
   return (

@@ -16,6 +16,7 @@ import SlideEditor from './SlideEditor';
 import { apiRequestStore } from './apiStore';
 import SlideTransitionWrapper from './SlideTransitionWrapper';
 import NaviBtn from './NaviBtnDash';
+import VersionHistoryBtn from './VersionHistoryBtn';
 
 const modalStyle = {
   position: 'absolute',
@@ -64,6 +65,31 @@ const EditPresentation = () => {
   const [title, setTitle] = useState(selectedPresentation?.name || '');
   const [deleteSignal, setDeleteSignal] = useState(false);
   const [currentVersionTimestamp, setCurrentVersionTimestamp] = useState(null);
+
+  useEffect(() => {
+    let timeoutId = null;
+
+    const updateTimestamp = () => {
+      const newTimestamp = new Date().toISOString();
+      setCurrentVersionTimestamp(newTimestamp); // 更新时间戳，标记新的版本
+      console.log('saveat', newTimestamp);
+      const updatedPresentation = NewVersionToPresentation(
+        selectedPresentation,
+        currentSlides,
+        currentTheme,
+        newTimestamp
+      );
+      updatePresentation(updatedPresentation);
+      setSelectedPresentation(updatedPresentation);
+    };
+
+    timeoutId = setTimeout(updateTimestamp, 60000);
+
+    // 清理函数
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [selectedPresentation, currentSlides, currentTheme, updatePresentation, setCurrentVersionTimestamp]);
 
   useEffect(() => {
     const index = parseInt(slideNumber, 10) - 1; // Convert slideNumber from string to integer and adjust for zero-based indexing
@@ -129,6 +155,12 @@ const EditPresentation = () => {
     }
   }, [presentations, deleteSignal]);
 
+  const handleRestoreVersion = (version) => {
+    setCurrentSlides(version.slides);
+    setCurrentTheme(version.theme)
+    setCurrentVersionTimestamp(version.timestamp);
+  };
+
   const handleUpdateTitle = () => {
     const updatedPresentation = { ...selectedPresentation, name: title };
     updatePresentation(updatedPresentation);
@@ -138,7 +170,8 @@ const EditPresentation = () => {
 
   const handleUpdateTheme = (color) => {
     setCurrentTheme(color); // 同步更新当前主题
-    const updatedPresentation = NewVersionToPresentation(selectedPresentation, currentSlides, currentTheme, currentVersionTimestamp);
+    const updatedPresentation = NewVersionToPresentation(selectedPresentation, currentSlides, color, currentVersionTimestamp);
+    console.log('theme', updatedPresentation);
     updatePresentation(updatedPresentation); // 更新全局状态中的演示文稿
     setSelectedPresentation(updatedPresentation); // 更新本地状态以反映更改
   };
@@ -290,6 +323,7 @@ const EditPresentation = () => {
           <Button onClick={previewPresentation} variant="contained" sx={{ ml: 1 }}>Preview</Button>
           <Button onClick={handleReorderClick} variant="contained" sx={{ ml: 1 }}>Reorder Slides</Button>
           <Button onClick={() => setDeleteConfirmOpen(true)} variant="contained" color="error" sx={{ ml: 1 }}>Delete Presentation</Button>
+          <VersionHistoryBtn versions={selectedPresentation.versions} onRestoreVersion={handleRestoreVersion}/>
           {/* <div style={{ display: 'inline-flex', alignItems: 'center' }}> */}
           <NaviBtn to="/login" onClick={handleLogout}>Logout</NaviBtn>
           {/* </div> */}
@@ -315,7 +349,7 @@ const EditPresentation = () => {
       <Typography sx={{ mt: 2, display: 'flex', justifyContent: 'center', fontWeight: 700 }}>Slide {currentSlideIndex + 1}</Typography>
       {selectedPresentation && currentSlides.length > 0 && currentSlideIndex < currentSlides.length && (
         <SlideTransitionWrapper keyProp={currentSlides[currentSlideIndex].id}>
-          <SlideEditor slide={currentSlides[currentSlideIndex]} handleUpdateSlide={handleUpdateSlide} handleUpdateTheme={handleUpdateTheme} themeColor={selectedPresentation.theme}/>
+          <SlideEditor slide={currentSlides[currentSlideIndex]} handleUpdateSlide={handleUpdateSlide} handleUpdateTheme={handleUpdateTheme} themeColor={currentTheme}/>
         </SlideTransitionWrapper>
       )}
       <Dialog open={deleteConfirmOpen} onClose={() => setDeleteConfirmOpen(false)}>
