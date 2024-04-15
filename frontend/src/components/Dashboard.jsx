@@ -116,9 +116,9 @@ function Dashboard () {
       <Modal open={open} onClose={handleClose}>
         <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
           <Typography id="modal-modal-title" variant="h6" component="h2">Create a New Presentation</Typography>
-          <TextField autoFocus margin="dense" name="name" label="Presentation Name" type="text" fullWidth variant="outlined" value={newPresentation.name} onChange={handleChange} />
-          <TextField margin="dense" name="description" label="Description" type="text" fullWidth multiline variant="outlined" value={newPresentation.description} onChange={handleChange} />
-          <TextField margin="dense" name="thumbnail" label="Thumbnail URL" type="text" fullWidth variant="outlined" value={newPresentation.thumbnail} onChange={handleChange} helperText="Leave blank for a default thumbnail." />
+          <TextField id = "name" autoFocus margin="dense" autoComplete="on" name="name" label="Presentation Name" type="text" fullWidth variant="outlined" value={newPresentation.name} onChange={handleChange} />
+          <TextField id = "description" margin="dense" autoComplete="on" name="description" label="Description" type="text" fullWidth variant="outlined" value={newPresentation.description} onChange={handleChange} />
+          <TextField id = "thumbnail" margin="dense" name="thumbnail" label="Thumbnail URL" type="text" fullWidth variant="outlined" value={newPresentation.thumbnail} onChange={handleChange} helperText="Leave blank for a default thumbnail." />
           <Button onClick={createPresentation} color="primary" variant="contained" sx={{ mt: 2 }}>Create</Button>
         </Box>
       </Modal>

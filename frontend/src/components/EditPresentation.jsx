@@ -242,7 +242,7 @@ const EditPresentation = () => {
       </Box>
       <Modal open={editTitleOpen} onClose={() => setEditTitleOpen(false)}>
         <Box sx={modalStyle}>
-          <TextField fullWidth value={title} onChange={(e) => setTitle(e.target.value)} autoFocus />
+          <TextField id="updateTitle" fullWidth value={title} onChange={(e) => setTitle(e.target.value)} autoFocus />
           <Button onClick={handleUpdateTitle} color="primary" variant="contained" sx={{ mt: 2 }}>Update</Button>
         </Box>
       </Modal>
