@@ -93,7 +93,8 @@ function SlideRender ({ slide, themeColor }) {
     }
   };
   return (
-    <div className="slide" style={{ position: 'relative', width: '100%', height: '100vh', background: backgroundColor }}>
+    // <div className="slide" style={{ position: 'relative', width: '100%', height: '100vh', background: backgroundColor }}>
+    <div className="slide" style={{ position: 'relative', width: '100%', height: '100%', background: backgroundColor }}>
       {slide.elements.map(renderElement)}
     </div>
   );

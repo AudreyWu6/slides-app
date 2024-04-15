@@ -223,9 +223,9 @@ const EditPresentation = () => {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
         <Button variant="contained" size="small" onClick={handleBackClick}>Back</Button>
         <div>
-          <Button onClick={previewPresentation}>Preview</Button>
-          <Button onClick={handleReorderClick}>Reorder Slides</Button>
-          <Button onClick={() => setDeleteConfirmOpen(true)} size="small" variant="contained" color="error" startIcon={<DeleteIcon />}>Delete Presentation</Button>
+          <Button onClick={previewPresentation} variant="contained" sx={{ ml: 1 }}>Preview</Button>
+          <Button onClick={handleReorderClick} variant="contained" sx={{ ml: 1 }}>Reorder Slides</Button>
+          <Button onClick={() => setDeleteConfirmOpen(true)} variant="contained" color="error" sx={{ ml: 1 }}>Delete Presentation</Button>
           {/* <div style={{ display: 'inline-flex', alignItems: 'center' }}> */}
           <NaviBtn to="/login" onClick={handleLogout}>Logout</NaviBtn>
           {/* </div> */}
@@ -242,7 +242,7 @@ const EditPresentation = () => {
       </Box>
       <Modal open={editTitleOpen} onClose={() => setEditTitleOpen(false)}>
         <Box sx={modalStyle}>
-          <TextField fullWidth value={title} onChange={(e) => setTitle(e.target.value)} autoFocus />
+          <TextField id="updateTitle" fullWidth value={title} onChange={(e) => setTitle(e.target.value)} autoFocus />
           <Button onClick={handleUpdateTitle} color="primary" variant="contained" sx={{ mt: 2 }}>Update</Button>
         </Box>
       </Modal>
