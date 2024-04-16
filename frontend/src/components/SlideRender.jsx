@@ -1,6 +1,6 @@
 import React from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { materialLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 function SlideRender ({ slide, themeColor }) {
   // Function to render different types of elements based on their type
@@ -73,7 +73,7 @@ function SlideRender ({ slide, themeColor }) {
           <SyntaxHighlighter
             key={element.id}
             language={element.language || 'javascript'}
-            style={dark}
+            style={materialLight}
             customStyle={{
               position: 'absolute',
               left: `${element.position.x}%`,
