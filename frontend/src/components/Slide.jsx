@@ -19,12 +19,6 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor })
   useEffect(() => {
     function updateDimensions () {
       const viewportWidth = window.innerWidth; // Get the viewport width
-      // if (viewportWidth > 690) {
-      //   const calculatedWidth = viewportWidth - 300; // Subtract 180 pixels
-      //   const newHeight = calculatedWidth * 0.75;
-      //   setWidth(`${calculatedWidth}`);
-      //   setHeight(`${newHeight}`);
-      // }
       if (viewportWidth > 690) {
         const calculatedWidth = viewportWidth - 300; // Subtract 180 pixels
         const newHeight = calculatedWidth * 0.75;
@@ -32,7 +26,7 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor })
         setHeight(`${newHeight}`);
       } else {
         // console.log('viewportWidth', viewportWidth);
-        const calculatedWidth = viewportWidth - 50;
+        const calculatedWidth = viewportWidth - 80;
         const newHeight = calculatedWidth * 0.75;
         setWidth(`${calculatedWidth}`);
         setHeight(`${newHeight}`);

@@ -58,7 +58,6 @@ const ReorderSlides = () => {
       const versionKeys = Object.keys(presentationById.versions);
       setlastKey(versionKeys[versionKeys.length - 1]);
       console.log('lastKey: ', lastKey);
-      // console.log('slides: ', presentationById.versions[lastKey].slides);
     };
     loadSlides();
   }, [id]);
@@ -67,15 +66,6 @@ const ReorderSlides = () => {
     const updateServer = async () => {
       if (presentations.length > 0) {
         try {
-          // const presentationtemp = presentations.find(p => p.id === parseInt(id));
-          // console.log('presentationtemp before: ', presentationtemp);
-          // const newVersion = {
-          //   timestamp: new Date().toISOString(), // New unique timestamp
-          //   slides: presentationtemp.slides,
-          //   theme: selectedPresentation.versions[lastKey].theme,
-          // };
-          // versions: [...selectedPresentation.versions, newVersion]
-          // console.log('presentationtemp after change: ', newVersion);
           await putToServer(presentations);
           console.log('the body beforeput to server: ', presentations);
         } catch (error) {

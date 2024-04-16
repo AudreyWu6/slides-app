@@ -37,18 +37,6 @@ export const PresentationProvider = ({ children }) => {
     });
   };
 
-  // New function to reorder slides within a presentation
-  // const reorderSlides = (presentationId, newSlidesOrder) => {
-  //   setPresentations((prevPresentations) =>
-  //     prevPresentations.map((presentation) => {
-  //       if (presentation.id === parseInt(presentationId, 10)) {
-  //         return { ...presentation, slides: newSlidesOrder };
-  //       }
-  //       return presentation;
-  //     })
-  //   );
-  // };
-
   const reorderSlides = (presentationId, newSlidesOrder) => {
     const newVersionTimestamp = new Date().toISOString(); // Generate new timestamp
     setPresentations(prevPresentations =>

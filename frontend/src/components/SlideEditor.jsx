@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Slide from './Slide';
 import ModalBtn from './OpenModalBtn';
 import ColorBtn from './ColorBtn';
+import SlideTransitionWrapper from './SlideTransitionWrapper';
 
 function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme, themeColor }) {
   // console.log('slide passed', passedSlide);
@@ -67,11 +68,32 @@ function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme
     deleteElement(elementId);
   };
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 690);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 690);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const toolbarStyle = {
+    display: 'flex',
+    flexDirection: isMobile ? 'row' : 'column',
+    flexWrap: isMobile ? 'wrap' : 'nowrap',
+    width: isMobile ? '100%' : '300px',
+  };
+
+  const mainContentStyle = {
+    display: 'flex',
+    flexDirection: isMobile ? 'column' : 'row',
+  };
   return (
-    <div style={{
-      display: 'flex',
-    }} className="main-content">
-      <div className="toolbar">
+    // <div style={{ display: 'flex', }} className="main-content">
+    <SlideTransitionWrapper keyProp={slide.id}>
+    <div style={mainContentStyle}>
+      <div style={toolbarStyle}>
       {/* <div className="toolbar" style={{ display: 'flex', flexDirection: 'column', width: '300px' }}> */}
         <ColorBtn updateBackground={updateBackground} updateTheme={handleUpdateTheme}></ColorBtn>
         <ModalBtn type='text' update={(data) => handleAddElement(data, 'text')}></ModalBtn>
@@ -79,12 +101,12 @@ function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme
         <ModalBtn type='video' update={(data) => handleAddElement(data, 'video')}></ModalBtn>
         <ModalBtn type='code' update={(data) => handleAddElement(data, 'code')}></ModalBtn>
       </div>
-
       {/* slide */}
       <div>
       <Slide slide={slide} handleDeleteElement={handleDeleteElement} handleUpdateElement={handleUpdateElement} themeColor={themeColor}/>
       </div>
     </div>
+    </SlideTransitionWrapper>
   );
 }
 
