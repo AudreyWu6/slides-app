@@ -306,6 +306,7 @@ function ResizableBox ({
            handleEditElement(element.id);
          }}
          style={{
+           fontSize: 16 * containerWidth / 1000 + 'px',
            position: 'absolute',
            border: '1px solid grey',
            zIndex: index,

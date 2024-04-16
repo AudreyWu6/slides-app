@@ -1,6 +1,6 @@
 import React from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { materialLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 function SlideRender ({ slide, themeColor }) {
   // Function to render different types of elements based on their type
@@ -20,8 +20,6 @@ function SlideRender ({ slide, themeColor }) {
               position: 'absolute',
               left: `${element.position.x}%`,
               top: `${element.position.y}%`,
-              // left: element.position.x * containerWidth / 100 + 'px',
-              // top: element.position.y * containerHeight / 100 + 'px',
               zIndex: element.zIndex,
               fontSize: `${element.fontSize}em`,
               color: element.color,
@@ -75,7 +73,7 @@ function SlideRender ({ slide, themeColor }) {
           <SyntaxHighlighter
             key={element.id}
             language={element.language || 'javascript'}
-            style={dark}
+            style={materialLight}
             customStyle={{
               position: 'absolute',
               left: `${element.position.x}%`,
@@ -95,8 +93,7 @@ function SlideRender ({ slide, themeColor }) {
     }
   };
   return (
-    // <div className="slide" style={{ position: 'relative', width: '100%', height: '100vh', background: backgroundColor }}>
-    <div className="slide" style={{ position: 'relative', width: '100%', height: '100%', background: backgroundColor }}>
+    <div className="slide" style={{ position: 'relative', width: '100%', height: '100%', background: backgroundColor, fontSize: 16 * window.innerWidth / 1000 + 'px' }}>
       {slide.elements.map(renderElement)}
     </div>
   );
