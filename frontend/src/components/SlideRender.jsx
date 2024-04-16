@@ -20,8 +20,6 @@ function SlideRender ({ slide, themeColor }) {
               position: 'absolute',
               left: `${element.position.x}%`,
               top: `${element.position.y}%`,
-              // left: element.position.x * containerWidth / 100 + 'px',
-              // top: element.position.y * containerHeight / 100 + 'px',
               zIndex: element.zIndex,
               fontSize: `${element.fontSize}em`,
               color: element.color,
@@ -95,8 +93,7 @@ function SlideRender ({ slide, themeColor }) {
     }
   };
   return (
-    // <div className="slide" style={{ position: 'relative', width: '100%', height: '100vh', background: backgroundColor }}>
-    <div className="slide" style={{ position: 'relative', width: '100%', height: '100%', background: backgroundColor }}>
+    <div className="slide" style={{ position: 'relative', width: '100%', height: '100%', background: backgroundColor, fontSize: 16 * window.innerWidth / 1000 + 'px' }}>
       {slide.elements.map(renderElement)}
     </div>
   );
