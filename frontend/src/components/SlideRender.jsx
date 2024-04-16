@@ -8,8 +8,8 @@ function SlideRender ({ slide, themeColor }) {
   // const containerWidth = width;
   // const containerHeight = width * 0.75;
   const renderElement = (element) => {
-    console.log('x', element.position.x);
-    console.log('element.position.x: ', element.position.x);
+    // console.log('element: ', element.text);
+    // console.log('element.position.x: ', element.position.x);
     // console.log('width: ', width);
     switch (element.type) {
       case 'text':

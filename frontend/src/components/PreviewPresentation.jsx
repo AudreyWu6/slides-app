@@ -28,6 +28,7 @@ const PreviewPresentation = () => {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [selectedPresentation, setSelectedPresentation] = useState(null);
   const { resetState } = usePresentations();
+  const [lastKey, setlastKey] = useState(0);
   // const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -40,15 +41,18 @@ const PreviewPresentation = () => {
       const fetchedPresentations = await fetchPresentations();
       const presentationsArray = fetchedPresentations.store;
       const presentationById = presentationsArray.find(p => p.id === parseInt(id));
-      console.log('presentationById', presentationById);
+      console.log('presentationById version', presentationById.versions);
       setSelectedPresentation(presentationById);
-      if (presentationById && presentationById.slides.length > currentSlideIndex) {
-        const slideByIndex = presentationById.slides[currentSlideIndex];
-        console.log('Found slide:', slideByIndex);
-      } else {
-        console.log('Slide or presentation not found');
-        navigate(`/edit-presentation/${id}/slide/1`);
-      }
+      const versionKeys = Object.keys(presentationById.versions);
+      setlastKey(versionKeys[versionKeys.length - 1]);
+      // if (presentationById && presentationById.versions[lastKey].slides.length > currentSlideIndex) {
+      //   const slideByIndex = presentationById.versions[lastKey].slides[currentSlideIndex];
+      //   console.log('Found slide:', slideByIndex);
+      //   // console.log('timestamp:', presentationById.versions[lastKey].timestamp);
+      // } else {
+      //   console.log('Slide or presentation not found');
+      //   navigate(`/edit-presentation/${id}/slide/1`);
+      // }
     };
     loadSlides();
   }, [id, currentSlideIndex]);
@@ -58,32 +62,17 @@ const PreviewPresentation = () => {
     navigate(`/preview-presentation/${id}/slide/${slideNumberForUrl}`, { replace: true });
   };
 
-  // useEffect(() => {
-  //   // Handler to call on window resize
-  //   function handleResize () {
-  //     // Set window width to the innerWidth of the browser window
-  //     setWindowWidth(window.innerWidth);
-  //   }
-  //   // Add event listener
-  //   window.addEventListener('resize', handleResize);
-  //   // Call handler right away so state gets updated with initial window size
-  //   handleResize();
-  //   // Remove event listener on cleanup
-  //   return () => {
-  //     window.removeEventListener('resize', handleResize);
-  //   };
-  // }, []);
-
   const goToPreviousSlide = () => {
     setCurrentSlideIndex(prevIndex => {
-      const newIndex = (prevIndex - 1 + selectedPresentation.slides.length) % selectedPresentation.slides.length;
+      const newIndex = (prevIndex - 1 + selectedPresentation.versions[lastKey].slides.length) % selectedPresentation.versions[lastKey].slides.length;
       updateSlideInUrl(newIndex);
       return newIndex;
     });
   };
   const goToNextSlide = () => {
     setCurrentSlideIndex(prevIndex => {
-      const newIndex = (prevIndex + 1) % selectedPresentation.slides.length;
+      const newIndex = (prevIndex + 1) % selectedPresentation.versions[lastKey].slides.length;
+      console.log('in nexr slide: ', lastKey);
       updateSlideInUrl(newIndex);
       return newIndex;
     });
@@ -97,14 +86,14 @@ const PreviewPresentation = () => {
     const handleKeyDown = (event) => {
       if (event.key === 'ArrowLeft' && currentSlideIndex > 0) {
         goToPreviousSlide();
-      } else if (event.key === 'ArrowRight' && currentSlideIndex < selectedPresentation.slides.length - 1) {
+      } else if (event.key === 'ArrowRight' && currentSlideIndex < selectedPresentation.versions[lastKey].slides.length - 1) {
         goToNextSlide();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentSlideIndex, selectedPresentation?.slides.length]);
+  }, [currentSlideIndex, selectedPresentation?.versions[lastKey].slides.length]);
 
   const handleLogout = () => {
     resetState();
@@ -123,10 +112,10 @@ const PreviewPresentation = () => {
         <NaviBtn to="/login" onClick={handleLogout}>Logout</NaviBtn>
       </div>
         <h3 style={{ textAlign: 'center' }}>Title: {selectedPresentation.name} slide {currentSlideIndex + 1}</h3>
-        <SlideTransitionWrapper keyProp={selectedPresentation.slides[currentSlideIndex].id}>
+        <SlideTransitionWrapper keyProp={selectedPresentation.versions[lastKey].slides[currentSlideIndex].id}>
           {selectedPresentation && (
             <div style={{ position: 'relative', height: '100vh', width: '100%' }}>
-              <SlideRender slide={selectedPresentation.slides[currentSlideIndex]} themeColor={selectedPresentation.theme}/>
+              <SlideRender slide={selectedPresentation.versions[lastKey].slides[currentSlideIndex]} themeColor={selectedPresentation.theme}/>
             </div>
           )}
         </SlideTransitionWrapper>
@@ -145,7 +134,7 @@ const PreviewPresentation = () => {
             // visibility: currentSlideIndex > 0 ? 'visible' : 'hidden',
           }}
         />}
-        {currentSlideIndex < selectedPresentation.slides.length - 1 && <ArrowForwardIcon
+        {currentSlideIndex < selectedPresentation.versions[lastKey].slides.length - 1 && <ArrowForwardIcon
           onClick={goToNextSlide}
           style={{
             position: 'absolute',

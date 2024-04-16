@@ -36,6 +36,7 @@ const ReorderSlides = () => {
   const { presentations, reorderSlides, resetState } = usePresentations();
   const [selectedPresentation, setSelectedPresentation] = useState(null);
   const [slides, setSlides] = useState([]);
+  const [lastKey, setlastKey] = useState(0);
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
@@ -54,30 +55,45 @@ const ReorderSlides = () => {
       const presentationsArray = fetchedPresentations.store;
       const presentationById = presentationsArray.find(p => p.id === parseInt(id));
       setSelectedPresentation(presentationById);
-      console.log('presentationById.slides', presentationById.slides[0].elements[0])
+      const versionKeys = Object.keys(presentationById.versions);
+      setlastKey(versionKeys[versionKeys.length - 1]);
+      console.log('lastKey: ', lastKey);
+      // console.log('slides: ', presentationById.versions[lastKey].slides);
     };
     loadSlides();
   }, [id]);
 
   useEffect(() => {
-    if (selectedPresentation) {
-      setSlides(selectedPresentation.slides);
-    }
-  }, [selectedPresentation]);
-
-  useEffect(() => {
     const updateServer = async () => {
       if (presentations.length > 0) {
         try {
+          // const presentationtemp = presentations.find(p => p.id === parseInt(id));
+          // console.log('presentationtemp before: ', presentationtemp);
+          // const newVersion = {
+          //   timestamp: new Date().toISOString(), // New unique timestamp
+          //   slides: presentationtemp.slides,
+          //   theme: selectedPresentation.versions[lastKey].theme,
+          // };
+          // versions: [...selectedPresentation.versions, newVersion]
+          // console.log('presentationtemp after change: ', newVersion);
           await putToServer(presentations);
           console.log('the body beforeput to server: ', presentations);
         } catch (error) {
           console.error('Failed to update presentations on the server:', error);
         }
+      } else {
+        console.log('presentations: abnormal', presentations)
       }
     };
     updateServer();
   }, [presentations]);
+
+  useEffect(() => {
+    if (selectedPresentation) {
+      // console.log('setedSlides: ', selectedPresentation.versions[lastKey].slides);
+      setSlides(selectedPresentation.versions[lastKey].slides);
+    }
+  }, [lastKey]);
 
   const handleLogout = () => {
     resetState();
@@ -132,7 +148,7 @@ const ReorderSlides = () => {
                       }}
                     >
                       Slide {index + 1}:
-                      <SlideRender slide={slide} themeColor={selectedPresentation.theme}/>
+                      <SlideRender slide={slide} themeColor={selectedPresentation.versions[lastKey].slides}/>
                     </Card>
                   )}
                 </Draggable>

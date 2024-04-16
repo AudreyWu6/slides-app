@@ -13,9 +13,6 @@ export const PresentationProvider = ({ children }) => {
   };
 
   const updatePresentation = (updatedPresentation) => {
-    // setPresentations((prev) =>
-    //   prev.map((presentation) => presentation.id === updatedPresentation.id ? updatedPresentation : presentation)
-    // );
     setPresentations((prev = []) =>
       prev.map((presentation) => presentation.id === updatedPresentation?.id ? updatedPresentation : presentation)
     );
@@ -23,11 +20,8 @@ export const PresentationProvider = ({ children }) => {
 
   const deletePresentation = (id) => {
     setPresentations((prev) => {
-      // Find the index of the presentation to delete
       const indexToDelete = prev.findIndex(presentation => presentation.id === id);
-      // Filter out the presentation to delete
       const filtered = prev.filter((presentation, index) => index !== indexToDelete);
-      // Check if there are any presentations left
       if (filtered.length === 0) {
         return []; // Return an empty array if no presentations are left
       }
@@ -44,11 +38,28 @@ export const PresentationProvider = ({ children }) => {
   };
 
   // New function to reorder slides within a presentation
+  // const reorderSlides = (presentationId, newSlidesOrder) => {
+  //   setPresentations((prevPresentations) =>
+  //     prevPresentations.map((presentation) => {
+  //       if (presentation.id === parseInt(presentationId, 10)) {
+  //         return { ...presentation, slides: newSlidesOrder };
+  //       }
+  //       return presentation;
+  //     })
+  //   );
+  // };
+
   const reorderSlides = (presentationId, newSlidesOrder) => {
-    setPresentations((prevPresentations) =>
-      prevPresentations.map((presentation) => {
+    const newVersionTimestamp = new Date().toISOString(); // Generate new timestamp
+    setPresentations(prevPresentations =>
+      prevPresentations.map(presentation => {
         if (presentation.id === parseInt(presentationId, 10)) {
-          return { ...presentation, slides: newSlidesOrder };
+          const newVersion = {
+            timestamp: newVersionTimestamp,
+            slides: newSlidesOrder,
+            theme: presentation.versions[presentation.versions.length - 1]?.theme || 'Default' // Copy theme from last version or default
+          };
+          return { ...presentation, versions: [...presentation.versions, newVersion] };
         }
         return presentation;
       })
