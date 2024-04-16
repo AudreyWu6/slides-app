@@ -289,6 +289,19 @@ function ResizableBox ({
         </div>
       );
       break;
+    case 'audio':
+      content = (
+        <audio
+          src={element.url}
+          style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+          }}
+          controls
+        />
+      );
+      break;
     default:
       content = <div>Unsupported element type</div>;
   }

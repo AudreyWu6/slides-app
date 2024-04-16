@@ -138,7 +138,7 @@ const ReorderSlides = () => {
                       }}
                     >
                       Slide {index + 1}:
-                      <SlideRender slide={slide} themeColor={selectedPresentation.versions[lastKey].slides}/>
+                      <SlideRender slide={slide} themeColor={selectedPresentation.versions[lastKey].theme} parentFontSize='3'/>
                     </Card>
                   )}
                 </Draggable>

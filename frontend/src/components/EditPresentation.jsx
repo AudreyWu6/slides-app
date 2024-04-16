@@ -153,7 +153,7 @@ const EditPresentation = () => {
   const handleRestoreVersion = (version) => {
     setCurrentSlides(version.slides);
     setCurrentTheme(version.theme)
-    const updatedPresentation = NewVersionToPresentation(selectedPresentation, currentSlides, currentTheme, '');
+    const updatedPresentation = NewVersionToPresentation(selectedPresentation, version.slides, version.theme, '');
     updatePresentation(updatedPresentation);
     setSelectedPresentation(updatedPresentation);
   };
@@ -196,8 +196,10 @@ const EditPresentation = () => {
       }
     } else {
       // If no timestamp is given, create a new version
+      const newTimestamp = new Date().toISOString();
+      setCurrentVersionTimestamp(newTimestamp); // 更新时间戳，标记新的版本
       newVersion = {
-        timestamp: new Date().toISOString(), // New unique timestamp
+        timestamp: newTimestamp, // New unique timestamp
         slides,
         theme
       };

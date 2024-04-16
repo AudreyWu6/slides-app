@@ -50,6 +50,14 @@ function getInitialState (type) {
         position: { x: 0, y: 0 },
         zIndex: 0,
       };
+    case 'audio':
+      return {
+        url: '',
+        autoPlay: false,
+        position: { x: 0, y: 0 },
+        zIndex: 0,
+      };
+
     default:
       return {};
   }
@@ -205,6 +213,7 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
           </Modal>
         </>
       );
+
     case 'code':
       return (
         <>
@@ -250,6 +259,38 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
                 value={data.code}
                 onChange={(e) => setData({ ...data, code: e.target.value })}
               />
+              <Button onClick={handleSubmit}>{isEditing ? 'Update' : 'Create'}</Button>
+            </Box>
+          </Modal>
+        </>
+      );
+    case 'audio':
+      return (
+        <>
+          <Modal open={open} onClose={handleClose}>
+            <Box sx={{
+              position: 'absolute',
+              top: '200px',
+              left: '10px',
+              width: '270px',
+              background: 'white',
+              padding: '20px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2
+            }}>
+              <Typography variant="h6">{isEditing ? 'Edit audio' : 'Add audio'}</Typography>
+              <TextField
+                fullWidth
+                label="Audio URL"
+                value={data.url}
+                onChange={(e) => setData({ ...data, url: e.target.value })}
+              />
+              {!isEditing && (
+                <TextField label="size (%)"
+                           value={parsePercentage(data.width)}
+                           onChange={(e) => setData({ ...data, width: e.target.value, height: e.target.value })}/>
+              )}
               <Button onClick={handleSubmit}>{isEditing ? 'Update' : 'Create'}</Button>
             </Box>
           </Modal>
