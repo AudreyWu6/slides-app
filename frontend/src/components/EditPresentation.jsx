@@ -14,7 +14,6 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { usePresentations } from './PresentationContext';
 import SlideEditor from './SlideEditor';
 import { apiRequestStore } from './apiStore';
-import SlideTransitionWrapper from './SlideTransitionWrapper';
 import NaviBtn from './NaviBtnDash';
 import VersionHistoryBtn from './VersionHistoryBtn';
 
@@ -68,7 +67,6 @@ const EditPresentation = () => {
 
   useEffect(() => {
     let timeoutId = null;
-
     const updateTimestamp = () => {
       const newTimestamp = new Date().toISOString();
       setCurrentVersionTimestamp(newTimestamp); // 更新时间戳，标记新的版本
@@ -150,7 +148,7 @@ const EditPresentation = () => {
     } else if (presentations && presentations.length === 0 && deleteSignal) {
       updateServer();
     }
-  }, [presentations, deleteSignal]);
+  }, [presentations, deleteSignal,]);
 
   const handleRestoreVersion = (version) => {
     setCurrentSlides(version.slides);
@@ -261,6 +259,7 @@ const EditPresentation = () => {
     setCurrentSlideIndex(prevIndex => {
       const newIndex = (prevIndex - 1 + currentSlides.length) % currentSlides.length;
       updateSlideInUrl(newIndex); // Ensure this function also expects the current index setup
+      // setTransitionTrigger(true);
       return newIndex;
     });
   };
@@ -269,6 +268,7 @@ const EditPresentation = () => {
     setCurrentSlideIndex(prevIndex => {
       const newIndex = (prevIndex + 1) % currentSlides.length;
       updateSlideInUrl(newIndex); // Ensure this function also expects the current index setup
+      // setTransitionTrigger(true);
       return newIndex;
     });
   };
@@ -319,9 +319,9 @@ const EditPresentation = () => {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
         <Button variant="contained" size="small" onClick={handleBackClick}>Back</Button>
         <div>
-          <Button onClick={previewPresentation} variant="contained" sx={{ ml: 1 }}>Preview</Button>
-          <Button onClick={handleReorderClick} variant="contained" sx={{ ml: 1 }}>Reorder Slides</Button>
-          <Button onClick={() => setDeleteConfirmOpen(true)} variant="contained" color="error" sx={{ ml: 1 }}>Delete Presentation</Button>
+          <Button onClick={previewPresentation} variant="contained" sx={{ ml: 1, width: '205px', marginBottom: '5px' }}>Preview</Button>
+          <Button onClick={handleReorderClick} variant="contained" sx={{ ml: 1, width: '205px', marginBottom: '5px' }}>Reorder Slides</Button>
+          <Button onClick={() => setDeleteConfirmOpen(true)} variant="contained" color="error" sx={{ ml: 1, width: '205px', marginBottom: '5px' }}>Delete Presentation</Button>
           <VersionHistoryBtn versions={selectedPresentation.versions} onRestoreVersion={handleRestoreVersion}/>
           <NaviBtn to="/login" onClick={handleLogout}>Logout</NaviBtn>
         </div>
@@ -345,9 +345,7 @@ const EditPresentation = () => {
       <Button onClick={handleDeleteSlide} size="small" variant="contained" color="error" sx={{ mt: 2, ml: 2 }} startIcon={<DeleteIcon />}>Delete Slide</Button>
       <Typography sx={{ mt: 2, display: 'flex', justifyContent: 'center', fontWeight: 700 }}>Slide {currentSlideIndex + 1}</Typography>
       {selectedPresentation && currentSlides.length > 0 && currentSlideIndex < currentSlides.length && (
-        <SlideTransitionWrapper keyProp={currentSlides[currentSlideIndex].id}>
-          <SlideEditor slide={currentSlides[currentSlideIndex]} handleUpdateSlide={handleUpdateSlide} handleUpdateTheme={handleUpdateTheme} themeColor={currentTheme}/>
-        </SlideTransitionWrapper>
+        <SlideEditor slide={currentSlides[currentSlideIndex]} handleUpdateSlide={handleUpdateSlide} handleUpdateTheme={handleUpdateTheme} themeColor={currentTheme}/>
       )}
       <Dialog open={deleteConfirmOpen} onClose={() => setDeleteConfirmOpen(false)}>
         <DialogTitle>Are you sure you want to delete this presentation?</DialogTitle>

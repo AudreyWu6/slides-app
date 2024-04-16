@@ -11,7 +11,6 @@ import EditPresentation from './components/EditPresentation';
 import { PresentationProvider } from './components/PresentationContext';
 import PreviewPresentation from './components/PreviewPresentation';
 import ReorderSlides from './components/ReorderSlides';
-import './App.css';
 
 const App = () => {
   return (

@@ -17,8 +17,8 @@ function NaviBtn ({ to, children, onClick }) {
       variant="contained"
       color="primary"
       onClick={handleClick}
-      style={{ textDecoration: 'none' }}
-      width= "400px"
+      style={{ textDecoration: 'none', width: '205px', marginBottom: '5px' }}
+      // width= "205px"
       height= "50px"
       sx={{ ml: 1 }}
     >

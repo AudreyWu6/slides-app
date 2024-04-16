@@ -45,14 +45,6 @@ const PreviewPresentation = () => {
       setSelectedPresentation(presentationById);
       const versionKeys = Object.keys(presentationById.versions);
       setlastKey(versionKeys[versionKeys.length - 1]);
-      // if (presentationById && presentationById.versions[lastKey].slides.length > currentSlideIndex) {
-      //   const slideByIndex = presentationById.versions[lastKey].slides[currentSlideIndex];
-      //   console.log('Found slide:', slideByIndex);
-      //   // console.log('timestamp:', presentationById.versions[lastKey].timestamp);
-      // } else {
-      //   console.log('Slide or presentation not found');
-      //   navigate(`/edit-presentation/${id}/slide/1`);
-      // }
     };
     loadSlides();
   }, [id, currentSlideIndex]);
@@ -112,13 +104,13 @@ const PreviewPresentation = () => {
         <NaviBtn to="/login" onClick={handleLogout}>Logout</NaviBtn>
       </div>
         <h3 style={{ textAlign: 'center' }}>Title: {selectedPresentation.name} slide {currentSlideIndex + 1}</h3>
-        <SlideTransitionWrapper keyProp={selectedPresentation.versions[lastKey].slides[currentSlideIndex].id}>
+        {selectedPresentation && (<SlideTransitionWrapper keyProp={selectedPresentation.versions[lastKey].slides[currentSlideIndex].id}>
           {selectedPresentation && (
             <div style={{ position: 'relative', height: '100vh', width: '100%' }}>
               <SlideRender slide={selectedPresentation.versions[lastKey].slides[currentSlideIndex]} themeColor={selectedPresentation.theme}/>
             </div>
           )}
-        </SlideTransitionWrapper>
+        </SlideTransitionWrapper>)}
         <Button onClick={goToEditPresentation} variant='outlined' style={{ position: 'absolute', top: 10, left: 10 }}>
           Go Back to Edit
         </Button>
