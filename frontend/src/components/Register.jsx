@@ -34,9 +34,14 @@ function Register () {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters long.');
+      setOpenAlert(true);
+      return;
+    }
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match.');
-      setOpenAlert(true); // 显示Alert
+      setOpenAlert(true);
       return;
     }
     try {

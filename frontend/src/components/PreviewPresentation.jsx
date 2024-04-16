@@ -45,6 +45,7 @@ const PreviewPresentation = () => {
       setSelectedPresentation(presentationById);
       const versionKeys = Object.keys(presentationById.versions);
       setlastKey(versionKeys[versionKeys.length - 1]);
+      console.log('preview', lastKey);
     };
     loadSlides();
   }, [id, currentSlideIndex]);
@@ -107,7 +108,7 @@ const PreviewPresentation = () => {
         {selectedPresentation && (<SlideTransitionWrapper keyProp={selectedPresentation.versions[lastKey].slides[currentSlideIndex].id}>
           {selectedPresentation && (
             <div style={{ position: 'relative', height: '100vh', width: '100%' }}>
-              <SlideRender slide={selectedPresentation.versions[lastKey].slides[currentSlideIndex]} themeColor={selectedPresentation.theme}/>
+              <SlideRender slide={selectedPresentation.versions[lastKey].slides[currentSlideIndex]} themeColor={selectedPresentation.versions[lastKey].theme} parentFontSize='16'/>
             </div>
           )}
         </SlideTransitionWrapper>)}

@@ -100,6 +100,7 @@ function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme
         <ModalBtn type='image' update={(data) => handleAddElement(data, 'image')}></ModalBtn>
         <ModalBtn type='video' update={(data) => handleAddElement(data, 'video')}></ModalBtn>
         <ModalBtn type='code' update={(data) => handleAddElement(data, 'code')}></ModalBtn>
+        <ModalBtn type='audio' update={(data) => handleAddElement(data, 'audio')}></ModalBtn>
       </div>
       {/* slide */}
       <div>
