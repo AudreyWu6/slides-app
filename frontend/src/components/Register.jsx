@@ -8,6 +8,8 @@ import Typography from '@mui/material/Typography';
 import { apiRequest } from './api';
 import NaviBtn from './NaviBtn';
 import Alert from './Alert';
+import { FormControl } from '@mui/material';
+import FormHelperText from '@mui/material/FormHelperText';
 
 function Register () {
   const [formData, setFormData] = useState({
@@ -61,6 +63,7 @@ function Register () {
   };
 
   return (
+    <FormControl>
     <Container maxWidth="xs">
       <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center', }}>
         <Typography component="h1" variant="h5">
@@ -101,7 +104,9 @@ function Register () {
             id="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
+            aria-describedby="my-helper-text"
           />
+          <FormHelperText fullWidth id="my-helper-text">Your password must at least 8 characters long, contain letters or numbers, and must not contain spaces, special characters, or emoji.</FormHelperText>
           <TextField
             margin="normal"
             required
@@ -132,6 +137,7 @@ function Register () {
         <NaviBtn fullWidth to="/login">Login</NaviBtn>
       </Box>
     </Container>
+    </FormControl>
   );
 }
 
