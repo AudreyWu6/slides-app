@@ -4,7 +4,7 @@ import ModalBtn from './OpenModalBtn';
 import ColorBtn from './ColorBtn';
 
 function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme, themeColor }) {
-  console.log('slide passed', passedSlide);
+  // console.log('slide passed', passedSlide);
   const initialState = {
     id: 1,
     elements: [],

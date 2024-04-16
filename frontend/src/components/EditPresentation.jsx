@@ -147,6 +147,8 @@ const EditPresentation = () => {
     };
     if (presentations && presentations.length > 0 && selectedPresentation !== null) {
       updateServer();
+    } else if (presentations && presentations.length === 0 && deleteSignal) {
+      updateServer();
     }
   }, [presentations, deleteSignal]);
 

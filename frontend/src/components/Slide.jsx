@@ -31,7 +31,7 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor })
         setWidth(`${calculatedWidth}`);
         setHeight(`${newHeight}`);
       } else {
-        console.log('viewportWidth', viewportWidth);
+        // console.log('viewportWidth', viewportWidth);
         const calculatedWidth = viewportWidth - 50;
         const newHeight = calculatedWidth * 0.75;
         setWidth(`${calculatedWidth}`);

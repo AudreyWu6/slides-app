@@ -28,7 +28,7 @@ const PreviewPresentation = () => {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [selectedPresentation, setSelectedPresentation] = useState(null);
   const { resetState } = usePresentations();
-  let lastKey = 0;
+  const [lastKey, setlastKey] = useState(0);
   // const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -41,17 +41,18 @@ const PreviewPresentation = () => {
       const fetchedPresentations = await fetchPresentations();
       const presentationsArray = fetchedPresentations.store;
       const presentationById = presentationsArray.find(p => p.id === parseInt(id));
-      console.log('presentationById version', typeof presentationById.versions);
+      console.log('presentationById version', presentationById.versions);
       setSelectedPresentation(presentationById);
       const versionKeys = Object.keys(presentationById.versions);
-      lastKey = versionKeys[versionKeys.length - 1];
-      if (presentationById && presentationById.versions[lastKey].slides.length > currentSlideIndex) {
-        const slideByIndex = presentationById.versions[lastKey].slides[currentSlideIndex];
-        console.log('Found slide:', slideByIndex);
-      } else {
-        console.log('Slide or presentation not found');
-        navigate(`/edit-presentation/${id}/slide/1`);
-      }
+      setlastKey(versionKeys[versionKeys.length - 1]);
+      // if (presentationById && presentationById.versions[lastKey].slides.length > currentSlideIndex) {
+      //   const slideByIndex = presentationById.versions[lastKey].slides[currentSlideIndex];
+      //   console.log('Found slide:', slideByIndex);
+      //   // console.log('timestamp:', presentationById.versions[lastKey].timestamp);
+      // } else {
+      //   console.log('Slide or presentation not found');
+      //   navigate(`/edit-presentation/${id}/slide/1`);
+      // }
     };
     loadSlides();
   }, [id, currentSlideIndex]);
@@ -71,6 +72,7 @@ const PreviewPresentation = () => {
   const goToNextSlide = () => {
     setCurrentSlideIndex(prevIndex => {
       const newIndex = (prevIndex + 1) % selectedPresentation.versions[lastKey].slides.length;
+      console.log('in nexr slide: ', lastKey);
       updateSlideInUrl(newIndex);
       return newIndex;
     });

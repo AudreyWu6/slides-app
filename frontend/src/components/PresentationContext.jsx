@@ -38,11 +38,28 @@ export const PresentationProvider = ({ children }) => {
   };
 
   // New function to reorder slides within a presentation
+  // const reorderSlides = (presentationId, newSlidesOrder) => {
+  //   setPresentations((prevPresentations) =>
+  //     prevPresentations.map((presentation) => {
+  //       if (presentation.id === parseInt(presentationId, 10)) {
+  //         return { ...presentation, slides: newSlidesOrder };
+  //       }
+  //       return presentation;
+  //     })
+  //   );
+  // };
+
   const reorderSlides = (presentationId, newSlidesOrder) => {
-    setPresentations((prevPresentations) =>
-      prevPresentations.map((presentation) => {
+    const newVersionTimestamp = new Date().toISOString(); // Generate new timestamp
+    setPresentations(prevPresentations =>
+      prevPresentations.map(presentation => {
         if (presentation.id === parseInt(presentationId, 10)) {
-          return { ...presentation, slides: newSlidesOrder };
+          const newVersion = {
+            timestamp: newVersionTimestamp,
+            slides: newSlidesOrder,
+            theme: presentation.versions[presentation.versions.length - 1]?.theme || 'Default' // Copy theme from last version or default
+          };
+          return { ...presentation, versions: [...presentation.versions, newVersion] };
         }
         return presentation;
       })
