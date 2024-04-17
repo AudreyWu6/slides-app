@@ -22,7 +22,7 @@ const putToServer = async (pres) => {
   try {
     const token = localStorage.getItem('token');
     const body = { store: pres };
-    // console.log('the body that given to server', body);
+    console.log('the body that given to server', body);
     await apiRequestStore('/store', token, 'PUT', body);
   } catch (error) {
     console.error('Fetching presentation failed:', error.message);
@@ -125,7 +125,7 @@ function Dashboard () {
           <TextField id = "name" autoFocus margin="dense" autoComplete="on" name="name" label="Presentation Name" type="text" fullWidth variant="outlined" value={newPresentation.name} onChange={handleChange} />
           <TextField id = "description" margin="dense" autoComplete="on" name="description" label="Description" type="text" fullWidth variant="outlined" value={newPresentation.description} onChange={handleChange} />
           <TextField id = "thumbnail" margin="dense" name="thumbnail" label="Thumbnail URL" type="text" fullWidth variant="outlined" value={newPresentation.thumbnail} onChange={handleChange} helperText="Leave blank for a default thumbnail." />
-          <Button onClick={createPresentation} color="primary" variant="contained" sx={{ mt: 2 }}>Create</Button>
+          <Button onClick={createPresentation} type="submit" color="primary" variant="contained" sx={{ mt: 2 }}>Create</Button>
         </Box>
       </Modal>
       <Grid container spacing={2} style={{ marginTop: '20px' }}>

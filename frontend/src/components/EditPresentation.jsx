@@ -33,10 +33,8 @@ const fetchPresentations = async () => {
     const token = localStorage.getItem('token');
     const response = await apiRequestStore('/store', token, 'GET', null);
     const presentations = response || [];
-    // console.log('presentationsData recieved from server: ', presentations);
     return presentations; // Ensure this is always an array
   } catch (error) {
-    // console.error('Fetching presentations failed:', error);
     return [];
   }
 };
@@ -56,7 +54,7 @@ const EditPresentation = () => {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const navigate = useNavigate();
   const { presentations, updatePresentation, deletePresentation, resetState } = usePresentations();
-  const [editTitleOpen, setEditTitleOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [selectedPresentation, setSelectedPresentation] = useState('null');
   const [currentSlides, setCurrentSlides] = useState([]);
@@ -64,6 +62,7 @@ const EditPresentation = () => {
   const [title, setTitle] = useState(selectedPresentation?.name || '');
   const [deleteSignal, setDeleteSignal] = useState(false);
   const [currentVersionTimestamp, setCurrentVersionTimestamp] = useState(null);
+  const [thumbnail, setThumbnail] = useState(selectedPresentation.thumbnail || '');
 
   useEffect(() => {
     let timeoutId = null;
@@ -116,6 +115,7 @@ const EditPresentation = () => {
           }
           setSelectedPresentation(presentationById); // 设置完整的演示文稿信息
           setTitle(presentationById.name); // 设置演示文稿标题
+          setThumbnail(presentationById.thumbnail);
         } else {
           console.error('Presentation not found');
         }
@@ -161,8 +161,16 @@ const EditPresentation = () => {
   const handleUpdateTitle = () => {
     const updatedPresentation = { ...selectedPresentation, name: title };
     updatePresentation(updatedPresentation);
-    setEditTitleOpen(false);
+    setModalOpen(false);
     setSelectedPresentation(updatedPresentation); // Update the local state to reflect the change immediately
+  };
+
+  // Handles updating the thumbnail
+  const handleUpdateThumbnail = () => {
+    const updatedPresentation = { ...selectedPresentation, thumbnail };
+    updatePresentation(updatedPresentation);
+    setModalOpen(false); // Optionally close the modal
+    setSelectedPresentation(updatedPresentation);
   };
 
   const handleUpdateTheme = (color) => {
@@ -333,14 +341,17 @@ const EditPresentation = () => {
           {selectedPresentation.name}
           <IconButton
             sx={{ display: 'inline-block' }}
-            onClick={() => setEditTitleOpen(true)}><EditIcon />
+            onClick={() => setModalOpen(true)}><EditIcon />
           </IconButton>
         </Typography>
       </Box>
-      <Modal open={editTitleOpen} onClose={() => setEditTitleOpen(false)}>
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
         <Box sx={modalStyle}>
           <TextField id="updateTitle" fullWidth value={title} onChange={(e) => setTitle(e.target.value)} autoFocus />
-          <Button onClick={handleUpdateTitle} color="primary" variant="contained" sx={{ mt: 2 }}>Update</Button>
+          <Button onClick={handleUpdateTitle} color="primary" variant="contained" sx={{ mt: 2 }}>Update Title</Button>
+          <TextField id="updateThumbnail" label="Thumbnail URL" type="text" fullWidth margin="dense" value={thumbnail} onChange={(e) => setThumbnail(e.target.value)}/>
+          {thumbnail && <img src={thumbnail} alt="Thumbnail Preview" style={{ maxWidth: '100%', marginTop: 10 }} />}
+          <Button onClick={handleUpdateThumbnail} color="primary" variant="contained" sx={{ mt: 2 }}>Update Thumbnail</Button>
         </Box>
       </Modal>
       <Button onClick={handleAddSlide} size="small" variant="contained" sx={{ mt: 2 }}>Add New Slide</Button>
