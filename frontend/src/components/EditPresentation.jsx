@@ -8,6 +8,8 @@ import EditIcon from '@mui/icons-material/Edit'; // npm install react-syntax-hig
 // npm install @mui/icons-material
 // npm install react-router-dom react-beautiful-dnd
 // npm install react-best-gradient-color-picker 这是现在要下载的
+// npm install react-syntax-highlighter --save
+// npm install --save-dev babel-jest @babel/core @babel/preset-env @babel/preset-react
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -158,19 +160,11 @@ const EditPresentation = () => {
     setSelectedPresentation(updatedPresentation);
   };
 
-  const handleUpdateTitle = () => {
-    const updatedPresentation = { ...selectedPresentation, name: title };
+  const handleUpdateTitleThumbnail = () => {
+    const updatedPresentation = { ...selectedPresentation, name: title, thumbnail };
     updatePresentation(updatedPresentation);
     setModalOpen(false);
     setSelectedPresentation(updatedPresentation); // Update the local state to reflect the change immediately
-  };
-
-  // Handles updating the thumbnail
-  const handleUpdateThumbnail = () => {
-    const updatedPresentation = { ...selectedPresentation, thumbnail };
-    updatePresentation(updatedPresentation);
-    setModalOpen(false); // Optionally close the modal
-    setSelectedPresentation(updatedPresentation);
   };
 
   const handleUpdateTheme = (color) => {
@@ -341,17 +335,17 @@ const EditPresentation = () => {
           {selectedPresentation.name}
           <IconButton
             sx={{ display: 'inline-block' }}
-            onClick={() => setModalOpen(true)}><EditIcon />
+            onClick={() => setModalOpen(true)}
+            data-cy="edit-icon-button"><EditIcon />
           </IconButton>
         </Typography>
       </Box>
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)} data-cy="modal-element">
         <Box sx={modalStyle}>
-          <TextField id="updateTitle" fullWidth value={title} onChange={(e) => setTitle(e.target.value)} autoFocus />
-          <Button onClick={handleUpdateTitle} color="primary" variant="contained" sx={{ mt: 2 }}>Update Title</Button>
-          <TextField id="updateThumbnail" label="Thumbnail URL" type="text" fullWidth margin="dense" value={thumbnail} onChange={(e) => setThumbnail(e.target.value)}/>
+          <TextField data-cy="modal-title-input" id="updateTitle" fullWidth value={title} onChange={(e) => setTitle(e.target.value)} autoFocus />
+          <TextField data-cy="modal-thumbnail-input" id="updateThumbnail" label="Thumbnail URL" type="text" fullWidth margin="dense" value={thumbnail} onChange={(e) => setThumbnail(e.target.value)}/>
           {thumbnail && <img src={thumbnail} alt="Thumbnail Preview" style={{ maxWidth: '100%', marginTop: 10 }} />}
-          <Button onClick={handleUpdateThumbnail} color="primary" variant="contained" sx={{ mt: 2 }}>Update Thumbnail</Button>
+          <Button data-cy="modal-save-btn" onClick={handleUpdateTitleThumbnail} color="primary" variant="contained" sx={{ mt: 2 }}>Update</Button>
         </Box>
       </Modal>
       <Button onClick={handleAddSlide} size="small" variant="contained" sx={{ mt: 2 }}>Add New Slide</Button>
