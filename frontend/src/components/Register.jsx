@@ -59,7 +59,7 @@ function Register () {
       setOpenAlert(true); // 显示Alert
     }
     console.log('Form data submitted:', formData);
-    navigate('/Dashboard');
+    navigate('/dashboard');
   };
 
   return (
@@ -94,6 +94,7 @@ function Register () {
             value={formData.password}
             onChange={handleChange}
           />
+          <FormHelperText id="my-helper-text">Your password must at least 8 characters long, contain letters or numbers, and must not contain spaces, special characters, or emoji.</FormHelperText>
           <TextField
             margin="normal"
             required
@@ -106,7 +107,6 @@ function Register () {
             onChange={handleChange}
             aria-describedby="my-helper-text"
           />
-          <FormHelperText fullWidth id="my-helper-text">Your password must at least 8 characters long, contain letters or numbers, and must not contain spaces, special characters, or emoji.</FormHelperText>
           <TextField
             margin="normal"
             required

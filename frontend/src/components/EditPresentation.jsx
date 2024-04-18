@@ -325,7 +325,7 @@ const EditPresentation = () => {
         <div>
           <Button onClick={previewPresentation} variant="contained" sx={{ ml: 1, width: '205px', marginBottom: '5px' }}>Preview</Button>
           <Button onClick={handleReorderClick} variant="contained" sx={{ ml: 1, width: '205px', marginBottom: '5px' }}>Reorder Slides</Button>
-          <Button onClick={() => setDeleteConfirmOpen(true)} variant="contained" color="error" sx={{ ml: 1, width: '205px', marginBottom: '5px' }}>Delete Presentation</Button>
+          <Button data-cy="delete-presentation-button" onClick={() => setDeleteConfirmOpen(true)} variant="contained" color="error" sx={{ ml: 1, width: '205px', marginBottom: '5px' }}>Delete Presentation</Button>
           <VersionHistoryBtn versions={selectedPresentation.versions} onRestoreVersion={handleRestoreVersion}/>
           <NaviBtn to="/login" onClick={handleLogout}>Logout</NaviBtn>
         </div>
@@ -342,13 +342,13 @@ const EditPresentation = () => {
       </Box>
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} data-cy="modal-element">
         <Box sx={modalStyle}>
-          <TextField data-cy="modal-title-input" id="updateTitle" fullWidth value={title} onChange={(e) => setTitle(e.target.value)} autoFocus />
+          <TextField data-cy="modal-title-input" id="updateTitle" label="Title" fullWidth value={title} onChange={(e) => setTitle(e.target.value)} autoFocus />
           <TextField data-cy="modal-thumbnail-input" id="updateThumbnail" label="Thumbnail URL" type="text" fullWidth margin="dense" value={thumbnail} onChange={(e) => setThumbnail(e.target.value)}/>
           {thumbnail && <img src={thumbnail} alt="Thumbnail Preview" style={{ maxWidth: '100%', marginTop: 10 }} />}
           <Button data-cy="modal-save-btn" onClick={handleUpdateTitleThumbnail} color="primary" variant="contained" sx={{ mt: 2 }}>Update</Button>
         </Box>
       </Modal>
-      <Button onClick={handleAddSlide} size="small" variant="contained" sx={{ mt: 2 }}>Add New Slide</Button>
+      <Button data-cy="add-new-slide-button" onClick={handleAddSlide} size="small" variant="contained" sx={{ mt: 2 }}>Add New Slide</Button>
       <Button onClick={handleDeleteSlide} size="small" variant="contained" color="error" sx={{ mt: 2, ml: 2 }} startIcon={<DeleteIcon />}>Delete Slide</Button>
       <Typography sx={{ mt: 2, display: 'flex', justifyContent: 'center', fontWeight: 700 }}>Slide {currentSlideIndex + 1}</Typography>
       {selectedPresentation && currentSlides.length > 0 && currentSlideIndex < currentSlides.length && (
@@ -358,7 +358,7 @@ const EditPresentation = () => {
         <DialogTitle>Are you sure you want to delete this presentation?</DialogTitle>
         <DialogActions>
           <Button onClick={() => setDeleteConfirmOpen(false)}>No</Button>
-          <Button onClick={handleDeleteThisPresentation} color="primary">Yes</Button>
+          <Button data-cy="confirm-delete-button" onClick={handleDeleteThisPresentation} color="primary">Yes</Button>
         </DialogActions>
       </Dialog>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
@@ -367,8 +367,8 @@ const EditPresentation = () => {
           <Button onClick={handleDeleteSlide} size="small" sx={{ ml: 2 }} variant="outlined"
                   startIcon={<DeleteIcon/>}>Delete</Button>}
           <div>
-            {currentSlideIndex >= 1 && <IconButton onClick={handlePreviousSlide}><ArrowBackIcon/></IconButton>}
-            {currentSlideIndex < currentSlides.length - 1 && <IconButton onClick={handleNextSlide}><ArrowForwardIcon/></IconButton>}
+            {currentSlideIndex >= 1 && <IconButton data-cy="previous-slide-button" onClick={handlePreviousSlide}><ArrowBackIcon/></IconButton>}
+            {currentSlideIndex < currentSlides.length - 1 && <IconButton data-cy="next-slide-button" onClick={handleNextSlide}><ArrowForwardIcon/></IconButton>}
           </div>
       </Box>
     </Box>

@@ -130,6 +130,7 @@ const ReorderSlides = () => {
                         width: '100%',
                         height: 'auto',
                         margin: '0 0 8px 0',
+                        padding: '5px 5px 5px 8px',
                         display: 'flex',
                         justifyContent: 'flex-start',
                         border: '1px solid lightgrey',
@@ -137,7 +138,7 @@ const ReorderSlides = () => {
                         alignItems: 'flex-start',
                       }}
                     >
-                      Slide {index + 1}:
+                      <div style={{ marginTop: '3px', marginRight: '3px', backgroundColor: 'grey', color: 'white', width: '60px', height: '20px', borderRadius: '3px', fontSize: '0.8rem', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>{`Slide ${index + 1}`}</div>
                       <SlideRender slide={slide} themeColor={selectedPresentation.versions[lastKey].theme} parentFontSize='3'/>
                     </Card>
                   )}

@@ -78,6 +78,7 @@ function Login () {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            data-cy="login-button"
           >
             Sign In
           </Button>

@@ -99,17 +99,20 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
             {!isEditing && (
               <TextField
                 label="size (%)"
+                data-cy="edit-slide-text-size"
                 value={parsePercentage(data.width)}
                 onChange={(e) => setData({ ...data, width: e.target.value, height: e.target.value })}
               />
             )}
             <TextField
               label="text"
+              data-cy="edit-slide-text-text"
               value={data.text}
               onChange={(e) => setData({ ...data, text: e.target.value })}
             />
             <TextField
               label="font size (em)"
+              data-cy="edit-slide-text-fontsize"
               value={data.fontSize}
               onChange={(e) => setData({ ...data, fontSize: e.target.value })}
             />
