@@ -56,7 +56,7 @@ function Register () {
     } catch (error) {
       console.error('Registration failed:', error);
       setError(error.message || 'Registration failed.');
-      setOpenAlert(true); // 显示Alert
+      setOpenAlert(true);
     }
     console.log('Form data submitted:', formData);
     navigate('/dashboard');

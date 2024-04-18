@@ -20,12 +20,10 @@ function Login () {
       });
       console.log('Login success:', data.token);
       localStorage.setItem('token', data.token);
-      // 处理登录成功逻辑，比如保存token，导航到另一个页面等
       navigate('/dashboard');
     } catch (error) {
       console.error('Login failed:', error.message);
-      setOpenAlert(true); // 显示Alert
-      // 处理登录失败逻辑
+      setOpenAlert(true);
     }
   };
 

@@ -67,14 +67,12 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
   // console.log('modal', initialData);
   const [data, setData] = useState(initialData || getInitialState(type));
   useEffect(() => {
-    // 这确保了每当isEditing或initialData变化时，data都会相应地更新
-    // 特别是当从编辑切换回添加模式时，这个逻辑能确保状态重置
     if (isEditing && initialData) {
       setData(initialData);
     } else {
       setData(getInitialState(type));
     }
-  }, [isEditing, initialData, type]); // 注意：这里添加了type作为依赖项
+  }, [isEditing, initialData, type]);
   // console.log('modal-data', data);
   const handleSubmit = () => {
     update(data);

@@ -80,7 +80,6 @@ const ReorderSlides = () => {
 
   useEffect(() => {
     if (selectedPresentation) {
-      // console.log('setedSlides: ', selectedPresentation.versions[lastKey].slides);
       setSlides(selectedPresentation.versions[lastKey].slides);
     }
   }, [lastKey]);
@@ -130,7 +129,7 @@ const ReorderSlides = () => {
                         width: '100%',
                         height: 'auto',
                         margin: '0 0 8px 0',
-                        padding: '5px 5px 5px 8px',
+                        // padding: '5px 5px 5px 8px',
                         display: 'flex',
                         justifyContent: 'flex-start',
                         border: '1px solid lightgrey',
@@ -150,7 +149,7 @@ const ReorderSlides = () => {
         </Droppable>
       </DragDropContext>
       <div>
-        <Button onClick={() => navigate(`/edit-presentation/${id}/slide/1`)} style={{ marginTop: '10px' }}>Close</Button>
+        <Button data-cy="save-reorder-button" onClick={() => navigate(`/edit-presentation/${id}/slide/1`)} style={{ marginTop: '10px' }}>Close</Button>
       </div>
     </div>
     </div>

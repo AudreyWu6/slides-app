@@ -29,19 +29,6 @@ describe('<Login>' , () => {
     expect(emailInput.value).toBe('test@example.com');
     expect(passwordInput.value).toBe('password');
   });
-  // it('calls the submit handler when the form is submitted', async () => {
-  //   const handleSubmit = jest.fn();
-  //   render(
-  //       <Router>
-  //           <Login onSubmit={handleSubmit} />
-  //       </Router>
-  //   );
-  //   const signInButton = screen.getByRole('button', { name: /Sign In/i });
-  //   fireEvent.click(signInButton);
-  //   await waitFor(() => {
-  //     expect(handleSubmit).toHaveBeenCalledTimes(0);
-  //   });
-  // });
   it('displays an error message if the login fails', async () => {
     render(
         <Router>

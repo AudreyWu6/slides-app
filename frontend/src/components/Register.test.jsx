@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Register from './Register'; // Adjust the import according to your file structure
+import Register from './Register';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 describe('<Register>', () => {

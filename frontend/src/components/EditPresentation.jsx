@@ -2,12 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Button, Dialog, DialogActions, DialogTitle, IconButton, Modal, TextField, Typography } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit'; // npm install react-syntax-highlighter --save
+import EditIcon from '@mui/icons-material/Edit';
 // npm install react-router-dom
 // npm install @mui/material @emotion/react @emotion/styled
 // npm install @mui/icons-material
 // npm install react-router-dom react-beautiful-dnd
-// npm install react-best-gradient-color-picker 这是现在要下载的
+// npm install react-best-gradient-color-picker
 // npm install react-syntax-highlighter --save
 // npm install --save-dev babel-jest @babel/core @babel/preset-env @babel/preset-react
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -70,7 +70,7 @@ const EditPresentation = () => {
     let timeoutId = null;
     const updateTimestamp = () => {
       const newTimestamp = new Date().toISOString();
-      setCurrentVersionTimestamp(newTimestamp); // 更新时间戳，标记新的版本
+      setCurrentVersionTimestamp(newTimestamp);
       console.log('saveat', newTimestamp);
       const updatedPresentation = NewVersionToPresentation(
         selectedPresentation,
@@ -84,7 +84,6 @@ const EditPresentation = () => {
 
     timeoutId = setTimeout(updateTimestamp, 60000);
 
-    // 清理函数
     return () => {
       clearTimeout(timeoutId);
     };
@@ -109,14 +108,14 @@ const EditPresentation = () => {
 
         if (presentationById) {
           const latestVersion = presentationById.versions[presentationById.versions.length - 1];
-          console.log('latestVersion', latestVersion);
-          setCurrentSlides(latestVersion.slides); // 设置当前版本的幻灯片信息
-          setCurrentVersionTimestamp(latestVersion.timestamp); // 设置最新版本的时间戳
+          // console.log('latestVersion', latestVersion);
+          setCurrentSlides(latestVersion.slides);
+          setCurrentVersionTimestamp(latestVersion.timestamp);
           if (latestVersion.theme) {
             setCurrentTheme(latestVersion.theme);
           }
-          setSelectedPresentation(presentationById); // 设置完整的演示文稿信息
-          setTitle(presentationById.name); // 设置演示文稿标题
+          setSelectedPresentation(presentationById);
+          setTitle(presentationById.name);
           setThumbnail(presentationById.thumbnail);
         } else {
           console.error('Presentation not found');
@@ -199,7 +198,7 @@ const EditPresentation = () => {
     } else {
       // If no timestamp is given, create a new version
       const newTimestamp = new Date().toISOString();
-      setCurrentVersionTimestamp(newTimestamp); // 更新时间戳，标记新的版本
+      setCurrentVersionTimestamp(newTimestamp);
       newVersion = {
         timestamp: newTimestamp, // New unique timestamp
         slides,
@@ -230,11 +229,11 @@ const EditPresentation = () => {
   };
 
   const handleUpdateSlide = (passedSlide) => {
-    const updatedSlides = updateSlide(passedSlide); // 获取更新后的幻灯片
-    setCurrentSlides(updatedSlides); // 更新当前版本的幻灯片状态
+    const updatedSlides = updateSlide(passedSlide);
+    setCurrentSlides(updatedSlides); // update current slide status
     const updatedPresentation = NewVersionToPresentation(selectedPresentation, updatedSlides, currentTheme, currentVersionTimestamp);
-    updatePresentation(updatedPresentation); // 更新全局状态
-    setSelectedPresentation(updatedPresentation); // 更新本地状态以反映更改
+    updatePresentation(updatedPresentation); // update global state
+    setSelectedPresentation(updatedPresentation); // update local state
   };
 
   const handleAddSlide = () => {
@@ -263,7 +262,6 @@ const EditPresentation = () => {
     setCurrentSlideIndex(prevIndex => {
       const newIndex = (prevIndex - 1 + currentSlides.length) % currentSlides.length;
       updateSlideInUrl(newIndex); // Ensure this function also expects the current index setup
-      // setTransitionTrigger(true);
       return newIndex;
     });
   };
@@ -272,7 +270,6 @@ const EditPresentation = () => {
     setCurrentSlideIndex(prevIndex => {
       const newIndex = (prevIndex + 1) % currentSlides.length;
       updateSlideInUrl(newIndex); // Ensure this function also expects the current index setup
-      // setTransitionTrigger(true);
       return newIndex;
     });
   };
@@ -323,8 +320,8 @@ const EditPresentation = () => {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
         <Button variant="contained" size="small" onClick={handleBackClick}>Back</Button>
         <div>
-          <Button onClick={previewPresentation} variant="contained" sx={{ ml: 1, width: '205px', marginBottom: '5px' }}>Preview</Button>
-          <Button onClick={handleReorderClick} variant="contained" sx={{ ml: 1, width: '205px', marginBottom: '5px' }}>Reorder Slides</Button>
+          <Button data-cy="preview-presentation-button" onClick={previewPresentation} variant="contained" sx={{ ml: 1, width: '205px', marginBottom: '5px' }}>Preview</Button>
+          <Button data-cy="reorder-slides-button" onClick={handleReorderClick} variant="contained" sx={{ ml: 1, width: '205px', marginBottom: '5px' }}>Reorder Slides</Button>
           <Button data-cy="delete-presentation-button" onClick={() => setDeleteConfirmOpen(true)} variant="contained" color="error" sx={{ ml: 1, width: '205px', marginBottom: '5px' }}>Delete Presentation</Button>
           <VersionHistoryBtn versions={selectedPresentation.versions} onRestoreVersion={handleRestoreVersion}/>
           <NaviBtn to="/login" onClick={handleLogout}>Logout</NaviBtn>
@@ -349,7 +346,7 @@ const EditPresentation = () => {
         </Box>
       </Modal>
       <Button data-cy="add-new-slide-button" onClick={handleAddSlide} size="small" variant="contained" sx={{ mt: 2 }}>Add New Slide</Button>
-      <Button onClick={handleDeleteSlide} size="small" variant="contained" color="error" sx={{ mt: 2, ml: 2 }} startIcon={<DeleteIcon />}>Delete Slide</Button>
+      <Button data-cy="delete-slide-button" onClick={handleDeleteSlide} size="small" variant="contained" color="error" sx={{ mt: 2, ml: 2 }} startIcon={<DeleteIcon />}>Delete Slide</Button>
       <Typography sx={{ mt: 2, display: 'flex', justifyContent: 'center', fontWeight: 700 }}>Slide {currentSlideIndex + 1}</Typography>
       {selectedPresentation && currentSlides.length > 0 && currentSlideIndex < currentSlides.length && (
         <SlideEditor slide={currentSlides[currentSlideIndex]} handleUpdateSlide={handleUpdateSlide} handleUpdateTheme={handleUpdateTheme} themeColor={currentTheme}/>

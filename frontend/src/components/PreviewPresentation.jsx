@@ -112,10 +112,11 @@ const PreviewPresentation = () => {
             </div>
           )}
         </SlideTransitionWrapper>)}
-        <Button onClick={goToEditPresentation} variant='outlined' style={{ position: 'absolute', top: 10, left: 10 }}>
+        <Button onClick={goToEditPresentation} variant='outlined' style={{ position: 'absolute', top: 0, left: 10 }}>
           Go Back to Edit
         </Button>
         {currentSlideIndex >= 1 && <ArrowBackIcon
+          data-cy="previous-slide-button-preview"
           onClick={goToPreviousSlide}
           style={{
             position: 'absolute',
@@ -124,10 +125,10 @@ const PreviewPresentation = () => {
             transform: 'translateY(-50%)',
             fontSize: '48px',
             cursor: 'pointer',
-            // visibility: currentSlideIndex > 0 ? 'visible' : 'hidden',
           }}
         />}
         {currentSlideIndex < selectedPresentation.versions[lastKey].slides.length - 1 && <ArrowForwardIcon
+          data-cy="next-slide-button-preview"
           onClick={goToNextSlide}
           style={{
             position: 'absolute',
@@ -136,7 +137,6 @@ const PreviewPresentation = () => {
             transform: 'translateY(-50%)',
             fontSize: '48px',
             cursor: 'pointer',
-            // visibility: currentSlideIndex < selectedPresentation.slides.length - 1 ? 'visible' : 'hidden',
           }}
         />}
       </div>

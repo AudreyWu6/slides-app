@@ -13,9 +13,8 @@ function ResizableBox ({
   containerWidth
 }) {
   const [isSelected, setIsSelected] = useState(false);
-  // console.log('containerWidth', containerWidth, 'x:', element.position.x)
   const toggleSelect = (e) => {
-    e.stopPropagation(); // 阻止事件冒泡
+    e.stopPropagation();
     setIsSelected(prev => !prev);
   };
   // useState to track size and position
@@ -34,7 +33,6 @@ function ResizableBox ({
     });
   }, [containerWidth, containerHeight, element.position.x, element.position.y, element.width, element.height]);
 
-  // console.log('left', style.left, element.position.x * containerWidth / 100 + 'px')
   // handle drag
   const startDrag = (e) => {
     e.preventDefault();
@@ -91,7 +89,7 @@ function ResizableBox ({
 
   // handle resize
   const startResize = (corner, e) => {
-    e.stopPropagation(); // 阻止mousedown事件冒泡
+    e.stopPropagation();
     e.preventDefault()
     const aspectRatio = element.width / element.height
     const startPos = { x: e.pageX, y: e.pageY };
@@ -103,13 +101,11 @@ function ResizableBox ({
     const onResizing = (e) => {
       const dx = e.pageX - startPos.x;
       const dy = e.pageY - startPos.y;
-      // 计算基于容器宽高的比例变化
       const dxRatio = Math.abs(dx / containerWidth * 100);
       const dyRatio = Math.abs(dy / containerHeight * 100);
 
-      // 选择最大的变化比例，确保宽高比
       const maxDeltaRatio = Math.max(dxRatio, dyRatio);
-      let sign; // 根据角的不同调整符号
+      let sign;
       switch (corner) {
         case 'bottom-right':
           sign = Math.sign(dxRatio > dyRatio ? dx : dy);
@@ -124,7 +120,7 @@ function ResizableBox ({
           sign = Math.sign(dxRatio > dyRatio ? -dx : -dy);
           break;
         default:
-          sign = 1; // 默认增加方向
+          sign = 1;
           break;
       }
 
@@ -149,7 +145,7 @@ function ResizableBox ({
       if (newLeft < 0) {
         newWidth += newLeft / containerWidth * 100;
         newWidth = Math.max(1, newWidth);
-        newLeft = 0; // 重置左边距，防止元素超出边界
+        newLeft = 0;
         if (corner === 'top-left') {
           newTop -= (newWidth * aspectRatio - newHeight) * containerHeight / 100;
         }
@@ -167,7 +163,6 @@ function ResizableBox ({
       const widthPx = newWidth * containerWidth / 100;
       const heightPx = newHeight * containerHeight / 100;
       if (newLeft + widthPx > containerWidth) {
-        // console.log('newLeft', newLeft, 'widthPx', widthPx, 'containerWidth', containerWidth)
         newWidth -= (newLeft + widthPx - containerWidth) / containerWidth * 100;
         newWidth = Math.max(1, newWidth);
         if (corner === 'top-right') {

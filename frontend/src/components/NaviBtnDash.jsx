@@ -18,7 +18,6 @@ function NaviBtn ({ to, children, onClick }) {
       color="primary"
       onClick={handleClick}
       style={{ textDecoration: 'none', width: '205px', marginBottom: '5px' }}
-      // width= "205px"
       height= "50px"
       sx={{ ml: 1 }}
     >

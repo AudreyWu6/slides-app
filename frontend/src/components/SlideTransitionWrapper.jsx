@@ -1,23 +1,10 @@
 import React, { useState, useEffect, } from 'react';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 
-// const SlideTransitionWrapper = ({ children, keyProp }) => (
-//   <SwitchTransition mode="out-in">
-//     <CSSTransition
-//       key={keyProp}
-//       addEndListener={(node, done) => node.addEventListener('transitionend', done, false)}
-//       classNames="fade"
-//     >
-//       {children}
-//     </CSSTransition>
-//   </SwitchTransition>
-// );
-
 const SlideTransitionWrapper = ({ keyProp, children }) => {
   const [inProp, setInProp] = useState(false);
   const [style, setStyle] = useState({
     opacity: 0,
-    // transform: 'translateX(-100%)',
     transition: 'none' // Start with no transition to avoid initial animation
   });
 
@@ -27,7 +14,6 @@ const SlideTransitionWrapper = ({ keyProp, children }) => {
     if (!keyProp) {
       setStyle({
         opacity: 0,
-        // transform: 'translateX(-100%)',
         transition: 'none'
       });
       setInProp(false); // Ensure no transition state is active
@@ -39,7 +25,6 @@ const SlideTransitionWrapper = ({ keyProp, children }) => {
       setStyle(prev => ({
         ...prev,
         opacity: 0,
-        // transform: 'translateX(100%)',
         transition: 'opacity 300ms ease-in-out, transform 300ms ease-in-out'
       }));
 
@@ -48,7 +33,6 @@ const SlideTransitionWrapper = ({ keyProp, children }) => {
         setInProp(true); // Trigger CSSTransition inProp to true
         setStyle({
           opacity: 1,
-          // transform: 'translateX(0)',
           transition: 'opacity 300ms ease-in-out, transform 300ms ease-in-out'
         });
       }, 300); // Wait for the out transition to complete

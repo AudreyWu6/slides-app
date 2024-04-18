@@ -5,7 +5,7 @@ describe('Admin happyPath Workflow', () => {
     it('Completes the happyPath workflow successfully', () => {
       // Step 1: Admin registers successfully
       cy.visit('/register');
-      cy.get('input[name="email"]').type('admin');
+      cy.get('input[name="email"]').type('test_user');
       cy.get('input[name="password"]').type('22222223');
       cy.get('input[name="confirmPassword"]').type('22222223');
       cy.get('input[name="name"]').type('user');
@@ -20,7 +20,7 @@ describe('Admin happyPath Workflow', () => {
   
       // Step 3: Admin updates the thumbnail and name of the presentation
       cy.contains('Admin Presentation').click();
-      // cy.url().should('include', '/edit-presentation');  // Confirms that the URL is correct
+      cy.url().should('include', '/edit-presentation');  // Confirms that the URL is correct
       cy.get('[data-cy="edit-icon-button"]').click();
       cy.get('[data-cy="modal-element"]').should('be.visible');
       cy.get('[data-cy="modal-title-input"]').clear().type('Updated Presentation Title');
@@ -45,13 +45,12 @@ describe('Admin happyPath Workflow', () => {
   
       // // Step 7: Admin logs out of the application
       cy.wait(1000);
-      // cy.get('[data-cy="logout-button"]').click();
       cy.contains('button', 'Logout').click();
       cy.url().should('include', '/login');
 
       // Step 8: Admin logs back into the application
       // cy.visit('/login');
-      cy.get('input[name="email"]').type('admin');
+      cy.get('input[name="email"]').type('test_user');
       cy.get('input[name="password"]').type('22222223');
       cy.get('[data-cy="login-button"]').click();
       cy.contains('button', 'Logout').should('be.visible'); 
