@@ -13,12 +13,6 @@ import {
 } from '@mui/material';
 import { FormControl } from '@mui/base';
 
-function parsePercentage (value) {
-  if (value) {
-    return parseInt(value);
-  }
-  return '';
-}
 function getInitialState (type) {
   switch (type) {
     case 'text':
@@ -78,6 +72,7 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
     update(data);
     handleClose();
   };
+
   switch (type) {
     case 'text':
       return (
@@ -97,9 +92,22 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
             {!isEditing && (
               <TextField
                 label="size (%)"
+                type="number"
+                value={data.width}
+                inputProps={{
+                  min: 0,
+                  max: 100,
+                }}
                 data-cy="edit-slide-text-size"
-                value={parsePercentage(data.width)}
-                onChange={(e) => setData({ ...data, width: e.target.value, height: e.target.value })}
+                onChange={(e) => {
+                  let inputValue = parseInt(e.target.value);
+                  if (!isNaN(inputValue)) {
+                    inputValue = Math.min(100, Math.max(0, inputValue));
+                  } else {
+                    inputValue = '';
+                  }
+                  setData({ ...data, width: inputValue, height: inputValue });
+                }}
               />
             )}
             <TextField
@@ -156,8 +164,17 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
               {!isEditing && (
               <TextField
                 label="size (%)"
-                value={parsePercentage(data.width)}
-                onChange={(e) => setData({ ...data, width: e.target.value, height: e.target.value })}/>
+                type="number"
+                value={data.width}
+                onChange={(e) => {
+                  let inputValue = parseInt(e.target.value);
+                  if (!isNaN(inputValue)) {
+                    inputValue = Math.min(100, Math.max(0, inputValue));
+                  } else {
+                    inputValue = '';
+                  }
+                  setData({ ...data, width: inputValue, height: inputValue });
+                }}/>
               )}
               <TextField
                 fullWidth
@@ -200,8 +217,17 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
               />
               {!isEditing && (
               <TextField label="size (%)"
-                         value={parsePercentage(data.width)}
-                         onChange={(e) => setData({ ...data, width: e.target.value, height: e.target.value })}/>
+                         type="number"
+                         value={data.width}
+                         onChange={(e) => {
+                           let inputValue = parseInt(e.target.value);
+                           if (!isNaN(inputValue)) {
+                             inputValue = Math.min(100, Math.max(0, inputValue));
+                           } else {
+                             inputValue = '';
+                           }
+                           setData({ ...data, width: inputValue, height: inputValue });
+                         }}/>
               )}
               <FormControlLabel
                 control={<Switch checked={data.autoPlay}
@@ -249,8 +275,17 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
               />
               {!isEditing && (
               <TextField label="size (%)"
-                         value={parsePercentage(data.width)}
-                         onChange={(e) => setData({ ...data, width: e.target.value, height: e.target.value })}/>
+                         type="number"
+                         value={data.width}
+                         onChange={(e) => {
+                           let inputValue = parseInt(e.target.value);
+                           if (!isNaN(inputValue)) {
+                             inputValue = Math.min(100, Math.max(0, inputValue));
+                           } else {
+                             inputValue = '';
+                           }
+                           setData({ ...data, width: inputValue, height: inputValue });
+                         }}/>
               )}
               <TextField
                 fullWidth
@@ -289,8 +324,17 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
               />
               {!isEditing && (
                 <TextField label="size (%)"
-                           value={parsePercentage(data.width)}
-                           onChange={(e) => setData({ ...data, width: e.target.value, height: e.target.value })}/>
+                           type="number"
+                           value={data.width}
+                           onChange={(e) => {
+                             let inputValue = parseInt(e.target.value);
+                             if (!isNaN(inputValue)) {
+                               inputValue = Math.min(100, Math.max(0, inputValue));
+                             } else {
+                               inputValue = '';
+                             }
+                             setData({ ...data, width: inputValue, height: inputValue });
+                           }}/>
               )}
               <Button onClick={handleSubmit}>{isEditing ? 'Update' : 'Create'}</Button>
             </Box>
