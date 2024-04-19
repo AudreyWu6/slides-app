@@ -22,7 +22,7 @@ const putToServer = async (pres) => {
   try {
     const token = localStorage.getItem('token');
     const body = { store: pres };
-    console.log('the body that given to server', body);
+    // console.log('the body that given to server', body);
     await apiRequestStore('/store', token, 'PUT', body);
   } catch (error) {
     console.error('Fetching presentation failed:', error.message);

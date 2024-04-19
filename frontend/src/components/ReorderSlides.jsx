@@ -12,7 +12,6 @@ const fetchPresentations = async () => {
     const token = localStorage.getItem('token');
     const response = await apiRequestStore('/store', token, 'GET', null);
     const presentations = response || [];
-    console.log('presentationsData recieved from server: ', presentations);
     return presentations; // Ensure this is always an array
   } catch (error) {
     console.error('Fetching presentations failed:', error);
@@ -57,7 +56,6 @@ const ReorderSlides = () => {
       setSelectedPresentation(presentationById);
       const versionKeys = Object.keys(presentationById.versions);
       setlastKey(versionKeys[versionKeys.length - 1]);
-      console.log('lastKey: ', lastKey);
     };
     loadSlides();
   }, [id]);
@@ -67,12 +65,11 @@ const ReorderSlides = () => {
       if (presentations.length > 0) {
         try {
           await putToServer(presentations);
-          console.log('the body beforeput to server: ', presentations);
         } catch (error) {
           console.error('Failed to update presentations on the server:', error);
         }
       } else {
-        console.log('presentations: abnormal', presentations)
+        console.log('presentations in context:', presentations)
       }
     };
     updateServer();

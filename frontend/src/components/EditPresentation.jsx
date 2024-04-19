@@ -136,7 +136,6 @@ const EditPresentation = () => {
     const updateServer = async () => {
       try {
         await putToServer(presentations);
-        console.log('the body before put to server: ', presentations);
       } catch (error) {
         console.error('Failed to update presentations on the server:', error);
       }
@@ -219,7 +218,7 @@ const EditPresentation = () => {
   };
 
   const updateSlide = (passedSlide) => {
-    console.log('handleSlideUpdate', passedSlide);
+    // console.log('handleSlideUpdate', passedSlide);
     return currentSlides.map(slide => {
       if (slide.id === passedSlide.id) {
         return passedSlide;

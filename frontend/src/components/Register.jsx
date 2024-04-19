@@ -48,7 +48,6 @@ function Register () {
     }
     try {
       const { email, password, name } = formData;
-      console.log(email, password, name);
       const data = await apiRequest('/admin/auth/register', 'POST', { email, name, password });
       console.log('Registration successful:', data);
       localStorage.setItem('token', data.token);

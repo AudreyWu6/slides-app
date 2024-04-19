@@ -3,31 +3,31 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Button } from '@mui/material';
-import { apiRequestStore } from './apiStore';
+// import { apiRequestStore } from './apiStore';
 import SlideRender from './SlideRender';
 import SlideTransitionWrapper from './SlideTransitionWrapper';
 import NaviBtn from './NaviBtnDash';
 import { usePresentations } from './PresentationContext';
 
-const fetchPresentations = async () => {
-  try {
-    const token = localStorage.getItem('token');
-    const response = await apiRequestStore('/store', token, 'GET', null);
-    const presentations = response || [];
-    // console.log('presentationsData recieved from server: ', presentations);
-    return presentations; // Ensure this is always an array
-  } catch (error) {
-    console.error('Fetching presentations failed:', error);
-    return [];
-  }
-};
+// const fetchPresentations = async () => {
+//   try {
+//     const token = localStorage.getItem('token');
+//     const response = await apiRequestStore('/store', token, 'GET', null);
+//     const presentations = response || [];
+//     // console.log('presentationsData recieved from server: ', presentations);
+//     return presentations; // Ensure this is always an array
+//   } catch (error) {
+//     console.error('Fetching presentations failed:', error);
+//     return [];
+//   }
+// };
 
 const PreviewPresentation = () => {
   const { id, slideNumber } = useParams();
   const navigate = useNavigate();
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [selectedPresentation, setSelectedPresentation] = useState(null);
-  const { resetState } = usePresentations();
+  const { presentations, resetState } = usePresentations();
   const [lastKey, setlastKey] = useState(0);
   // const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -37,18 +37,37 @@ const PreviewPresentation = () => {
   }, [slideNumber]);
 
   useEffect(() => {
-    const loadSlides = async () => {
-      const fetchedPresentations = await fetchPresentations();
-      const presentationsArray = fetchedPresentations.store;
-      const presentationById = presentationsArray.find(p => p.id === parseInt(id));
-      console.log('presentationById version', presentationById.versions);
-      setSelectedPresentation(presentationById);
-      const versionKeys = Object.keys(presentationById.versions);
-      setlastKey(versionKeys[versionKeys.length - 1]);
-      console.log('preview', lastKey);
+    const updateServer = async () => {
+      if (presentations.length > 0) {
+        try {
+          console.log('presentations: ', presentations);
+          const presentationById = presentations.find(p => p.id === parseInt(id));
+          setSelectedPresentation(presentationById);
+          const versionKeys = Object.keys(presentationById.versions);
+          setlastKey(versionKeys[versionKeys.length - 1]);
+        } catch (error) {
+          console.error('Failed to update presentations on the server:', error);
+        }
+      } else {
+        console.log('presentations in context:', presentations)
+      }
     };
-    loadSlides();
-  }, [id, currentSlideIndex]);
+    updateServer();
+  }, [presentations]);
+
+  // useEffect(() => {
+  //   const loadSlides = async () => {
+  //     const fetchedPresentations = await fetchPresentations();
+  //     const presentationsArray = fetchedPresentations.store;
+  //     const presentationById = presentationsArray.find(p => p.id === parseInt(id));
+  //     console.log('presentationById version', presentationById.versions);
+  //     setSelectedPresentation(presentationById);
+  //     const versionKeys = Object.keys(presentationById.versions);
+  //     setlastKey(versionKeys[versionKeys.length - 1]);
+  //     // console.log('preview', lastKey);
+  //   };
+  //   loadSlides();
+  // }, [id, currentSlideIndex]);
 
   const updateSlideInUrl = (index) => {
     const slideNumberForUrl = index + 1;
