@@ -27,7 +27,6 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
               <Route path="/" element={<Navigate replace to="/login" />} />
-            {/* 这里可以添加更多路由 */}
           </Routes>
         </div>
       </Router>
@@ -36,3 +35,10 @@ const App = () => {
 };
 
 export default App;
+
+// the structure of presto:
+//   users layer: contain multiple slides:  user {id, name, ... , store{pptList{ppt1, ppt2, ...}}}
+//   ppt layer: contain multiple slides:          ppt {id, name, versions}
+//   version layer: contain multiple versions          versions{timestamp, slides, theme}
+//   slide layer: contain multiple elements                slides{id, elements}
+//   element layer: contains multiple attributes               elements{id, type, position ... }

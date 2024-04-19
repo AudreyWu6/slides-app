@@ -11,6 +11,7 @@ import Alert from './Alert';
 import { FormControl } from '@mui/material';
 import FormHelperText from '@mui/material/FormHelperText';
 
+// function to generate register page
 function Register () {
   const [formData, setFormData] = useState({
     email: '',

@@ -4,6 +4,7 @@ import ModalBtn from './OpenModalBtn';
 import ColorBtn from './ColorBtn';
 import SlideTransitionWrapper from './SlideTransitionWrapper';
 
+// function to generate toolbar and slide area
 function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme, themeColor }) {
   const initialState = {
     id: 1,

@@ -1,13 +1,13 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Alert from './Alert'; // 确保这里的路径正确
+import Alert from './Alert';
 
 describe('<Alert />', () => {
   it('displays the alert with the correct message and severity', () => {
     const handleClose = jest.fn();
     const message = "Test Alert";
-    const severity = "error"; // 可以是 'error', 'warning', 'info', 'success'
+    const severity = "error";
 
     render(
       <Alert

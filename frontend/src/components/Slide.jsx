@@ -4,7 +4,6 @@ import ElementModal from './ElementModal';
 import ResizableBox from './ResizableBox';
 
 function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor }) {
-  // console.log(slide.background, 'theme', themeColor);
   // State to control the modal for adding/editing elements
   const [modalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -20,7 +19,7 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor })
     function updateDimensions () {
       const viewportWidth = window.innerWidth; // Get the viewport width
       if (viewportWidth > 690) {
-        const calculatedWidth = viewportWidth - 300; // Subtract 300 pixels
+        const calculatedWidth = viewportWidth - 300;
         const newHeight = calculatedWidth * 0.75;
         setWidth(`${calculatedWidth}`);
         setHeight(`${newHeight}`);

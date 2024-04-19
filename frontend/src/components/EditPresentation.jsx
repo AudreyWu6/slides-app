@@ -50,7 +50,7 @@ const putToServer = async (pres) => {
     console.error('PUT presentation failed:', error.message);
   }
 };
-
+// following function is to generate edit page:
 const EditPresentation = () => {
   const { id, slideNumber } = useParams();
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);

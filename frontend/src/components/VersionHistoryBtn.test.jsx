@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import VersionHistoryBtn from './VersionHistoryBtn'; // Adjust the import according to your file structure
+import VersionHistoryBtn from './VersionHistoryBtn';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 describe('<VersionHistoryBtn>', () => {

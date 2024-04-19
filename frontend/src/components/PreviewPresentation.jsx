@@ -22,6 +22,7 @@ import { usePresentations } from './PresentationContext';
 //   }
 // };
 
+// function to genrate preview presentation page:
 const PreviewPresentation = () => {
   const { id, slideNumber } = useParams();
   const navigate = useNavigate();

@@ -78,5 +78,4 @@ describe('<ResizableBox>', () => {
     }));
   });
 
-  // Add more tests as needed for resizing, right-click to delete, etc.
 });

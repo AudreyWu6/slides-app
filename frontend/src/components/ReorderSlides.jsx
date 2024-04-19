@@ -7,6 +7,7 @@ import { apiRequestStore } from './apiStore';
 import NaviBtn from './NaviBtnDash';
 import SlideRender from './SlideRender';
 
+// function to generate reorder slides page
 const fetchPresentations = async () => {
   try {
     const token = localStorage.getItem('token');
@@ -126,7 +127,6 @@ const ReorderSlides = () => {
                         width: '100%',
                         height: 'auto',
                         margin: '0 0 8px 0',
-                        // padding: '5px 5px 5px 8px',
                         display: 'flex',
                         justifyContent: 'flex-start',
                         border: '1px solid lightgrey',

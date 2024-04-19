@@ -5,6 +5,7 @@ import { apiRequest } from './api';
 import NaviBtn from './NaviBtn';
 import Alert from './Alert';
 
+// following function is to genrate login page:
 function Login () {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
