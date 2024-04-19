@@ -63,7 +63,8 @@ function Register () {
   };
 
   return (
-    <FormControl>
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <FormControl style={{ textAlign: 'center' }}>
     <Container maxWidth="xs">
       <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center', }}>
         <Typography component="h1" variant="h5">
@@ -138,6 +139,7 @@ function Register () {
       </Box>
     </Container>
     </FormControl>
+    </div>
   );
 }
 
