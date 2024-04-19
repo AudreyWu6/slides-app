@@ -316,7 +316,7 @@ function ResizableBox ({
          style={{
            fontSize: 16 * containerWidth / 1000 + 'px',
            position: 'absolute',
-           border: '1px solid grey',
+           border: '1.5px solid #D3D3D3',
            zIndex: index,
            ...style
          }}>

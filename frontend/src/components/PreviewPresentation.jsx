@@ -3,24 +3,24 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Button } from '@mui/material';
-// import { apiRequestStore } from './apiStore';
+import { apiRequestStore } from './apiStore';
 import SlideRender from './SlideRender';
 import SlideTransitionWrapper from './SlideTransitionWrapper';
 import NaviBtn from './NaviBtnDash';
 import { usePresentations } from './PresentationContext';
 
-// const fetchPresentations = async () => {
-//   try {
-//     const token = localStorage.getItem('token');
-//     const response = await apiRequestStore('/store', token, 'GET', null);
-//     const presentations = response || [];
-//     // console.log('presentationsData recieved from server: ', presentations);
-//     return presentations; // Ensure this is always an array
-//   } catch (error) {
-//     console.error('Fetching presentations failed:', error);
-//     return [];
-//   }
-// };
+const fetchPresentations = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await apiRequestStore('/store', token, 'GET', null);
+    const presentations = response || [];
+    // console.log('presentationsData recieved from server: ', presentations);
+    return presentations; // Ensure this is always an array
+  } catch (error) {
+    console.error('Fetching presentations failed:', error);
+    return [];
+  }
+};
 
 // function to genrate preview presentation page:
 const PreviewPresentation = () => {
@@ -56,19 +56,19 @@ const PreviewPresentation = () => {
     updateServer();
   }, [presentations]);
 
-  // useEffect(() => {
-  //   const loadSlides = async () => {
-  //     const fetchedPresentations = await fetchPresentations();
-  //     const presentationsArray = fetchedPresentations.store;
-  //     const presentationById = presentationsArray.find(p => p.id === parseInt(id));
-  //     console.log('presentationById version', presentationById.versions);
-  //     setSelectedPresentation(presentationById);
-  //     const versionKeys = Object.keys(presentationById.versions);
-  //     setlastKey(versionKeys[versionKeys.length - 1]);
-  //     // console.log('preview', lastKey);
-  //   };
-  //   loadSlides();
-  // }, [id, currentSlideIndex]);
+  useEffect(() => {
+    const loadSlides = async () => {
+      const fetchedPresentations = await fetchPresentations();
+      const presentationsArray = fetchedPresentations.store;
+      const presentationById = presentationsArray.find(p => p.id === parseInt(id));
+      console.log('presentationById version', presentationById.versions);
+      setSelectedPresentation(presentationById);
+      const versionKeys = Object.keys(presentationById.versions);
+      setlastKey(versionKeys[versionKeys.length - 1]);
+      // console.log('preview', lastKey);
+    };
+    loadSlides();
+  }, [id, currentSlideIndex]);
 
   const updateSlideInUrl = (index) => {
     const slideNumberForUrl = index + 1;
@@ -133,7 +133,7 @@ const PreviewPresentation = () => {
           )}
         </SlideTransitionWrapper>)}
         <Button onClick={goToEditPresentation} variant='outlined' style={{ position: 'absolute', top: 0, left: 10 }}>
-          Go Back to Edit
+          Go back
         </Button>
         {currentSlideIndex >= 1 && <ArrowBackIcon
           data-cy="previous-slide-button-preview"

@@ -42,5 +42,3 @@ describe('<NaviBtn>', () => {
     fireEvent.click(button);
   });
 });
-
-

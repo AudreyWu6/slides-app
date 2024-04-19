@@ -1,16 +1,16 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Login from './Login'; // Adjust the import according to your file structure
 import { BrowserRouter as Router } from 'react-router-dom';
 
-describe('<Login>' , () => {
+describe('<Login>', () => {
   it('renders the Login form with all inputs and the Login button', () => {
     render(
         <Router>
           <Login />
         </Router>
-      );
+    );
     expect(screen.getByRole('textbox', { name: /email/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
@@ -21,7 +21,7 @@ describe('<Login>' , () => {
         <Router>
           <Login />
         </Router>
-      );
+    );
     const emailInput = screen.getByLabelText(/email address/i);
     const passwordInput = screen.getByLabelText(/password/i);
     userEvent.type(emailInput, 'test@example.com');
@@ -34,7 +34,7 @@ describe('<Login>' , () => {
         <Router>
           <Login />
         </Router>
-      );
+    );
     const emailInput = screen.getByLabelText(/email address/i);
     const passwordInput = screen.getByLabelText(/password/i);
     userEvent.type(emailInput, 'wrong@example.com');
@@ -49,7 +49,7 @@ describe('<Login>' , () => {
         <Router>
           <Login />
         </Router>
-      );
+    );
     const registerButton = screen.getByText(/register/i);
     userEvent.click(registerButton);
     expect(screen.getByText(/register/i)).toBeInTheDocument(); // This line is just illustrative
