@@ -54,7 +54,7 @@ describe('Admin detailPath Workflow', () => {
       cy.url().should('include', '/preview-presentation');  
     
       // Step 7: Returns to Edit Presentation page and enters reorder page
-      cy.contains('button', 'Go Back').click({ force: true });
+      cy.contains('button', 'Go back').click({ force: true });
       cy.url().should('include', '/edit-presentation');  
       cy.get('[data-cy="reorder-slides-button"]').click();
       cy.url().should('include', '/reorder-slides');  
