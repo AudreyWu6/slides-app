@@ -1,20 +1,20 @@
-import {fireEvent, render, screen} from "@testing-library/react";
-import ResizableBox from "./ResizableBox";
+import React from 'react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import ResizableBox from './ResizableBox';
 
-
-const element= {
-  "id": 1713432841331,
-  "type": "text",
-  "text": "111 New Element for Slide 1",
-  "fontSize": "5",
-  "color": "",
-  "position": {
-    "x": 5,
-    "y": 5
+const element = {
+  id: 1713432841331,
+  type: 'text',
+  text: '111 New Element for Slide 1',
+  fontSize: '5',
+  color: '',
+  position: {
+    x: 5,
+    y: 5
   },
-  "zIndex": 0,
-  "width": "50",
-  "height": "50"
+  zIndex: 0,
+  width: '50',
+  height: '50'
 };
 const containerHeight = 800;
 const containerWidth = 1200;
@@ -62,8 +62,8 @@ describe('<ResizableBox>', () => {
 
     const box = screen.getByText('111 New Element for Slide 1');
 
-    const expectedNewX = element.position.x + 150;
-    const expectedNewY = element.position.y + 150;
+    // const expectedNewX = element.position.x + 150;
+    // const expectedNewY = element.position.y + 150;
 
     // Simulate dragging
     fireEvent.mouseDown(box, { clientX: 5, clientY: 5 });
@@ -77,5 +77,4 @@ describe('<ResizableBox>', () => {
       }
     }));
   });
-
 });

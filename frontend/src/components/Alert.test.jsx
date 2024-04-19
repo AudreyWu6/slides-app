@@ -6,8 +6,8 @@ import Alert from './Alert';
 describe('<Alert />', () => {
   it('displays the alert with the correct message and severity', () => {
     const handleClose = jest.fn();
-    const message = "Test Alert";
-    const severity = "error";
+    const message = 'Test Alert';
+    const severity = 'error';
 
     render(
       <Alert
@@ -19,9 +19,6 @@ describe('<Alert />', () => {
     );
 
     expect(screen.getByText(message)).toBeInTheDocument();
-
-    const alert = screen.getByRole('alert');
-
     userEvent.click(screen.getByRole('button', { name: /close/i }));
     expect(handleClose).toHaveBeenCalledTimes(1);
   });
@@ -37,7 +34,7 @@ describe('<Alert />', () => {
       />
     );
 
-    await new Promise(r => setTimeout(r, 3100));
+    await new Promise(resolve => setTimeout(resolve, 3100));
     expect(handleClose).toHaveBeenCalled();
   });
 });

@@ -1,38 +1,37 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen } from '@testing-library/react';
 import Slide from './Slide';
 
 // Mock data for the slides
 const slide = {
-  "id": 1713432839854,
-  "elements": [
+  id: 1713432839854,
+  elements: [
     {
-      "id": 1713432841331,
-      "type": "text",
-      "text": "111 New Element for Slide 1",
-      "fontSize": "5",
-      "color": "",
-      "position": {
-        "x": 0,
-        "y": 0
+      id: 1713432841331,
+      type: 'text',
+      text: '111 New Element for Slide 1',
+      fontSize: '5',
+      color: '',
+      position: {
+        x: 0,
+        y: 0
       },
-      "zIndex": 0,
-      "width": "50",
-      "height": "50"
+      zIndex: 0,
+      width: '50',
+      height: '50'
     },
     {
-      "id": 1713432841332,
-      "type": "image",
-      "url": "http://example.com/image.png",
-      "alt": "Example Image",
-      "position": {
-        "x": 0,
-        "y": 0
+      id: 1713432841332,
+      type: 'image',
+      url: 'http://example.com/image.png',
+      alt: 'Example Image',
+      position: {
+        x: 0,
+        y: 0
       },
-      "zIndex": 1,
-      "width": "100",
-      "height": "100"
+      zIndex: 1,
+      width: '100',
+      height: '100'
     },
   ]
 };
@@ -60,6 +59,4 @@ describe('<Slide>', () => {
     expect(computedStyles.width).toBe('100%');
     expect(computedStyles.height).toBe('100%');
   });
-
-
 });

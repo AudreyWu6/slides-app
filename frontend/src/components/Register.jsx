@@ -94,7 +94,7 @@ function Register () {
             value={formData.password}
             onChange={handleChange}
           />
-          <FormHelperText id="my-helper-text">Your password must at least 8 characters long, contain letters or numbers, and must not contain spaces, special characters, or emoji.</FormHelperText>
+          <FormHelperText id="my-helper-text">Your password must at least 8 characters long, contain letters or numbers.</FormHelperText>
           <TextField
             margin="normal"
             required

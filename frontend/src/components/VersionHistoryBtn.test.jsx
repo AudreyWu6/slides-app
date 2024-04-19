@@ -6,43 +6,43 @@ import { BrowserRouter as Router } from 'react-router-dom';
 describe('<VersionHistoryBtn>', () => {
   const versions = [
     {
-      "timestamp": "2024-04-19T00:22:33.329Z",
-      "slides": [
+      timestamp: '2024-04-19T00:22:33.329Z',
+      slides: [
         {
-          "id": 1713486153329,
-          "elements": [],
-          "background": "linear-gradient(90deg, RGB(70, 150, 150) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)"
+          id: 1713486153329,
+          elements: [],
+          background: 'linear-gradient(90deg, RGB(70, 150, 150) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%)'
         },
         {
-          "id": 1713486184639,
-          "elements": []
+          id: 1713486184639,
+          elements: []
         },
         {
-          "id": 1713486424439,
-          "elements": []
+          id: 1713486424439,
+          elements: []
         }
       ],
-      "theme": "rgba(128,128,128, 1)"
+      theme: 'rgba(128,128,128, 1)'
     },
     {
-        "timestamp": "2024-04-19T00:42:46.501Z",
-        "slides": [
-          {
-            "id": 1713486153329,
-            "elements": [],
-            "background": "rgb(132, 49, 176)"
-          },
-          {
-            "id": 1713486184639,
-            "elements": []
-          },
-          {
-            "id": 1713486424439,
-            "elements": []
-          }
-        ],
-        "theme": "rgba(128,128,128, 1)"
-      },]
+      timestamp: '2024-04-19T00:42:46.501Z',
+      slides: [
+        {
+          id: 1713486153329,
+          elements: [],
+          background: 'rgb(132, 49, 176)'
+        },
+        {
+          id: 1713486184639,
+          elements: []
+        },
+        {
+          id: 1713486424439,
+          elements: []
+        }
+      ],
+      theme: 'rgba(128,128,128, 1)'
+    },]
 
   it('renders the button to show versions', () => {
     render(
