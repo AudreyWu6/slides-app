@@ -1,5 +1,6 @@
 // "node_modules/(?!axios)"
 import React from 'react';
+// import '@4tw/cypress-drag-drop'
 
 describe('Admin detailPath Workflow', () => {
     it('Completes the Detailed Path workflow successfully', () => {
@@ -59,10 +60,14 @@ describe('Admin detailPath Workflow', () => {
       cy.url().should('include', '/reorder-slides');  
 
       // Step 8: Reverses the order of slides and checks updated order
-      // cy.contains('222 New Element for Slide 2').trigger('mousedown', { which: 1 })
-      // cy.contains('111 New Element for Slide 1').trigger('mousemove').trigger('mouseup', { force: true });
-      // cy.contains('111 New Element for Slide 1').trigger('mousedown', { which: 1 })
-      // cy.contains('222 New Element for Slide 2').trigger('mousemove').trigger('mouseup', { force: true });
+      // cy.contains('Slide 2').trigger('mousedown', { which: 1 })
+      // cy.contains('Slide 1').trigger('mousemove').trigger('mouseup', { force: true });
+      // cy.contains('Slide 1').trigger('mousedown', { which: 1 })
+      // cy.contains('Slide 2').trigger('mousemove').trigger('mouseup', { force: true });
+      // Drag one element before another
+      // cy.contains('Slide 2').drag('Slide 1', { position: 'top' });
+      cy.contains('Slide 1').should('be.visible');
+      cy.contains('Slide 2').should('be.visible');
       cy.get('[data-cy="save-reorder-button"]').click();
 
       // Step 9: Checks current slide after reordering      
