@@ -15,3 +15,4 @@
  Additional: 
  1. For component and UI testing, just type 'npm run test', it will run all the component tests(Using Jest) and UI test(using cypress) at one time( the script in Package.json has been modified).
  2. there are overall seven component test(except App.test.jsx) using Jest.
+ 3. Please run it after reset the backend datebase.
