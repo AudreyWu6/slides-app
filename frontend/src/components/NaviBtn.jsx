@@ -7,9 +7,9 @@ function NaviBtn ({ to, children, onClick }) {
 
   const handleClick = (event) => {
     if (onClick) {
-      onClick(event); // 如果有传入的onClick处理函数，先执行它
+      onClick(event);
     }
-    navigate(to); // 然后导航
+    navigate(to);
   };
 
   return (

@@ -4,7 +4,6 @@ import ElementModal from './ElementModal';
 import ResizableBox from './ResizableBox';
 
 function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor }) {
-  // console.log(slide.background, 'theme', themeColor);
   // State to control the modal for adding/editing elements
   const [modalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -20,12 +19,11 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor })
     function updateDimensions () {
       const viewportWidth = window.innerWidth; // Get the viewport width
       if (viewportWidth > 690) {
-        const calculatedWidth = viewportWidth - 300; // Subtract 180 pixels
+        const calculatedWidth = viewportWidth - 300;
         const newHeight = calculatedWidth * 0.75;
         setWidth(`${calculatedWidth}`);
         setHeight(`${newHeight}`);
       } else {
-        // console.log('viewportWidth', viewportWidth);
         const calculatedWidth = viewportWidth - 80;
         const newHeight = calculatedWidth * 0.75;
         setWidth(`${calculatedWidth}`);
@@ -54,11 +52,10 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor })
   };
 
   useEffect(() => {
-    // console.log(dataType); // 在这里检查更新后的值
+    // console.log(dataType);
   }, [dataType]);
 
   return (
-    // <div className="slide-container"
     <div className="slide-container" ref={elementRef}
         style={{ border: '2px solid black', margin: '20px', position: 'relative', width: `${width}px`, height: `${height}px`, background: backgroundColor }}>
       {slide.elements.map((element, index) => {
@@ -83,7 +80,6 @@ function Slide ({ slide, handleDeleteElement, handleUpdateElement, themeColor })
         initialData={initialData}
         update={(data) => handleUpdateElement(elementId, data)}
       />
-      {/* Button or method to open the modal in add mode */}
     </div>
   );
 }

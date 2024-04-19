@@ -10,7 +10,6 @@ const fetchPresentations = async () => {
     const token = localStorage.getItem('token');
     const response = await apiRequestStore('/store', token, 'GET', null);
     const presentations = response || [];
-    // console.log('presentationsData recieved from server: ', presentations);
     return presentations;
   } catch (error) {
     console.error('Fetching presentations failed:', error);
@@ -22,16 +21,16 @@ const putToServer = async (pres) => {
   try {
     const token = localStorage.getItem('token');
     const body = { store: pres };
-    console.log('the body that given to server', body);
     await apiRequestStore('/store', token, 'PUT', body);
   } catch (error) {
     console.error('Fetching presentation failed:', error.message);
   }
 };
 
+// following function is to generate dashboard page:
 function Dashboard () {
   const navigate = useNavigate();
-  const { presentations, addPresentation, setAllPresentations, resetState } = usePresentations(); // Assuming addPresentation is a function provided by your context to add a new presentation
+  const { presentations, addPresentation, setAllPresentations, resetState } = usePresentations(); // Assuming addPresentation is a function provided by context to add a new presentation
   const [open, setOpen] = useState(false);
   const [newPresentation, setNewPresentation] = useState({
     name: '',
@@ -44,7 +43,6 @@ function Dashboard () {
     const loadPresentations = async () => {
       const fetchedPresentations = await fetchPresentations();
       const presentationsData = Array.isArray(fetchedPresentations.store) ? fetchedPresentations.store : [];
-      console.log('presentationsData)', presentationsData);
       if (presentationsData) {
         setAllPresentations(presentationsData);
       } else {
@@ -52,7 +50,6 @@ function Dashboard () {
       }
     };
     loadPresentations();
-    console.log('presentations in dashboard should be load one time: ', presentations);
   }, []);
 
   useEffect(() => {
@@ -60,15 +57,12 @@ function Dashboard () {
       if (presentations.length > 0) {
         try {
           await putToServer(presentations);
-          // console.log('the body beforeput to server: ', presentations);
-          // setAllPresentations(presentations);
         } catch (error) {
           console.error('Failed to update presentations on the server:', error);
         }
       }
     };
     updateServer();
-    console.log('presentations in dashboard, has change?????', presentations);
   }, [presentations]);
 
   const handleOpen = () => setOpen(true);
@@ -78,8 +72,8 @@ function Dashboard () {
   };
 
   const createPresentation = () => {
-    const timestamp = new Date().toISOString(); // 为新版本生成时间戳
-    const initialSlides = [{ id: Date.now(), elements: [] }]; // 创建初始幻灯片数组
+    const timestamp = new Date().toISOString();
+    const initialSlides = [{ id: Date.now(), elements: [] }];
     const initialVersion = {
       timestamp,
       slides: initialSlides,
@@ -87,7 +81,7 @@ function Dashboard () {
     const newPres = {
       ...newPresentation,
       id: Date.now(),
-      versions: [initialVersion], // 初始化包含一个版本的数组
+      versions: [initialVersion],
       thumbnail: newPresentation.thumbnail || '',
     };
     addPresentation(newPres);

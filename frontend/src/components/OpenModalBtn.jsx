@@ -7,7 +7,7 @@ function ModalBtn ({ update, type }) {
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <>
-      <Button onClick={() => setModalOpen(true)}>Add {type}</Button>
+      <Button data-cy="edit-slide" onClick={() => setModalOpen(true)}>Add {type}</Button>
       <ElementModal
         type={type}
         open={modalOpen}

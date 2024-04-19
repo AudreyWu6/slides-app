@@ -67,14 +67,12 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
   // console.log('modal', initialData);
   const [data, setData] = useState(initialData || getInitialState(type));
   useEffect(() => {
-    // 这确保了每当isEditing或initialData变化时，data都会相应地更新
-    // 特别是当从编辑切换回添加模式时，这个逻辑能确保状态重置
     if (isEditing && initialData) {
       setData(initialData);
     } else {
       setData(getInitialState(type));
     }
-  }, [isEditing, initialData, type]); // 注意：这里添加了type作为依赖项
+  }, [isEditing, initialData, type]);
   // console.log('modal-data', data);
   const handleSubmit = () => {
     update(data);
@@ -99,17 +97,20 @@ function ElementModal ({ type, open, handleClose, update, isEditing = false, ini
             {!isEditing && (
               <TextField
                 label="size (%)"
+                data-cy="edit-slide-text-size"
                 value={parsePercentage(data.width)}
                 onChange={(e) => setData({ ...data, width: e.target.value, height: e.target.value })}
               />
             )}
             <TextField
               label="text"
+              data-cy="edit-slide-text-text"
               value={data.text}
               onChange={(e) => setData({ ...data, text: e.target.value })}
             />
             <TextField
               label="font size (em)"
+              data-cy="edit-slide-text-fontsize"
               value={data.fontSize}
               onChange={(e) => setData({ ...data, fontSize: e.target.value })}
             />

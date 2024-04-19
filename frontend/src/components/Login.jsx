@@ -5,6 +5,7 @@ import { apiRequest } from './api';
 import NaviBtn from './NaviBtn';
 import Alert from './Alert';
 
+// following function is to genrate login page:
 function Login () {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,12 +21,10 @@ function Login () {
       });
       console.log('Login success:', data.token);
       localStorage.setItem('token', data.token);
-      // 处理登录成功逻辑，比如保存token，导航到另一个页面等
       navigate('/dashboard');
     } catch (error) {
       console.error('Login failed:', error.message);
-      setOpenAlert(true); // 显示Alert
-      // 处理登录失败逻辑
+      setOpenAlert(true);
     }
   };
 
@@ -78,6 +77,7 @@ function Login () {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            data-cy="login-button"
           >
             Sign In
           </Button>

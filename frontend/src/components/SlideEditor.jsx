@@ -4,16 +4,14 @@ import ModalBtn from './OpenModalBtn';
 import ColorBtn from './ColorBtn';
 import SlideTransitionWrapper from './SlideTransitionWrapper';
 
+// function to generate toolbar and slide area
 function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme, themeColor }) {
-  // console.log('slide passed', passedSlide);
   const initialState = {
     id: 1,
     elements: [],
   }
   const [slide, setSlide] = useState(passedSlide || initialState);
-  // console.log('slide shown', slide)
 
-  // 使用 useEffect 来监听 passedSlide 的变化
   useEffect(() => {
     setSlide(passedSlide || initialState);
   }, [passedSlide]);
@@ -21,7 +19,7 @@ function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme
   const updateElements = (newElements) => {
     setSlide(prevSlide => {
       const updatedSlide = { ...prevSlide, elements: newElements };
-      handleUpdateSlide(updatedSlide); // 调用父组件的函数，传递更新后的 slide
+      handleUpdateSlide(updatedSlide);
       return updatedSlide;
     });
   };
@@ -29,7 +27,7 @@ function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme
   const updateBackground = (color) => {
     setSlide(prevSlide => {
       const updatedSlide = { ...prevSlide, background: color };
-      handleUpdateSlide(updatedSlide); // 调用父组件的函数，传递更新后的 slide
+      handleUpdateSlide(updatedSlide);
       return updatedSlide;
     });
   };
@@ -40,14 +38,14 @@ function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme
         ...prevSlide,
         elements: prevSlide.elements.filter(element => element.id !== elementId),
       };
-      handleUpdateSlide(updatedSlide); // 同样更新父组件的 slide 数据
+      handleUpdateSlide(updatedSlide);
       return updatedSlide;
     });
   };
 
   const handleAddElement = (elementData, elementType) => {
     const newElement = {
-      id: Date.now(), // 为新元素生成唯一ID
+      id: Date.now(),
       type: elementType,
       ...elementData,
     };
@@ -90,11 +88,9 @@ function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme
     flexDirection: isMobile ? 'column' : 'row',
   };
   return (
-    // <div style={{ display: 'flex', }} className="main-content">
     <SlideTransitionWrapper keyProp={slide.id}>
     <div style={mainContentStyle}>
       <div style={toolbarStyle}>
-      {/* <div className="toolbar" style={{ display: 'flex', flexDirection: 'column', width: '300px' }}> */}
         <ColorBtn updateBackground={updateBackground} updateTheme={handleUpdateTheme}></ColorBtn>
         <ModalBtn type='text' update={(data) => handleAddElement(data, 'text')}></ModalBtn>
         <ModalBtn type='image' update={(data) => handleAddElement(data, 'image')}></ModalBtn>
@@ -102,7 +98,6 @@ function SlideEditor ({ slide: passedSlide, handleUpdateSlide, handleUpdateTheme
         <ModalBtn type='code' update={(data) => handleAddElement(data, 'code')}></ModalBtn>
         <ModalBtn type='audio' update={(data) => handleAddElement(data, 'audio')}></ModalBtn>
       </div>
-      {/* slide */}
       <div>
       <Slide slide={slide} handleDeleteElement={handleDeleteElement} handleUpdateElement={handleUpdateElement} themeColor={themeColor}/>
       </div>

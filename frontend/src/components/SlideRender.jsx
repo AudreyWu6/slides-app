@@ -9,29 +9,21 @@ function SlideRender ({ slide, themeColor, parentFontSize }) {
   const [fontSize, setFontSize] = useState(parentFontSize);
 
   useEffect(() => {
-    // 当窗口大小改变时，更新 windowWidth 的值
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
     window.addEventListener('resize', handleResize);
 
-    // 清理 effect
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   useEffect(() => {
-    // 根据窗口宽度计算新的字体大小
     const newFontSize = parentFontSize * windowWidth / 1000;
     setFontSize(newFontSize);
   }, [windowWidth]);
-  // const containerWidth = width;
-  // const containerHeight = width * 0.75;
   const renderElement = (element) => {
-    // console.log('element: ', element.text);
-    // console.log('element.position.x: ', element.position.x);
-    // console.log('width: ', width);
     switch (element.type) {
       case 'text':
         return (

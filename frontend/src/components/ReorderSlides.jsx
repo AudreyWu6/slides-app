@@ -7,12 +7,12 @@ import { apiRequestStore } from './apiStore';
 import NaviBtn from './NaviBtnDash';
 import SlideRender from './SlideRender';
 
+// function to generate reorder slides page
 const fetchPresentations = async () => {
   try {
     const token = localStorage.getItem('token');
     const response = await apiRequestStore('/store', token, 'GET', null);
     const presentations = response || [];
-    console.log('presentationsData recieved from server: ', presentations);
     return presentations; // Ensure this is always an array
   } catch (error) {
     console.error('Fetching presentations failed:', error);
@@ -57,7 +57,6 @@ const ReorderSlides = () => {
       setSelectedPresentation(presentationById);
       const versionKeys = Object.keys(presentationById.versions);
       setlastKey(versionKeys[versionKeys.length - 1]);
-      console.log('lastKey: ', lastKey);
     };
     loadSlides();
   }, [id]);
@@ -67,12 +66,11 @@ const ReorderSlides = () => {
       if (presentations.length > 0) {
         try {
           await putToServer(presentations);
-          console.log('the body beforeput to server: ', presentations);
         } catch (error) {
           console.error('Failed to update presentations on the server:', error);
         }
       } else {
-        console.log('presentations: abnormal', presentations)
+        console.log('presentations in context:', presentations)
       }
     };
     updateServer();
@@ -80,7 +78,6 @@ const ReorderSlides = () => {
 
   useEffect(() => {
     if (selectedPresentation) {
-      // console.log('setedSlides: ', selectedPresentation.versions[lastKey].slides);
       setSlides(selectedPresentation.versions[lastKey].slides);
     }
   }, [lastKey]);
@@ -137,7 +134,7 @@ const ReorderSlides = () => {
                         alignItems: 'flex-start',
                       }}
                     >
-                      Slide {index + 1}:
+                      <div style={{ marginTop: '3px', marginRight: '3px', backgroundColor: 'grey', color: 'white', width: '60px', height: '20px', borderRadius: '3px', fontSize: '0.8rem', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>{`Slide ${index + 1}`}</div>
                       <SlideRender slide={slide} themeColor={selectedPresentation.versions[lastKey].theme} parentFontSize='3'/>
                     </Card>
                   )}
@@ -149,7 +146,7 @@ const ReorderSlides = () => {
         </Droppable>
       </DragDropContext>
       <div>
-        <Button onClick={() => navigate(`/edit-presentation/${id}/slide/1`)} style={{ marginTop: '10px' }}>Close</Button>
+        <Button data-cy="save-reorder-button" onClick={() => navigate(`/edit-presentation/${id}/slide/1`)} style={{ marginTop: '10px' }}>Close</Button>
       </div>
     </div>
     </div>

@@ -11,6 +11,7 @@ import Alert from './Alert';
 import { FormControl } from '@mui/material';
 import FormHelperText from '@mui/material/FormHelperText';
 
+// function to generate register page
 function Register () {
   const [formData, setFormData] = useState({
     email: '',
@@ -48,7 +49,6 @@ function Register () {
     }
     try {
       const { email, password, name } = formData;
-      console.log(email, password, name);
       const data = await apiRequest('/admin/auth/register', 'POST', { email, name, password });
       console.log('Registration successful:', data);
       localStorage.setItem('token', data.token);
@@ -56,10 +56,10 @@ function Register () {
     } catch (error) {
       console.error('Registration failed:', error);
       setError(error.message || 'Registration failed.');
-      setOpenAlert(true); // 显示Alert
+      setOpenAlert(true);
     }
     console.log('Form data submitted:', formData);
-    navigate('/Dashboard');
+    navigate('/dashboard');
   };
 
   return (
@@ -94,6 +94,7 @@ function Register () {
             value={formData.password}
             onChange={handleChange}
           />
+          <FormHelperText id="my-helper-text">Your password must at least 8 characters long, contain letters or numbers, and must not contain spaces, special characters, or emoji.</FormHelperText>
           <TextField
             margin="normal"
             required
@@ -106,7 +107,6 @@ function Register () {
             onChange={handleChange}
             aria-describedby="my-helper-text"
           />
-          <FormHelperText fullWidth id="my-helper-text">Your password must at least 8 characters long, contain letters or numbers, and must not contain spaces, special characters, or emoji.</FormHelperText>
           <TextField
             margin="normal"
             required
