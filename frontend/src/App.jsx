@@ -4,9 +4,9 @@ import {
   Routes,
   Route, Navigate,
 } from 'react-router-dom';
-import Dashboard from './components/Dashboard'; // 确保Dashboard.jsx的路径正确
-import Login from './components/Login'; // 确保Login.jsx的路径正确
-import Register from './components/Register'; // 确保Register.jsx的路径正确
+import Dashboard from './components/Dashboard';
+import Login from './components/Login';
+import Register from './components/Register';
 import EditPresentation from './components/EditPresentation';
 import { PresentationProvider } from './components/PresentationContext';
 import PreviewPresentation from './components/PreviewPresentation';
