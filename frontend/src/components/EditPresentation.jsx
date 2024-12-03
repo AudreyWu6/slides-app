@@ -3,13 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Button, Dialog, DialogActions, DialogTitle, IconButton, Modal, TextField, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-// npm install react-router-dom
-// npm install @mui/material @emotion/react @emotion/styled
-// npm install @mui/icons-material
-// npm install react-router-dom react-beautiful-dnd
-// npm install react-best-gradient-color-picker
-// npm install react-syntax-highlighter --save
-// npm install --save-dev babel-jest @babel/core @babel/preset-env @babel/preset-react
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
